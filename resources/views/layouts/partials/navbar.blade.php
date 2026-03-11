@@ -29,20 +29,30 @@
                                     </a>
                                     <ul class="dropdown-menu shadow border-0">
                                         <li><a class="dropdown-item"
-                                                href="{{ route('planejamento.loa.despesa.elemento') }}">Por Elemento</a>
+                                                href="{{ route('planejamento.loa.despesa', ['filtro' => 'elemento']) }}">Por
+                                                Elemento</a>
                                         </li>
-                                        <li><a class="dropdown-item" href="#">Por Órgão</a></li>
-                                        <li><a class="dropdown-item" href="#">Por Recurso</a></li>
+                                        <li><a class="dropdown-item"
+                                                href="{{ route('planejamento.loa.despesa', ['filtro' => 'orgao']) }}">Por
+                                                Órgão</a></li>
+                                        <li><a class="dropdown-item"
+                                                href="{{ route('planejamento.loa.despesa', ['filtro' => 'recurso']) }}">Por
+                                                Recurso</a></li>
                                     </ul>
                                 </li>
                                 <li class="dropdown-submenu">
                                     <a class="dropdown-item d-flex justify-content-between align-items-center"
                                         href="#">
-                                        Despesa
+                                        Receita
                                     </a>
                                     <ul class="dropdown-menu shadow border-0">
-                                        <li><a class="dropdown-item" href="#">Por Elemento</a></li>
-                                        <li><a class="dropdown-item" href="#">Por Recurso</a></li>
+                                        <li><a class="dropdown-item"
+                                                href="{{ route('planejamento.loa.receita', ['filtro' => 'elemento']) }}">Por
+                                                Elemento</a>
+                                        </li>
+                                        <li><a class="dropdown-item"
+                                                href="{{ route('planejamento.loa.receita', ['filtro' => 'recurso']) }}">Por
+                                                Recurso</a></li>
                                     </ul>
                                 </li>
                             </ul>
