@@ -66,7 +66,7 @@
                         Despesa
                     </a>
                     <ul class="dropdown-menu shadow border-0" aria-labelledby="navbarDespesa">
-                        <li><a class="dropdown-item" href="#">Diária</a></li>
+                        <li><a class="dropdown-item" href="{{ route('despesa.diarias.resumo') }}">Diária</a></li>
                         <li><a class="dropdown-item" href="#">Decreto</a></li>
                         <li><a class="dropdown-item" href="#">Repasse</a></li>
                         <li><a class="dropdown-item" href="#">Duodécimo</a></li>

@@ -56,9 +56,7 @@
             </tfoot>
         </x-tabela-transparencia>
 
-        <div class="d-flex justify-content-center mt-3">
-            {{ $data->links('pagination::bootstrap-5') }}
-        </div>
+         
 
         <a href="{{ route('planejamento.loa.despesa', ['filtro' => 'orgao']) }}" class="btn btn-secondary">
             <i class="fa fa-arrow-left"></i> Voltar
