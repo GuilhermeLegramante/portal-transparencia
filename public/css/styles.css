@@ -1,0 +1,684 @@
+/* 1. VARIÁVEIS DE TEMA (Onde a mágica acontece) */
+:root {
+    /* Modo Claro (Default) */
+    --bg-body: #f8fafc;
+    --bg-card: #ffffff;
+    --bg-alt: #f1f5f9;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --accent-color: #0d6efd;
+    --border-color: #e2e8f0;
+    --glass-bg: rgba(13, 110, 253, 0.08);
+    --shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+}
+
+body.dark-mode {
+    /* Modo Noturno */
+    --bg-body: #0f172a;
+    --bg-card: #1e293b;
+    --bg-alt: #020617;
+    --text-main: #f1f5f9;
+    --text-muted: #94a3b8;
+    --accent-color: #38bdf8;
+    --border-color: #334155;
+    --glass-bg: rgba(56, 189, 248, 0.1);
+}
+
+body.high-contrast {
+    /* Alto Contraste */
+    --bg-body: #000000;
+    --bg-card: #000000;
+    --text-main: #ffffff;
+    --text-muted: #ffffff;
+    --accent-color: #ffff00;
+    --border-color: #ffffff;
+}
+
+/* 2. REGRAS GERAIS E BODY */
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    transition: background 0.3s ease, color 0.3s ease;
+    letter-spacing: -0.01em;
+}
+
+/* 3. COMPONENTES DE ESTRUTURA (Nav, Topbar, Footer, Cards) */
+/* Agrupamos todos que compartilham o comportamento de 'fundo de card' */
+.top-bar,
+.navbar,
+.accessibility-bar,
+.card,
+.summary-card,
+.dropdown-menu,
+footer,
+.bg-light,
+.bg-white {
+    background-color: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-main) !important;
+    transition: all 0.3s ease;
+}
+
+.bg-light,
+footer .bg-light {
+    background-color: var(--bg-alt) !important;
+}
+
+/* 4. LINKS E NAVEGAÇÃO */
+.nav-link {
+    color: var(--text-muted);
+    font-weight: 600;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--accent-color) !important;
+    background: var(--glass-bg) !important;
+}
+
+.dropdown-item:hover {
+    background-color: var(--accent-color);
+    color: white !important;
+}
+
+/* 5. ELEMENTOS ESPECÍFICOS (Carrossel, Tabelas, Botões) */
+.carousel-item.active {
+    background: radial-gradient(circle at 90% 50%, var(--glass-bg) 0%, transparent 100%);
+}
+
+.table td,
+.table th {
+    border-color: var(--border-color) !important;
+    vertical-align: middle;
+}
+
+.btn-action-view {
+    background-color: var(--glass-bg);
+    color: var(--accent-color);
+    border-radius: 8px;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.btn-action-view:hover {
+    background-color: var(--accent-color);
+    color: #fff;
+}
+
+/* 6. ACESSIBILIDADE E UTILITÁRIOS */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    background: var(--accent-color);
+    color: #000;
+    padding: 8px;
+    z-index: 9999;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+a:focus,
+button:focus,
+input:focus {
+    outline: 3px solid var(--accent-color) !important;
+    outline-offset: 2px;
+}
+
+.social-icon {
+    width: 35px;
+    height: 35px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--bg-alt);
+    color: var(--accent-color);
+    transition: 0.3s;
+}
+
+.social-icon:hover {
+    background: var(--accent-color);
+    color: #fff;
+    transform: translateY(-3px);
+}
+
+.footer-seal {
+    max-height: 80px;
+    filter: grayscale(1);
+    opacity: 0.7;
+    transition: 0.3s;
+}
+
+.footer-seal:hover {
+    filter: grayscale(0);
+    opacity: 1;
+}
+
+/* 7. CORREÇÕES DE IMAGEM NO DARK MODE */
+body.dark-mode .navbar-brand img {
+    filter: none !important;
+}
+
+/* Impede a logo de mudar */
+body.dark-mode img:not(.navbar-brand img) {
+    filter: brightness(0.8);
+}
+
+/* Loader centralizado e fixo */
+#loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(5px);
+    display: flex;
+    flex-direction: column;
+    /* FAZ O TEXTO IR PARA BAIXO */
+    align-items: center;
+    /* CENTRALIZA HORIZONTALMENTE */
+    justify-content: center;
+    /* CENTRALIZA VERTICALMENTE */
+    z-index: 9999;
+}
+
+/* Ajuste essencial para que o submenu saiba de onde "nascer" */
+.dropdown-menu .dropdown-submenu {
+    position: relative;
+    /* Importante: os filhos absolutos se baseiam nisso */
+}
+
+/* Esconde o menu de 3º nível por padrão */
+.dropdown-menu .dropdown-submenu>.dropdown-menu {
+    top: 0;
+    left: 100%;
+    /* Joga para a direita do item atual */
+    margin-top: -5px;
+    /* Pequeno ajuste para alinhar o topo */
+    display: none;
+    /* Mantém escondido */
+}
+
+/* Mostra apenas quando o mouse estiver sobre o <li> pai */
+.dropdown-menu .dropdown-submenu:hover>.dropdown-menu {
+    display: block !important;
+}
+
+/* Ajuste para dispositivos móveis: evita que fiquem sobrepostos de forma errada */
+@media (max-width: 991px) {
+    .dropdown-menu .dropdown-submenu>.dropdown-menu {
+        position: static;
+        /* No mobile, eles empilham um embaixo do outro */
+        left: 0;
+        margin-left: 1rem;
+        display: block;
+        /* Pode deixar visível ou controlar via JS */
+        box-shadow: none;
+    }
+}
+
+/* Ajuste no Submenu para suportar animação */
+.dropdown-menu .dropdown-submenu>.dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -5px;
+
+    /* Substituímos display:none por visibilidade e opacidade para permitir transição */
+    display: block !important;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateX(10px);
+    /* Começa 10px para a direita */
+    transition: all 0.3s ease-in-out;
+
+    border: none;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1) !important;
+    /* Sombra mais elegante */
+}
+
+/* Estado quando o mouse passa sobre o item pai */
+.dropdown-menu .dropdown-submenu:hover>.dropdown-menu {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(0);
+    /* Volta para a posição original */
+}
+
+.summary-card {
+    padding: 1.75rem !important;
+    /* Aumenta o respiro interno */
+    min-height: 145px;
+    /* Mantém todos os cards com a mesma altura */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* Centraliza o conteúdo verticalmente */
+    border-radius: 16px;
+    background-color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.summary-card h2 {
+    font-size: 1.75rem;
+    /* Tamanho ideal para números grandes */
+    margin-top: 0.5rem;
+    color: var(--text-main);
+    /* Usa a cor grafite definida no root */
+}
+
+/* Garante que o texto 'p' e 'text-muted' mude de cor no modo escuro */
+body.dark-mode .summary-card p.text-muted {
+    color: #94a3b8 !important;
+    /* Cinzento claro azulado */
+}
+
+body.dark-mode .summary-card h2 {
+    color: #ffffff !important;
+    /* Números em branco puro */
+}
+
+/* Caso use a classe text-secondary do Bootstrap */
+body.dark-mode .text-secondary {
+    color: #cbd5e1 !important;
+}
+
+/* Garante que os cards internos do carrossel fiquem visíveis no Dark Mode */
+body.dark-mode .carousel-item .card.bg-white {
+    background-color: #1e293b !important;
+    /* Fundo azul escuro */
+    border: 1px solid #334155 !important;
+}
+
+body.dark-mode .carousel-item .card .text-muted {
+    color: #94a3b8 !important;
+    /* Cinza claro para o texto 'p' */
+}
+
+body.dark-mode .carousel-item .card h5 {
+    /* Mantém as cores originais (primary/success) mas com um pouco mais de brilho se necessário */
+    filter: brightness(1.2);
+}
+
+/* Container do Dropdown */
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1) !important;
+    border-radius: 12px;
+    padding: 0.75rem;
+    animation: slideUp 0.3s ease forwards;
+    /* Efeito de entrada */
+    opacity: 0;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Itens do Menu */
+.dropdown-item {
+    padding: 0.7rem 1.2rem;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(13, 110, 253, 0.08) !important;
+    /* Fundo azul bem clarinho */
+    color: var(--accent-color) !important;
+    /* Texto azul (cor de destaque) */
+    transform: translateX(5px);
+    transition: all 0.2s ease;
+}
+
+body.dark-mode .card-body,
+body.dark-mode .card-header {
+    color: #f1f5f9 !important;
+    /* Branco acinzentado */
+}
+
+/* Garante que o texto dentro do Glossário fique visível */
+body.dark-mode .card-body p,
+body.dark-mode .card-body span {
+    color: #cbd5e1 !important;
+}
+
+/* Ajuste específico para o título do Glossário */
+body.dark-mode h5.text-primary,
+body.dark-mode .card-title {
+    color: #38bdf8 !important;
+    /* Azul brilhante */
+}
+
+body.dark-mode footer p,
+body.dark-mode footer span,
+body.dark-mode footer .contact-info {
+    color: #94a3b8 !important;
+    /* Cinza claro legível */
+}
+
+body.dark-mode footer h6,
+body.dark-mode footer strong {
+    color: #f1f5f9 !important;
+    /* Branco para destaques */
+}
+
+/* Ícones do footer que estão escuros */
+body.dark-mode footer i {
+    color: #38bdf8 !important;
+}
+
+body.dark-mode .dataTables_info,
+body.dark-mode .pagination .page-link {
+    color: #cbd5e1 !important;
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+body.dark-mode .page-item.active .page-link {
+    background-color: #0d6efd !important;
+    color: white !important;
+}
+
+/* Texto de pesquisa e labels de tabela */
+body.dark-mode label,
+body.dark-mode .dataTables_length select {
+    color: #cbd5e1 !important;
+}
+
+body.dark-mode .text-muted {
+    color: #94a3b8 !important;
+    /* Substitui o cinza escuro por um claro */
+}
+
+body.dark-mode .text-secondary {
+    color: #cbd5e1 !important;
+}
+
+/* Correção específica para o Glossário no Modo Escuro */
+body.dark-mode .card h5,
+body.dark-mode .card h6,
+body.dark-mode .card .card-title {
+    color: #38bdf8 !important;
+    /* Azul brilhante para títulos */
+}
+
+body.dark-mode .card p,
+body.dark-mode .card span,
+body.dark-mode .card .card-text {
+    color: #cbd5e1 !important;
+    /* Cinza claro para o corpo do texto */
+}
+
+/* Se o título estiver dentro de um link ou strong */
+body.dark-mode .card strong,
+body.dark-mode .card b {
+    color: #f1f5f9 !important;
+    /* Branco acinzentado para negritos */
+}
+
+body.dark-mode .text-muted,
+body.dark-mode .text-secondary {
+    color: #94a3b8 !important;
+    /* Cinza azulado claro */
+}
+
+body.dark-mode .text-dark {
+    color: #f1f5f9 !important;
+    /* Garante que classes 'dark' fiquem claras */
+}
+
+body.dark-mode footer p,
+body.dark-mode footer span,
+body.dark-mode footer a:not(.btn) {
+    color: #94a3b8 !important;
+}
+
+body.dark-mode footer h1,
+body.dark-mode footer h2,
+body.dark-mode footer h3,
+body.dark-mode footer h4,
+body.dark-mode footer h5,
+body.dark-mode footer h6 {
+    color: #38bdf8 !important;
+}
+
+/* Garante visibilidade do texto nas células e cabeçalhos da tabela */
+body.dark-mode table.table {
+    color: #f1f5f9 !important;
+}
+
+body.dark-mode .table td,
+body.dark-mode .table th {
+    color: #cbd5e1 !important;
+    /* Cinza claro azulado */
+    border-bottom-color: #334155 !important;
+    /* Linhas de separação visíveis */
+}
+
+/* Ajuste do botão "Detalhes" dentro da tabela */
+body.dark-mode .btn-action-view {
+    background-color: rgba(56, 189, 248, 0.1) !important;
+    color: #38bdf8 !important;
+}
+
+body.dark-mode .btn-action-view:hover {
+    background-color: #38bdf8 !important;
+    color: #ffffff !important;
+}
+
+/* Título da secção no modo escuro */
+body.dark-mode .card-header h5,
+body.dark-mode .card-header span {
+    color: #38bdf8 !important;
+}
+
+/* Campo de Pesquisa (Input) */
+body.dark-mode .dataTables_filter input,
+body.dark-mode input.form-control {
+    background-color: #0f172a !important;
+    border-color: #334155 !important;
+    color: #f1f5f9 !important;
+}
+
+/* Botões de exportação (Excel/PDF) que estão apagados */
+body.dark-mode .dt-buttons .btn {
+    background-color: #334155 !important;
+    color: #cbd5e1 !important;
+    border: none !important;
+}
+
+body.dark-mode .summary-card p.text-muted {
+    color: #94a3b8 !important;
+    /* Cinza claro com contraste suficiente */
+}
+
+body.dark-mode .summary-card h2 {
+    color: #ffffff !important;
+}
+
+/* Correção definitiva para Tabelas no Modo Escuro */
+body.dark-mode .table {
+    --bs-table-bg: transparent !important;
+    /* Remove o fundo branco do Bootstrap */
+    color: #f8fafc !important;
+}
+
+body.dark-mode .table td {
+    background-color: transparent !important;
+    /* Força transparência nas células */
+    color: #cbd5e1 !important;
+    /* Cinza claro para os dados */
+    border-color: #334155 !important;
+    /* Linhas sutis entre os dados */
+    vertical-align: middle;
+}
+
+body.dark-mode .table th {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    color: #38bdf8 !important;
+    /* Azul para o cabeçalho */
+    border-color: #334155 !important;
+}
+
+/* Fix para o texto dos anos (2012, 2013...) que parece escuro na sua print */
+body.dark-mode .table td strong,
+body.dark-mode .table td b {
+    color: #f1f5f9 !important;
+}
+
+/* Campo de Pesquisa */
+body.dark-mode .dataTables_filter input {
+    background-color: #0f172a !important;
+    border: 1px solid #334155 !important;
+    color: #f1f5f9 !important;
+    border-radius: 8px;
+    padding: 5px 10px;
+}
+
+/* Botões Excel e PDF */
+body.dark-mode .dt-buttons .btn {
+    background-color: #334155 !important;
+    color: #f1f5f9 !important;
+    border: 1px solid #475569 !important;
+    opacity: 0.9;
+}
+
+body.dark-mode .dt-buttons .btn:hover {
+    background-color: #475569 !important;
+    opacity: 1;
+}
+
+body.dark-mode .card-header {
+    background-color: #1e293b !important;
+    border-bottom: 1px solid #334155 !important;
+}
+
+body.dark-mode .card-header h5 {
+    color: #38bdf8 !important;
+}
+
+body.dark-mode .card-header span.text-muted {
+    color: #94a3b8 !important;
+    /* Texto "Clique para expandir" */
+}
+
+/* Fix definitivo para o cabeçalho (th) da tabela no Modo Escuro */
+body.dark-mode table.dataTable thead th,
+body.dark-mode table.table thead th {
+    background-color: #1e293b !important;
+    /* Cor igual ao fundo do card */
+    color: #38bdf8 !important;
+    /* Azul brilhante para o texto */
+    border-bottom: 2px solid #334155 !important;
+    border-top: none !important;
+}
+
+/* Ajusta as setinhas de ordenação do DataTables que somem no escuro */
+body.dark-mode .table.dataTable thead .sorting::before,
+body.dark-mode .table.dataTable thead .sorting::after,
+body.dark-mode .table.dataTable thead .sorting_asc::before,
+body.dark-mode .table.dataTable thead .sorting_asc::after {
+    color: #f1f5f9 !important;
+    opacity: 0.3;
+}
+
+/* Remove qualquer linha branca que sobra no topo da tabela */
+body.dark-mode .dataTables_wrapper .table {
+    border-collapse: collapse !important;
+    background-color: transparent !important;
+}
+
+/* Remove o fundo branco forçado do Bootstrap/DataTables */
+body.dark-mode .table,
+body.dark-mode .table> :not(caption)>*>*,
+body.dark-mode .dataTables_wrapper .dataTables_scrollBody {
+    background-color: transparent !important;
+    color: #cbd5e1 !important;
+}
+
+/* Ajuste específico para o TH (Cabeçalho) */
+body.dark-mode table.dataTable thead th,
+body.dark-mode table.table thead th {
+    background-color: #1e293b !important;
+    /* Mesma cor do card */
+    color: #38bdf8 !important;
+    /* Azul para destaque */
+    border-bottom: 2px solid #334155 !important;
+}
+
+/* Breadcrumbs (Caminho da página) */
+body.dark-mode .breadcrumb-item,
+body.dark-mode .breadcrumb-item a {
+    color: #94a3b8 !important;
+}
+
+/* Texto dentro do Glossário Interativo */
+body.dark-mode .card-body p,
+body.dark-mode .card-body span {
+    color: #cbd5e1 !important;
+    /* Cinza claro */
+}
+
+/* Título sumido do Glossário */
+body.dark-mode #glossaryAccordion .card-header h6,
+body.dark-mode #glossaryAccordion .card-header span {
+    color: #38bdf8 !important;
+}
+
+/* Botão Detalhes na tabela */
+body.dark-mode .btn-outline-warning {
+    color: #ffc107 !important;
+    border-color: #ffc107 !important;
+    background-color: transparent !important;
+}
+
+body.dark-mode .btn-outline-warning:hover {
+    background-color: #ffc107 !important;
+    color: #000 !important;
+}
+
+/* Input de Pesquisa */
+body.dark-mode .dataTables_filter input {
+    background-color: #0f172a !important;
+    color: #f1f5f9 !important;
+    border: 1px solid #334155 !important;
+}
+
+/* Botão Login - Estilo Base */
+.btn-login {
+    background-color: transparent !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-main) !important;
+    transition: all 0.3s ease;
+}
+
+/* Hover e Estado Ativo no Dark Mode */
+body.dark-mode .btn-login {
+    border-color: var(--accent-color) !important;
+    color: var(--accent-color) !important;
+}
+
+body.dark-mode .btn-login:hover {
+    background-color: var(--glass-bg) !important;
+    color: var(--accent-color) !important;
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+}

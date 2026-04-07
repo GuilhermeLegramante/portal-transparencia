@@ -2,19 +2,13 @@
 
 @section('content')
     <div class="container">
-        <nav aria-label="breadcrumb" class="mb-4">
-            <ol class="breadcrumb bg-light p-2 rounded">
-                <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted">Planejamento</a></li>
-                <li class="breadcrumb-item text-muted">LOA</li>
-                <li class="breadcrumb-item text-muted">Receita</li>
-                <li class="breadcrumb-item text-muted">
-                    <a href="{{ route('planejamento.loa.receita', ['filtro' => 'elemento']) }}">
-                        Por Elemento</a>
-                </li>
-                <li class="breadcrumb-item active text-danger fw-bold" aria-current="page">Exercício {{ $exercicio }}
-                </li>
-            </ol>
-        </nav>
+        <x-breadcrumb :items="[
+            'Planejamento' => '/',
+            'LOA' => '#',
+            'Receita' => '#',
+            'Por Elemento' => route('planejamento.loa.receita', ['filtro' => 'elemento']),
+            'Exercício ' . $exercicio => '',
+        ]" />
 
         @include('layouts.partials.cards.loa')
 
@@ -56,11 +50,7 @@
             </tfoot>
         </x-tabela-transparencia>
 
-         
-
-        <a href="{{ route('planejamento.loa.despesa', ['filtro' => 'elemento']) }}" class="btn btn-secondary">
-            <i class="fa fa-arrow-left"></i> Voltar
-        </a>
+        @include('layouts.partials.back')
     </div>
 
     @push('scripts')

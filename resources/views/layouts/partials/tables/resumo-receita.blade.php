@@ -18,8 +18,8 @@
             </td> --}}
             <td class="text-center">
                 <a href="{{ route('planejamento.loa.receita.' . $filtro . '.detalhe', $resumo->exercicio) }}"
-                    class="btn btn-outline-secondary btn-sm">
-                    <i class="fa fa-edit me-1"></i> Visualizar
+                    class="btn btn-action-view btn-sm shadow-sm">
+                    <i class="fa fa-eye me-1"></i> Detalhes
                 </a>
             </td>
         </tr>
@@ -30,3 +30,4 @@
     @endforelse
 
 </x-tabela-transparencia>
+@include('layouts.partials.back')

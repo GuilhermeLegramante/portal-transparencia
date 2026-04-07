@@ -5,178 +5,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal da Transparência</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    @php
-        $client = env('CLIENT_NAME', 'default');
-    @endphp
-    <link rel="shortcut icon" href="{{ asset('img/' . $client . '.png') }}" type="image/x-icon">
-    <style>
-        /* Estilos personalizados para aproximar o design da imagem */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #fcfcfc;
-        }
-
-        .top-bar {
-            font-size: 0.85rem;
-            background-color: #f8f9fa;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .nav-link {
-            color: #555;
-            font-weight: 500;
-        }
-
-        .nav-link:hover,
-        .nav-link.active {
-            color: #d9534f;
-            border-bottom: 2px solid #d9534f;
-        }
-
-        /* Cores dos Cards de Resumo */
-        .card-green {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .card-red {
-            background-color: #E53935;
-            color: white;
-        }
-
-        .card-orange {
-            background-color: #FFB300;
-            color: white;
-        }
-
-        .card-blue {
-            background-color: #42A5F5;
-            color: white;
-        }
-
-        .summary-card {
-            padding: 20px;
-            text-align: right;
-            border-radius: 0;
-            border: none;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .summary-card h2 {
-            margin-bottom: 0;
-            font-size: 2.5rem;
-            font-weight: 300;
-        }
-
-        .summary-card p {
-            margin-bottom: 0;
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-
-        /* Rodapé */
-        footer {
-            background-color: #333;
-            color: #ccc;
-            font-size: 0.9rem;
-        }
-
-        footer h5 {
-            color: white;
-            font-weight: normal;
-            margin-bottom: 15px;
-        }
-
-        .footer-bottom {
-            background-color: #222;
-            font-size: 0.8rem;
-            padding: 15px 0;
-        }
-
-        /* Estilo para permitir submenus laterais */
-        .dropdown-submenu {
-            position: relative;
-        }
-
-        .dropdown-submenu .dropdown-menu {
-            top: 0;
-            left: 100%;
-            margin-top: -1px;
-            border-radius: 0;
-            display: none;
-            /* Escondido por padrão */
-        }
-
-        /* Mostra o submenu ao passar o mouse no item pai */
-        .dropdown-submenu:hover>.dropdown-menu {
-            display: block;
-        }
-
-        /* Estilização para ficar igual à imagem (Laranja) */
-        .dropdown-item:hover {
-            background-color: #f15a24;
-            /* Laranja da imagem */
-            color: white;
-        }
-
-        .dropdown-item.active,
-        .dropdown-item:active {
-            background-color: #f15a24;
-        }
-
-        /* Ajuste na seta do submenu */
-        .dropdown-submenu>a::after {
-            display: inline-block;
-            float: right;
-            margin-top: 5px;
-            content: "\f105";
-            /* Ícone de seta do Font Awesome */
-            font-family: "Font Awesome 6 Free";
-            font-weight: 600;
-            border: none;
-        }
-    </style>
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 
+    @php $client = config('app.client_name', 'default'); @endphp
+    <link rel="shortcut icon" href="{{ asset('img/' . $client . '.png') }}" type="image/x-icon">
 
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 </head>
 
 <body>
-    @php
-        // Dados do Cliente
-        $client = env('CLIENT_NAME', 'default');
-        $nomeCliente = env('CLIENT_FULL_NAME', 'Prefeitura Municipal');
-        $cnpjCliente = env('CLIENT_CNPJ', '00.000.000/0000-00');
+    <a href="#conteudo" class="skip-link">Pular para o conteúdo principal</a>
 
-        // Busca o logo
-        $logoPath = public_path('img/' . $client . '.png');
-        $logoBase64 = '';
-        if (file_exists($logoPath)) {
-            $logoData = file_get_contents($logoPath);
-            $logoBase64 = 'data:image/png;base64,' . base64_encode($logoData);
-        }
+    @php
+        $nomeCliente = config('app.client_full_name', 'Prefeitura Municipal');
+        $cnpjCliente = config('app.client_cnpj', '00.000.000/0000-00');
+        $logoPath = public_path('img/' . config('app.client_name') . '.png');
+        $logoBase64 = file_exists($logoPath)
+            ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath))
+            : '';
     @endphp
 
+    <div class="accessibility-bar d-none d-md-block">
+        <div class="container d-flex justify-content-between align-items-center py-1">
+            <div class="access-links">
+                <a href="#conteudo" accesskey="1" class="me-3 small text-decoration-none">Ir para o conteúdo [1]</a>
+                <a href="#menu" accesskey="2" class="me-3 small text-decoration-none">Ir para o menu [2]</a>
+            </div>
+            <div class="access-controls d-flex gap-3">
+                <div class="btn-group btn-group-sm">
+                    <button onclick="changeFontSize('increase')" class="btn btn-light border shadow-sm">A+</button>
+                    <button onclick="changeFontSize('decrease')" class="btn btn-light border shadow-sm">A-</button>
+                </div>
+                {{-- <button id="toggle-contrast" class="btn btn-sm btn-dark shadow-sm">
+                    <i class="bi bi-circle-half"></i> Contraste
+                </button> --}}
+                <button id="toggle-dark-mode" class="btn btn-sm btn-outline-dark shadow-sm">
+                    <i id="dark-mode-icon" class="bi bi-moon-stars"></i>
+                    <span id="dark-mode-text" class="ms-1 d-none d-lg-inline">Modo Escuro</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="loader">
+        <div class="spinner-grow text-primary" role="status"></div>
+        <p class="mt-3 text-muted fw-medium">Sincronizando dados...</p>
+    </div>
+
     @include('layouts.partials.topbar')
+    <div class="sticky-top shadow-sm">
+        @include('layouts.partials.navbar')
+    </div>
 
-    @include('layouts.partials.navbar')
-
-    <main class="py-4">
-        @yield('content')
+    <main id="conteudo" class="py-5 min-vh-100">
+        <div class="container">
+            @yield('content')
+        </div>
     </main>
 
     @include('layouts.partials.footer')
 
-    @stack('scripts')
-
-    <script src="{{ asset('js/highcharts.js') }}"></script>
-
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
@@ -187,109 +84,108 @@
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
 
+    <script>
+        const CLIENT_CONFIG = {
+            name: @json($nomeCliente),
+            cnpj: @json($cnpjCliente),
+            logo: @json($logoBase64)
+        };
+    </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('js/accessibility.js') }}"></script>
+    {{-- <script src="{{ asset('js/datatables-config.js') }}"></script> --}}
+    <script src="{{ asset('js/ui-features.js') }}"></script>
 
     <script>
         $(document).ready(function() {
             $('.js-datatable').each(function() {
-                // Captura o título do card-header mais próximo para usar na exportação
-                var tituloCard = $(this).closest('.card').find('.card-header span').text().trim();
+                // 1. Captura correta do título (pegando o h5)
+                var tituloCard = $(this).closest('.card').find('.card-header h5').text().trim();
 
-                // Captura as variáveis PHP para o JS de forma segura
                 var nomeCliente = {!! json_encode($nomeCliente) !!};
                 var cnpjCliente = {!! json_encode($cnpjCliente) !!};
 
+                // Captura a orientação vinda do PHP (padrão 'portrait' se não vier nada)
+                const orientacaoPDF = {!! json_encode($orientacaoPDF ?? 'portrait') !!};
+
                 if (!$.fn.DataTable.isDataTable(this)) {
                     $(this).DataTable({
+                        "order": [], // <-- Garante que o plugin não aplique nenhuma ordenação automática
                         "language": {
                             "url": "https://cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
                         },
                         "pageLength": 25,
-                        "order": [],
                         "dom": '<"d-flex justify-content-between align-items-center mb-2" <"d-flex align-items-center"B l> f>rtip',
-
                         "buttons": [{
                                 extend: 'excelHtml5',
-                                text: '<i class="fa fa-file-excel me-1"></i> Excel',
-                                className: 'btn btn-success btn-sm border-0 shadow-sm me-1',
-                                title: tituloCard, // Título da planilha (dentro do arquivo)
-                                filename: 'Exportacao_' + tituloCard.replace(/\s+/g,
-                                    '_'), // Nome do arquivo .xlsx
+                                // Usamos span para melhor controle de estilo do ícone
+                                text: '<span class="d-flex align-items-center"><i class="fas fa-file-excel fs-6 me-2"></i> EXCEL</span>',
+                                className: 'btn btn-modern-excel btn-sm shadow-sm me-2',
+                                title: tituloCard,
+                                filename: 'Exportacao_' + tituloCard.replace(/\s+/g, '_'),
                                 footer: true,
-                                messageTop: 'Relatório gerado em: ' + new Date().toLocaleString(
-                                    'pt-BR')
+                                // FILTRO: Exporta apenas colunas que NÃO tenham o título "Ação"
+                                exportOptions: {
+                                    columns: function(idx, data, node) {
+                                        // Pega o texto do th correspondente ao índice da coluna
+                                        let headerText = $(node).closest('table').find(
+                                            'thead th').eq(idx).text().trim();
+
+                                        // Retorna falso (não exporta) se:
+                                        // 1. O texto for "Ação" ou "Ações"
+                                        // 2. O texto for vazio (colunas sem título)
+                                        return headerText !== "" && headerText !== "Ação" &&
+                                            headerText !== "Ações";
+                                    }
+                                }
                             },
                             {
                                 extend: 'pdfHtml5',
-                                text: '<i class="fa fa-file-pdf me-1"></i> PDF',
-                                className: 'btn btn-danger btn-sm border-0 shadow-sm me-1',
-                                title: '', // Deixamos vazio para construir o título manualmente no customize
-                                exportOptions: {
-                                    columns: ':visible'
-                                },
+                                text: '<span class="d-flex align-items-center"><i class="fas fa-file-pdf fs-6 me-2"></i> PDF</span>',
+                                className: 'btn btn-modern-pdf btn-sm shadow-sm me-2',
+                                title: '',
                                 footer: true,
-                                orientation: 'portrait',
-                                // Configuração do Nome do Arquivo
+                                orientation: orientacaoPDF,
+                                exportOptions: {
+                                    columns: function(idx, data, node) {
+                                        // Pega o texto do th correspondente ao índice da coluna
+                                        let headerText = $(node).closest('table').find(
+                                            'thead th').eq(idx).text().trim();
+
+                                        // Retorna falso (não exporta) se:
+                                        // 1. O texto for "Ação" ou "Ações"
+                                        // 2. O texto for vazio (colunas sem título)
+                                        return headerText !== "" && headerText !== "Ação" &&
+                                            headerText !== "Ações";
+                                    }
+                                },
                                 filename: function() {
-                                    // Usamos a variável tituloCard que foi capturada no início do loop .each()
-                                    // Isso evita erros de escopo com o 'this'
-                                    var nomeArquivo = tituloCard.replace(/[\s/]+/g, '_');
-
-                                    var agora = new Date();
-                                    var dataHora = agora.toLocaleDateString('pt-BR')
-                                        .replace(/\//g, '-') + '_' +
-                                        agora.getHours() + 'h' + agora.getMinutes();
-
-                                    return nomeArquivo + '_' + dataHora;
+                                    const dataHora = new Date().toLocaleString('pt-BR')
+                                        .replace(/[\/:]/g, '-').replace(/, /g, '_');
+                                    return tituloCard.replace(/[\s/]+/g, '_') + '_' +
+                                        dataHora;
                                 },
                                 customize: function(doc) {
-                                    // Localizar a tabela de dados dentro do documento
-                                    var tabelaDados;
-
+                                    // 2. Localizar a tabela principal (geralmente é o último item do content antes do splice)
+                                    var tabelaPrincipal = null;
                                     doc.content.forEach(function(item) {
-                                        if (item.table && item.table.body) {
-                                            // Ignoramos a tabela do cabeçalho (que tem o logo) 
-                                            // identificando-a pela quantidade de colunas ou conteúdo
-                                            if (item.table.body[0].length > 3) {
-                                                tabelaDados = item;
-                                            }
+                                        if (item.table && item.table.body && item
+                                            .table.body[0].length > 1) {
+                                            tabelaPrincipal = item;
                                         }
                                     });
 
-                                    if (tabelaDados) {
-                                        // 1. OBRIGA A TABELA A OCUPAR 100% DA LARGURA
-                                        // O '*' distribui as colunas proporcionalmente
-                                        tabelaDados.table.widths = Array(tabelaDados.table
-                                            .body[0].length).fill('*');
+                                    if (tabelaPrincipal) {
+                                        // FORÇAR 100% DE LARGURA
+                                        // O '*' faz com que cada coluna divida o espaço disponível igualmente
+                                        tabelaPrincipal.table.widths = Array(tabelaPrincipal
+                                            .table.body[0].length).fill('*');
 
-                                        // 2. LIMPAR "TOTAIS" REPETIDOS NO RODAPÉ
-                                        var footerRow = tabelaDados.table.body[tabelaDados
-                                            .table.body.length - 1];
-                                        var encontrouPrimeiro = false;
+                                        // Margens da tabela
+                                        tabelaPrincipal.margin = [0, 5, 0, 5];
 
-                                        // Inverte a lógica: percorre as células do final para o início
-                                        var footerRow = tabelaDados.table.body[tabelaDados
-                                            .table.body.length - 1];
-                                        var encontrouUltimo = false;
-
-                                        // Clonamos o array e invertemos para achar o "primeiro de trás pra frente"
-                                        footerRow.slice().reverse().forEach(function(
-                                        celula) {
-                                            if (celula.text && celula.text.includes(
-                                                    'TOTAIS')) {
-                                                if (!encontrouUltimo) {
-                                                    // Este é o último "TOTAIS" da linha original, mantém ele
-                                                    encontrouUltimo = true;
-                                                } else {
-                                                    // Já encontramos o último, então limpa os anteriores
-                                                    celula.text = '';
-                                                }
-                                            }
-                                        });
-
-                                        // 3. REMOVE LINHAS VERTICAIS E AJUSTA BORDAS (Estilo da imagem)
-                                        tabelaDados.layout = {
+                                        // Estilo das linhas (sem verticais, igual à imagem)
+                                        tabelaPrincipal.layout = {
                                             hLineWidth: function(i) {
                                                 return 0.5;
                                             },
@@ -297,153 +193,124 @@
                                                 return 0;
                                             },
                                             hLineColor: function(i) {
-                                                return '#aaa';
+                                                return '#e2e8f0';
                                             },
                                             paddingLeft: function(i) {
-                                                return 4;
+                                                return 8;
                                             },
                                             paddingRight: function(i) {
-                                                return 4;
+                                                return 8;
+                                            },
+                                            paddingTop: function(i) {
+                                                return 6;
+                                            },
+                                            paddingBottom: function(i) {
+                                                return 6;
                                             }
                                         };
                                     }
 
-                                    // 1. ZERAR ESTILOS GERAIS PARA FORÇAR O NOSSO
-                                    doc.defaultStyle.fontSize = 6;
-
-                                    // Estilização da tabela de dados para ficar "limpa" como a da imagem
-                                    doc.styles.tableHeader = {
-                                        fillColor: '#ffffff',
-                                        color: '#000000',
-                                        bold: true,
-                                        fontSize: 6,
-                                        alignment: 'left',
-                                        border: [false, true, false,
-                                            true
-                                        ] // Linhas apenas em cima e embaixo
-                                    };
-
-                                    // 3. DIMINUIR A FONTE DO RODAPÉ (TOTAIS)
-                                    doc.styles.tableFooter = {
-                                        fontSize: 6,
-                                        bold: true
-                                    };
-
-                                    var logo =
-                                        "{{ $logoBase64 }}"; // Variável PHP convertida
-
-                                    // Criamos um cabeçalho personalizado com 3 colunas (Logo | Texto | Info)
+                                    // 3. Inserir cabeçalho personalizado
+                                    var logo = "{{ $logoBase64 }}";
                                     doc.content.splice(0, 0, {
-                                        margin: [0, 0, 0, 12],
+                                        margin: [0, 0, 0, 20],
                                         table: {
-                                            widths: [80, '*', 150],
+                                            widths: [60, '*', 120],
                                             body: [
                                                 [{
                                                         image: logo,
-                                                        width: 60,
+                                                        width: 50,
                                                         alignment: 'left'
                                                     },
                                                     {
                                                         stack: [{
                                                                 text: tituloCard
                                                                     .toUpperCase(),
-                                                                fontSize: 16,
+                                                                fontSize: 14,
+                                                                bold: true,
+                                                                color: '#1e293b'
+                                                            },
+                                                            {
+                                                                text: nomeCliente,
+                                                                fontSize: 10,
                                                                 bold: true,
                                                                 margin: [0,
-                                                                    5,
+                                                                    2,
                                                                     0, 0
                                                                 ]
                                                             },
                                                             {
-                                                                text: nomeCliente, // VARIÁVEL DINÂMICA
-                                                                fontSize: 12,
-                                                                bold: true
-                                                            },
-                                                            {
                                                                 text: 'CNPJ: ' +
-                                                                    cnpjCliente, // VARIÁVEL DINÂMICA
-                                                                fontSize: 8
+                                                                    cnpjCliente,
+                                                                fontSize: 8,
+                                                                color: '#64748b'
                                                             }
                                                         ],
                                                         alignment: 'left'
                                                     },
                                                     {
                                                         stack: [{
-                                                                text: 'Página: 1/1',
+                                                                text: 'RELATÓRIO DE SISTEMA',
+                                                                fontSize: 7,
                                                                 alignment: 'right',
-                                                                fontSize: 6
+                                                                bold: true
                                                             },
                                                             {
-                                                                text: '\nEmissão: ' +
+                                                                text: 'Emissão: ' +
                                                                     new Date()
                                                                     .toLocaleString(
                                                                         'pt-BR'
                                                                     ),
-                                                                alignment: 'right',
-                                                                fontSize: 6
+                                                                fontSize: 7,
+                                                                alignment: 'right'
                                                             }
                                                         ]
                                                     }
                                                 ]
                                             ]
                                         },
-                                        layout: 'noBorders' // Remove as bordas apenas deste cabeçalho
+                                        layout: 'noBorders'
                                     });
 
-
-
-                                    // Ajusta as bordas da tabela principal
-                                    var objLayout = {};
-                                    objLayout['hLineWidth'] = function(i) {
-                                        return (i === 1 || i === doc.content[1].table
-                                            .body.length) ? 1 : 0.5;
+                                    // Ajustes de fontes globais
+                                    doc.defaultStyle.fontSize = 8;
+                                    doc.styles.tableHeader = {
+                                        fillColor: '#f8fafc',
+                                        color: '#475569',
+                                        bold: true,
+                                        fontSize: 8,
+                                        alignment: 'left'
                                     };
-                                    objLayout['vLineWidth'] = function(i) {
-                                        return 0;
-                                    }; // Remove linhas verticais como na imagem
-                                    objLayout['hLineColor'] = function(i) {
-                                        return '#333';
+
+                                    // 1. Defina o rodapé dinâmico (Footer) para todas as páginas
+                                    doc['footer'] = function(currentPage, pageCount) {
+                                        return {
+                                            columns: [{
+                                                    text: 'Relatório Gerado pelo Sistema',
+                                                    alignment: 'left',
+                                                    margin: [40, 0],
+                                                    fontSize: 7
+                                                },
+                                                {
+                                                    text: 'Página ' + currentPage
+                                                        .toString() + ' de ' +
+                                                        pageCount,
+                                                    alignment: 'right',
+                                                    margin: [0, 0, 40, 0],
+                                                    fontSize: 7
+                                                }
+                                            ],
+                                            margin: [0, 10, 0, 0]
+                                        };
                                     };
-                                    doc.content[1].layout = objLayout;
                                 }
                             }
-                        ],
-                        "drawCallback": function() {
-                            $('.dataTables_filter input').addClass(
-                                'form-control form-control-sm ms-2');
-                            $('.dataTables_length select').addClass(
-                                'form-select form-select-sm ms-2 me-2');
-                        }
+                        ]
                     });
                 }
             });
         });
-
-        // Selecionamos o nosso carrossel pelo ID
-        const myCarousel = document.getElementById('portalCarousel');
-
-        // Este evento do Bootstrap dispara toda vez que um slide começa a transição
-        myCarousel.addEventListener('slide.bs.carousel', event => {
-
-            // Buscamos todos os elementos que têm classes de animação dentro do carrossel
-            const animatedElements = event.target.querySelectorAll('.animate__animated');
-
-            animatedElements.forEach(el => {
-                // Descobrimos qual era a animação original (ex: animate__fadeInLeft)
-                const animationClass = Array.from(el.classList).find(cl => cl.startsWith('animate__'));
-
-                // Removemos a animação para "resetar" o elemento
-                el.classList.remove(animationClass);
-
-                // Forçamos o navegador a registrar a remoção e reiniciamos a animação
-                // Isso é um truque técnico (void el.offsetWidth) para reiniciar o ciclo de CSS
-                void el.offsetWidth;
-                el.classList.add(animationClass);
-            });
-        });
     </script>
-
-
 </body>
 
 </html>

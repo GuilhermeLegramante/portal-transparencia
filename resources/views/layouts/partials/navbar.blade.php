@@ -1,19 +1,24 @@
-<nav class="navbar navbar-expand-lg bg-white shadow-sm py-3">
+<nav id="menu" class="navbar navbar-expand-lg bg-white shadow-sm py-3">
     <div class="container">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="{{ route('home') }}">
             @php
-                $client = env('CLIENT_NAME', 'default');
+                $client = config('app.client_name', 'default');
+                $baseUrl = "https://transp.hardsoftsfa.com/{$client}/despesa/";
             @endphp
             <img src="{{ asset('img/' . $client . '.png') }}" alt="Logo" style="height: 50px;">
         </a>
 
         <div class="collapse navbar-collapse justify-content-center">
             <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link active" href="#">Início</a></li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}"
+                        href="{{ route('home') }}">Início</a>
+                </li>
 
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarPlanejamento" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle {{ request()->is('planejamento*') ? 'active fw-bold' : '' }}"
+                        href="#" id="navbarPlanejamento" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
                         Planejamento
                     </a>
                     <ul class="dropdown-menu shadow border-0" aria-labelledby="navbarPlanejamento">
@@ -61,25 +66,42 @@
                 </li>
 
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDespesa" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle {{ request()->is('despesa*') ? 'active fw-bold' : '' }}"
+                        href="#" id="navbarDespesa" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
                         Despesa
                     </a>
                     <ul class="dropdown-menu shadow border-0" aria-labelledby="navbarDespesa">
-                        <li><a class="dropdown-item" href="{{ route('despesa.diarias.resumo') }}">Diária</a></li>
-                        <li><a class="dropdown-item" href="#">Decreto</a></li>
-                        <li><a class="dropdown-item" href="#">Repasse</a></li>
-                        <li><a class="dropdown-item" href="#">Duodécimo</a></li>
+                        <li><a class="dropdown-item" href="{{ route('despesa.diarias.resumo') }}">Diárias</a></li>
+                        <li><a class="dropdown-item" href="{{ $baseUrl }}decreto">Decreto</a></li>
+                        <li><a class="dropdown-item" href="{{ $baseUrl }}repasse">Repasse</a></li>
+                        <li><a class="dropdown-item" href="{{ $baseUrl }}duodecimo">Duodécimo</a></li>
 
                         <li class="dropdown-submenu">
                             <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
                                 Empenho Orçamentário
                             </a>
                             <ul class="dropdown-menu shadow border-0">
-                                <li><a class="dropdown-item" href="#">Por Credor</a></li>
-                                <li><a class="dropdown-item" href="#">Por Elemento</a></li>
-                                <li><a class="dropdown-item" href="#">Por Órgão</a></li>
-                                <li><a class="dropdown-item" href="#">Por Recurso</a></li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('empenho.credor.index') }}">
+                                        Por Credor
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('empenho.elemento.index') }}">
+                                        Por Elemento
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('empenho.orgao.index') }}">
+                                        Por Órgão
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('empenho.recurso.index') }}">
+                                        Por Recurso
+                                    </a>
+                                </li>
                             </ul>
                         </li>
 
@@ -88,45 +110,84 @@
                                 Execução Orçamentária
                             </a>
                             <ul class="dropdown-menu shadow border-0">
-                                <li><a class="dropdown-item" href="#">Por Elemento</a></li>
-                                <li><a class="dropdown-item" href="#">Por Órgão</a></li>
-                                <li><a class="dropdown-item" href="#">Por Recurso</a></li>
-                                <li><a class="dropdown-item" href="#">Por Localizador</a></li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('execucao.elemento.index') }}">
+                                        Por Elemento
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('execucao.orgao.index') }}">
+                                        Por Órgão
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('execucao.recurso.index') }}">
+                                        Por Recurso
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('execucao.localizador.index') }}">
+                                        Por Localizador
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     </ul>
                 </li>
 
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarReceita" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle {{ request()->is('receita*') ? 'active fw-bold' : '' }}"
+                        href="#" id="navbarReceita" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
                         Receita
                     </a>
                     <ul class="dropdown-menu shadow border-0" aria-labelledby="navbarReceita">
+
+                        {{-- ARRECADAÇÃO --}}
                         <li class="dropdown-submenu">
                             <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
-                                Arrecadação
+                                Arrecadação <i class="fa fa-chevron-right ms-2" style="font-size: 0.7rem;"></i>
                             </a>
                             <ul class="dropdown-menu shadow border-0">
-                                <li><a class="dropdown-item" href="#">Por Elemento</a></li>
-                                <li><a class="dropdown-item" href="#">Por Recurso</a></li>
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="{{ route('receita.arrecadacao.elemento.index') }}">
+                                        Por Elemento
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('receita.arrecadacao.recurso.index') }}">
+                                        Por Recurso
+                                    </a>
+                                </li>
                             </ul>
                         </li>
 
+                        {{-- EXECUÇÃO ORÇAMENTÁRIA --}}
                         <li class="dropdown-submenu">
                             <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
-                                Execução Orçamentária
+                                Execução Orçamentária <i class="fa fa-chevron-right ms-2"
+                                    style="font-size: 0.7rem;"></i>
                             </a>
                             <ul class="dropdown-menu shadow border-0">
-                                <li><a class="dropdown-item" href="#">Por Elemento</a></li>
-                                <li><a class="dropdown-item" href="#">Por Recurso</a></li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('receita.execucao.elemento.index') }}">
+                                        Por Elemento
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('receita.execucao.recurso.index') }}">
+                                        Por Recurso
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarCompras" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle {{ request()->is('compras*') ? 'active fw-bold' : '' }}"
+                        href="#" id="navbarCompras" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
                         Compras
                     </a>
                     <ul class="dropdown-menu shadow border-0" aria-labelledby="navbarCompras">
@@ -135,26 +196,55 @@
                                 Licitações
                             </a>
                             <ul class="dropdown-menu shadow border-0">
-                                <li><a class="dropdown-item" href="#">Processo Licitatório</a></li>
-                                <li><a class="dropdown-item" href="#">Contrato Administrativo</a></li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('compras.licitacoes.processo.index') }}">
+                                        Processo Licitatório
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('compras.licitacoes.contrato.index') }}">
+                                        Contrato Administrativo
+                                    </a>
+                                </li>
                             </ul>
                         </li>
 
-                        <li><a class="dropdown-item" href="#">Registro de Preços</a></li>
+                        <li><a class="dropdown-item" href="{{ route('compras.registro-preco.index') }}">Registro de
+                                Preços</a></li>
 
                         <li class="dropdown-submenu">
                             <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
                                 Requisição de Compras
                             </a>
                             <ul class="dropdown-menu shadow border-0">
-                                <li><a class="dropdown-item" href="#">Por Fornecedor</a></li>
-                                <li><a class="dropdown-item" href="#">Por Solicitação</a></li>
+                                {{-- Rota: Requisição por Fornecedor --}}
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="{{ route('compras.requisicao.fornecedor.index') }}">
+                                        Por Fornecedor
+                                    </a>
+                                </li>
+
+                                {{-- Rota: Requisição por Solicitante (Secretarias) --}}
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="{{ route('compras.requisicao.solicitante.index') }}">
+                                        Por Solicitante
+                                    </a>
+                                </li>
+
+                                {{-- Rota: Requisição por Elemento de Despesa --}}
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('compras.requisicao.elemento.index') }}">
+                                        Por Elemento
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarPessoal" role="button"
+                    <a class="nav-link dropdown-toggle {{ request()->is('pessoal*') ? 'active fw-bold' : '' }}" href="#" id="navbarPessoal" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         Pessoal
                     </a>
@@ -162,12 +252,36 @@
                         <li class="dropdown-submenu">
                             <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
                                 Quadro Funcional
+                                <i class="fa fa-chevron-right small"></i>
                             </a>
                             <ul class="dropdown-menu shadow border-0">
-                                <li><a class="dropdown-item" href="#">Por Função</a></li>
-                                <li><a class="dropdown-item" href="#">Por Lotação</a></li>
-                                <li><a class="dropdown-item" href="#">Por Regime</a></li>
+                                {{-- Rota: Quadro por Função --}}
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('pessoal.quadro.funcao') }}">
+                                        Por Função
+                                    </a>
+                                </li>
 
+                                {{-- Rota: Quadro por Lotação --}}
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('pessoal.quadro.lotacao') }}">
+                                        Por Lotação
+                                    </a>
+                                </li>
+
+                                {{-- Rota: Quadro por Regime --}}
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('pessoal.quadro.regime') }}">
+                                        Por Regime
+                                    </a>
+                                </li>
+
+                                {{-- Rota: Relação Nominal / Por Servidor --}}
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('pessoal.quadro.servidor') }}">
+                                        Por Servidor
+                                    </a>
+                                </li>
                             </ul>
                         </li>
 
@@ -197,13 +311,15 @@
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarAjuda" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle {{ request()->is('ajuda*') ? 'active fw-bold' : '' }}"
+                        href="#" id="navbarAjuda" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
                         Ajuda
                     </a>
                     <ul class="dropdown-menu shadow border-0" aria-labelledby="navbarAjuda">
                         <li><a class="dropdown-item" href="#">Glossário</a></li>
-                        <li><a class="dropdown-item" href="#">Perguntas Frequentes (FAQ)</a></li>
+                        <li><a class="dropdown-item" href="{{ route('ajuda.faq') }}">Perguntas Frequentes (FAQ)</a>
+                        </li>
                         <li><a class="dropdown-item" href="#">Links Úteis</a></li>
                     </ul>
                 </li>

@@ -14,7 +14,7 @@ class PlanejamentoController extends Controller
     public function resumoDespesa($filtro)
     {
         // Suposição de valores (você pode pegar do request ou da sessão)
-        $idCliente = env('CLIENT_ID');
+        $idCliente = config('app.client_id');
 
         $resumoAnual = DB::table('ctbcontadespesa as despesa')
             ->select([
@@ -87,7 +87,7 @@ class PlanejamentoController extends Controller
      */
     public function despesaPorElementoDetalhePorExercicio($exercicio)
     {
-        $idCliente = env('CLIENT_ID');
+        $idCliente = config('app.client_id');
 
         // 1. Definimos a query base (a que você já tinha)
         $subQuery = DB::table('ctbelemento as elemento')
@@ -125,7 +125,8 @@ class PlanejamentoController extends Controller
         // 3. Extraímos os dados paginados (Apenas os 25 desta página)
         $data = $queryBaseExterna
             ->orderBy('estrutural')
-            ->paginate(25);
+            // ->paginate(25); por causa do datatables vou trazer todos os dados e paginar no frontend
+            ->get();
 
         return view('planejamento.loa.despesa.elemento.detalhe', compact('data', 'exercicio', 'totalGeralOrcado'));
     }
@@ -136,7 +137,7 @@ class PlanejamentoController extends Controller
      */
     public function despesaPorOrgaoDetalhePorExercicio($exercicio)
     {
-        $idCliente = env('CLIENT_ID');
+        $idCliente = config('app.client_id');
 
         // Query agrupada por Órgão
         $queryOrgao = DB::table('ctbcontadespesa as contaDespesa')
@@ -178,7 +179,8 @@ class PlanejamentoController extends Controller
         // 3. Agora aplicamos a ordenação e a paginação para a tabela
         $data = $queryBaseOrgao
             ->orderByRaw('CAST(codigo AS UNSIGNED) ASC')
-            ->paginate(15);
+            // ->paginate(25); por causa do datatables vou trazer todos os dados e paginar no frontend
+            ->get();
 
         return view('planejamento.loa.despesa.orgao.detalhe', compact('data', 'exercicio', 'totalGeralOrcado'));
     }
@@ -189,7 +191,7 @@ class PlanejamentoController extends Controller
      */
     public function despesaPorRecursoDetalhePorExercicio($exercicio)
     {
-        $idCliente = env('CLIENT_ID');
+        $idCliente = config('app.client_id');
 
         // Query Base: Busca os recursos e soma o orçamento vinculado a cada um
         $subQueryRecurso = DB::table('ctbrecursovinculado as vinculo')
@@ -222,14 +224,15 @@ class PlanejamentoController extends Controller
         // 3. Agora sim, aplica ordenação e paginação para os dados da tabela
         $data = $queryBaseExterna
             ->orderBy('codigo')
-            ->paginate(15);
+            // ->paginate(25); por causa do datatables vou trazer todos os dados e paginar no frontend
+            ->get();
 
         return view('planejamento.loa.despesa.recurso.detalhe', compact('data', 'exercicio', 'totalGeralOrcado'));
     }
 
     public function resumoReceita($filtro)
     {
-        $idCliente = env('CLIENT_ID');
+        $idCliente = config('app.client_id');
 
         $resumoAnual = DB::table('ctbcontareceita as receita')
             ->select([
@@ -276,7 +279,7 @@ class PlanejamentoController extends Controller
      */
     public function receitaPorElementoDetalhePorExercicio($exercicio)
     {
-        $idCliente = env('CLIENT_ID');
+        $idCliente = config('app.client_id');
 
         // 1. Query Base: Agrupando por Elemento (Natureza)
         $subQuery = DB::table('ctbcontareceita as contaReceita')
@@ -322,7 +325,7 @@ class PlanejamentoController extends Controller
      */
     public function receitaPorRecursoDetalhePorExercicio($exercicio)
     {
-        $idCliente = env('CLIENT_ID');
+        $idCliente = config('app.client_id');
 
         // 1. Definimos a Subquery (Lógica interna do SQL)
         $subQuery = DB::table('ctbrecursovinculado as vinculo')
@@ -357,7 +360,8 @@ class PlanejamentoController extends Controller
         // 3. Agora sim, aplica ordenação e paginação para os dados da tabela
         $data = $queryExterna
             ->orderBy('codigo')
-            ->paginate(15);
+            // ->paginate(25); por causa do datatables vou trazer todos os dados e paginar no frontend
+            ->get();
 
         return view('planejamento.loa.receita.recurso.detalhe', compact('data', 'exercicio', 'totalGeralOrcado'));
     }

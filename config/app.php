@@ -4,6 +4,11 @@ use Illuminate\Support\Facades\Facade;
 
 return [
 
+    'client_id' => env('CLIENT_ID'),
+    'client_name' => env('CLIENT_NAME', 'Cliente Padrão'),
+    'client_full_name' => env('CLIENT_FULL_NAME', 'Prefeitura Municipal'),
+    'client_cnpj' => env('CLIENT_CNPJ', '00.000.000/0000-00'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Name
