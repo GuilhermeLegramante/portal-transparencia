@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ContratoController;
+use App\Http\Controllers\CronogramaPagamentoController;
 use App\Http\Controllers\DespesaController;
 use App\Http\Controllers\EmpenhoCredorController;
 use App\Http\Controllers\EmpenhoElementoController;
@@ -10,12 +11,17 @@ use App\Http\Controllers\ExecucaoElementoController;
 use App\Http\Controllers\ExecucaoLocalizadorController;
 use App\Http\Controllers\ExecucaoOrgaoController;
 use App\Http\Controllers\ExecucaoRecursoController;
+use App\Http\Controllers\FolhaPagamentoController;
 use App\Http\Controllers\LicitacaoController;
+use App\Http\Controllers\ParlamentarController;
+use App\Http\Controllers\PatrimonioController;
 use App\Http\Controllers\PlanejamentoController;
+use App\Http\Controllers\PublicacaoController;
 use App\Http\Controllers\QuadroFuncionalController;
 use App\Http\Controllers\ReceitaController;
 use App\Http\Controllers\RegistroPrecoController;
 use App\Http\Controllers\RequisicaoController;
+use App\Http\Controllers\SessaoController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -231,6 +237,40 @@ Route::prefix('pessoal/quadro')->name('pessoal.quadro.')->group(function () {
 
     // Detalhes (chamadas AJAX ou expansão)
     Route::get('/detalhes/{tipo}/{idCategoria}', [QuadroFuncionalController::class, 'showDetalhes'])->name('detalhes');
+});
+
+Route::prefix('pessoal/folha')->name('pessoal.folha.')->group(function () {
+    // Nível 1: Listagens Agrupadas
+    Route::get('/funcao', [FolhaPagamentoController::class, 'porFuncao'])->name('funcao');
+    Route::get('/lotacao', [FolhaPagamentoController::class, 'porLotacao'])->name('lotacao');
+    Route::get('/regime', [FolhaPagamentoController::class, 'porRegime'])->name('regime');
+    Route::get('/servidor', [FolhaPagamentoController::class, 'porServidor'])->name('servidor');
+
+    // Nível 2: Detalhamento de Contratos (O nome aqui deve ser 'contratos')
+    // A URL aceita o {tipo} (funcao, lotacao ou regime) para reutilizar a mesma lógica
+    Route::get('/detalhes/{tipo}/{exercicio}/{mes}/{idCategoria}', [FolhaPagamentoController::class, 'showContratos'])->name('contratos');
+
+    // Nível 3: Contracheque Individual
+    Route::get('/contracheque/{exercicio}/{mes}/{idContrato}', [FolhaPagamentoController::class, 'showContracheque'])->name('contracheque');
+});
+
+Route::get('/financas/cronograma', [CronogramaPagamentoController::class, 'index'])->name('financas.cronograma');
+
+Route::prefix('patrimonio')->name('patrimonio.')->group(function () {
+    Route::get('/', [PatrimonioController::class, 'index'])->name('index');
+    Route::get('/detalhar/{id}', [PatrimonioController::class, 'show'])->name('show');
+});
+
+Route::get('/transparencia/publicacoes', [PublicacaoController::class, 'index'])->name('publicacoes.index');
+
+Route::prefix('parlamentar')->name('parlamentar.')->group(function () {
+    Route::get('/', [ParlamentarController::class, 'index'])->name('index');
+
+    Route::prefix('sessoes')->name('sessao.')->group(function () {
+        Route::get('/', [SessaoController::class, 'index'])->name('index');
+        Route::get('/{id}', [SessaoController::class, 'show'])->name('show');
+        Route::get('/projeto/{idProtocolo}', [SessaoController::class, 'projeto'])->name('projeto');
+    });
 });
 
 /**

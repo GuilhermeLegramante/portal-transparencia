@@ -127,4 +127,3 @@
         </tr>
     </tfoot>
 </x-tabela-transparencia>
-@include('layouts.partials.back')

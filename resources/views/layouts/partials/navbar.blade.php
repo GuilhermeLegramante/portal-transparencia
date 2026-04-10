@@ -25,12 +25,14 @@
                         <li class="dropdown-submenu">
                             <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
                                 Lei Orçamentária Anual (LOA)
+                                <i class="fa fa-chevron-right ms-2" style="font-size: 0.7rem;"></i>
                             </a>
                             <ul class="dropdown-menu shadow border-0">
                                 <li class="dropdown-submenu">
                                     <a class="dropdown-item d-flex justify-content-between align-items-center"
                                         href="#">
                                         Despesa
+                                        <i class="fa fa-chevron-right ms-2" style="font-size: 0.7rem;"></i>
                                     </a>
                                     <ul class="dropdown-menu shadow border-0">
                                         <li><a class="dropdown-item"
@@ -49,6 +51,7 @@
                                     <a class="dropdown-item d-flex justify-content-between align-items-center"
                                         href="#">
                                         Receita
+                                        <i class="fa fa-chevron-right ms-2" style="font-size: 0.7rem;"></i>
                                     </a>
                                     <ul class="dropdown-menu shadow border-0">
                                         <li><a class="dropdown-item"
@@ -80,6 +83,7 @@
                         <li class="dropdown-submenu">
                             <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
                                 Empenho Orçamentário
+                                <i class="fa fa-chevron-right ms-2" style="font-size: 0.7rem;"></i>
                             </a>
                             <ul class="dropdown-menu shadow border-0">
                                 <li>
@@ -108,6 +112,7 @@
                         <li class="dropdown-submenu">
                             <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
                                 Execução Orçamentária
+                                <i class="fa fa-chevron-right ms-2" style="font-size: 0.7rem;"></i>
                             </a>
                             <ul class="dropdown-menu shadow border-0">
                                 <li>
@@ -194,6 +199,7 @@
                         <li class="dropdown-submenu">
                             <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
                                 Licitações
+                                <i class="fa fa-chevron-right ms-2" style="font-size: 0.7rem;"></i>
                             </a>
                             <ul class="dropdown-menu shadow border-0">
                                 <li>
@@ -215,6 +221,7 @@
                         <li class="dropdown-submenu">
                             <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
                                 Requisição de Compras
+                                <i class="fa fa-chevron-right ms-2" style="font-size: 0.7rem;"></i>
                             </a>
                             <ul class="dropdown-menu shadow border-0">
                                 {{-- Rota: Requisição por Fornecedor --}}
@@ -244,8 +251,9 @@
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {{ request()->is('pessoal*') ? 'active fw-bold' : '' }}" href="#" id="navbarPessoal" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle {{ request()->is('pessoal*') ? 'active fw-bold' : '' }}"
+                        href="#" id="navbarPessoal" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
                         Pessoal
                     </a>
                     <ul class="dropdown-menu shadow border-0" aria-labelledby="navbarPessoal">
@@ -288,28 +296,91 @@
                         <li class="dropdown-submenu">
                             <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
                                 Folha de Pagamento
+                                <i class="fa fa-chevron-right ms-2" style="font-size: 0.7rem;"></i>
                             </a>
                             <ul class="dropdown-menu shadow border-0">
-                                <li><a class="dropdown-item" href="#">Por Função</a></li>
-                                <li><a class="dropdown-item" href="#">Por Lotação</a></li>
-                                <li><a class="dropdown-item" href="#">Por Regime</a></li>
-                                <li><a class="dropdown-item" href="#">Por Servidor</a></li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('pessoal.folha.funcao') }}">
+                                        Por Função
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('pessoal.folha.lotacao') }}">
+                                        Por Lotação
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('pessoal.folha.regime') }}">
+                                        Por Regime
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('pessoal.folha.servidor') }}">
+                                        Por Servidor
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item"><a class="nav-link" href="#">Cronograma</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Patrimônio</a></li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarPublicacao" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        Publicação
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('financas.cronograma') ? 'active fw-bold' : '' }}"
+                        href="{{ route('financas.cronograma') }}">
+                        Cronograma
                     </a>
-                    <ul class="dropdown-menu shadow border-0" aria-labelledby="navbarPublicacao">
-                        <li><a class="dropdown-item" href="#">Prestação de Contas</a></li>
-                        <li><a class="dropdown-item" href="#">Outras Publicações</a></li>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('patrimonio*') ? 'active fw-bold' : '' }}"
+                        href="{{ route('patrimonio.index') }}">
+                        Patrimônio
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('publicacoes*') ? 'active fw-bold' : '' }}"
+                        href="{{ route('publicacoes.index') }}">
+                        Publicações
+                    </a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {{ request()->is('parlamentar*') ? 'active fw-bold' : '' }}"
+                        href="#" id="navbarParlamentar" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Parlamentar
+                    </a>
+                    <ul class="dropdown-menu shadow border-0" aria-labelledby="navbarParlamentar">
+
+                        {{-- Submenu: Legislatura (Parlamentares e Mesa) --}}
+                        <li class="dropdown-submenu">
+                            <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
+                                Legislatura
+                                <i class="fa fa-chevron-right ms-2" style="font-size: 0.7rem;"></i>
+                            </a>
+                            <ul class="dropdown-menu shadow border-0">
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('parlamentar.index') }}">
+                                        Parlamentares
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="{{ route('parlamentar.index', ['tab' => 'mesa']) }}">
+                                        Mesa Diretora
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        {{-- Item Direto: Sessões --}}
+                        <li>
+                            <a class="dropdown-item" href="{{ route('parlamentar.sessao.index') }}">
+                                Sessões
+                            </a>
+                        </li>
+
                     </ul>
                 </li>
+
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle {{ request()->is('ajuda*') ? 'active fw-bold' : '' }}"
                         href="#" id="navbarAjuda" role="button" data-bs-toggle="dropdown"
