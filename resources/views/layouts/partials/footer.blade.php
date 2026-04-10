@@ -55,4 +55,34 @@
             </div>
         </div>
     </div>
+
+    <div id="cookie-banner" class="cookie-banner shadow-lg border-top animate__animated animate__fadeInUp">
+        <div class="container py-3">
+            <div class="row align-items-center">
+                <div class="col-md-9 col-12 mb-3 mb-md-0">
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="cookie-icon d-none d-md-block text-primary">
+                            <i class="fas fa-cookie-bite fs-2"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1">Aviso de Privacidade e Cookies</h6>
+                            <p class="small text-muted mb-0">
+                                Este Portal utiliza cookies para melhorar sua experiência de navegação e garantir a
+                                segurança dos dados, conforme a
+                                <strong>Lei Geral de Proteção de Dados (LGPD)</strong>. Ao continuar navegando, você
+                                concorda com nossas
+                                <a href="/politica-de-privacidade"
+                                    class="text-primary fw-medium text-decoration-none">Políticas de Privacidade</a>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-12 d-flex justify-content-md-end gap-2">
+                    <button id="btn-accept-cookies" class="btn btn-primary btn-sm px-4 fw-bold shadow-sm">
+                        ACEITAR
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </footer>
