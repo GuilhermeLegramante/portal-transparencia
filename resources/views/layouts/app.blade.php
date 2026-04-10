@@ -15,7 +15,7 @@
     @php $client = config('app.client_name', 'default'); @endphp
     <link rel="shortcut icon" href="{{ asset('img/' . $client . '.png') }}" type="image/x-icon">
 
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('css/app.css') }}"> --}}
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
 </head>
 
@@ -131,7 +131,7 @@
                     $banner.hide();
                 }
             });
-            
+
             $('.js-datatable').each(function() {
                 // 1. Captura correta do título (pegando o h5)
                 var tituloCard = $(this).closest('.card').find('.card-header h5').text().trim();
