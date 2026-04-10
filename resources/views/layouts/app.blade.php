@@ -103,39 +103,35 @@
     <script>
         $(document).ready(function() {
             const COOKIE_KEY = 'portal_transparencia_cookies';
+            const $banner = $('#cookie-banner');
 
-            // 1. Verifica se já existe o registro no localStorage
+            // 1. Lógica de exibição invertida (mais segura)
             if (!localStorage.getItem(COOKIE_KEY)) {
-                console.log("LGPD: Usuário ainda não aceitou os termos. Mostrando banner...");
-
-                // Garante que o banner apareça (removemos o delay para teste)
-                $('#cookie-banner').show().removeClass('d-none');
+                console.log("LGPD: Exibindo banner...");
+                // Adicionamos a animação e removemos o d-none ao mesmo tempo
+                $banner.addClass('animate__animated animate__fadeInUp').removeClass('d-none').show();
             } else {
-                console.log("LGPD: Termos já aceitos anteriormente.");
+                console.log("LGPD: Já aceito. Removendo do DOM.");
+                $banner.remove(); // Remove o elemento para não ocupar memória
             }
 
-            // 2. Ação do Clique usando delegação (mais seguro)
+            // 2. Evento de clique
             $(document).on('click', '#btn-accept-cookies', function(e) {
                 e.preventDefault();
-
                 try {
-                    // Salva no localStorage
                     localStorage.setItem(COOKIE_KEY, 'true');
-                    console.log("LGPD: Preferência salva com sucesso!");
 
-                    // Esconde o banner com animação do Animate.css que você já tem
-                    $('#cookie-banner').addClass('animate__fadeOutDown');
+                    // Troca animação de entrada pela de saída
+                    $banner.removeClass('animate__fadeInUp').addClass('animate__fadeOutDown');
 
                     setTimeout(function() {
-                        $('#cookie-banner').remove();
+                        $banner.remove();
                     }, 500);
                 } catch (error) {
-                    console.error("Erro ao salvar no localStorage:", error);
-                    // Fallback: Apenas esconde se o localStorage falhar (ex: aba anônima)
-                    $('#cookie-banner').hide();
+                    $banner.hide();
                 }
             });
-
+            
             $('.js-datatable').each(function() {
                 // 1. Captura correta do título (pegando o h5)
                 var tituloCard = $(this).closest('.card').find('.card-header h5').text().trim();

@@ -56,7 +56,7 @@
         </div>
     </div>
 
-    <div id="cookie-banner" class="cookie-banner shadow-lg border-top animate__animated animate__fadeInUp">
+    <div id="cookie-banner" class="cookie-banner shadow-lg d-none border-top animate__animated animate__fadeInUp">
         <div class="container py-3">
             <div class="row align-items-center">
                 <div class="col-md-9 col-12 mb-3 mb-md-0">
