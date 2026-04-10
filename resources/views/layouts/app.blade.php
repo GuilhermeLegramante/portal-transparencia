@@ -69,6 +69,10 @@
         </div>
     </main>
 
+
+
+    @include('layouts.partials.footer')
+
     <div id="cookie-banner" class="cookie-banner shadow-lg border-top animate__animated animate__fadeInUp">
         <div class="container py-3">
             <div class="row align-items-center">
@@ -98,8 +102,6 @@
             </div>
         </div>
     </div>
-
-    @include('layouts.partials.footer')
 
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
