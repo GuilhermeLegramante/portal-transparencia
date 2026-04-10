@@ -73,7 +73,7 @@
 
     @include('layouts.partials.footer')
 
-  
+
 
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -102,26 +102,39 @@
 
     <script>
         $(document).ready(function() {
-            // Verifica se o usuário já aceitou os cookies anteriormente
-            if (!localStorage.getItem('cookies_accepted')) {
-                setTimeout(function() {
-                    $('#cookie-banner').fadeIn().addClass('d-block');
-                }, 2000); // Mostra o aviso após 2 segundos
+            const COOKIE_KEY = 'portal_transparencia_cookies';
+
+            // 1. Verifica se já existe o registro no localStorage
+            if (!localStorage.getItem(COOKIE_KEY)) {
+                console.log("LGPD: Usuário ainda não aceitou os termos. Mostrando banner...");
+
+                // Garante que o banner apareça (removemos o delay para teste)
+                $('#cookie-banner').show().removeClass('d-none');
+            } else {
+                console.log("LGPD: Termos já aceitos anteriormente.");
             }
 
-            // Ação do botão Aceitar
-            $('#btn-accept-cookies').on('click', function() {
-                // Salva a decisão no navegador por 30 dias (ou até limpar cache)
-                localStorage.setItem('cookies_accepted', 'true');
+            // 2. Ação do Clique usando delegação (mais seguro)
+            $(document).on('click', '#btn-accept-cookies', function(e) {
+                e.preventDefault();
 
-                // Esconde o banner com animação
-                $('#cookie-banner').removeClass('animate__fadeInUp').addClass('animate__fadeOutDown');
+                try {
+                    // Salva no localStorage
+                    localStorage.setItem(COOKIE_KEY, 'true');
+                    console.log("LGPD: Preferência salva com sucesso!");
 
-                setTimeout(function() {
-                    $('#cookie-banner').remove();
-                }, 1000);
+                    // Esconde o banner com animação do Animate.css que você já tem
+                    $('#cookie-banner').addClass('animate__fadeOutDown');
+
+                    setTimeout(function() {
+                        $('#cookie-banner').remove();
+                    }, 500);
+                } catch (error) {
+                    console.error("Erro ao salvar no localStorage:", error);
+                    // Fallback: Apenas esconde se o localStorage falhar (ex: aba anônima)
+                    $('#cookie-banner').hide();
+                }
             });
-
 
             $('.js-datatable').each(function() {
                 // 1. Captura correta do título (pegando o h5)
