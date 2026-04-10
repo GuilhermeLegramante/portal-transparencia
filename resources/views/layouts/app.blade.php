@@ -69,6 +69,36 @@
         </div>
     </main>
 
+    <div id="cookie-banner" class="cookie-banner shadow-lg border-top animate__animated animate__fadeInUp">
+        <div class="container py-3">
+            <div class="row align-items-center">
+                <div class="col-md-9 col-12 mb-3 mb-md-0">
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="cookie-icon d-none d-md-block text-primary">
+                            <i class="fas fa-cookie-bite fs-2"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1">Aviso de Privacidade e Cookies</h6>
+                            <p class="small text-muted mb-0">
+                                Este Portal utiliza cookies para melhorar sua experiência de navegação e garantir a
+                                segurança dos dados, conforme a
+                                <strong>Lei Geral de Proteção de Dados (LGPD)</strong>. Ao continuar navegando, você
+                                concorda com nossas
+                                <a href="/politica-de-privacidade"
+                                    class="text-primary fw-medium text-decoration-none">Políticas de Privacidade</a>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-12 d-flex justify-content-md-end gap-2">
+                    <button id="btn-accept-cookies" class="btn btn-primary btn-sm px-4 fw-bold shadow-sm">
+                        ACEITAR
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @include('layouts.partials.footer')
 
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
@@ -98,6 +128,27 @@
 
     <script>
         $(document).ready(function() {
+            // Verifica se o usuário já aceitou os cookies anteriormente
+            if (!localStorage.getItem('cookies_accepted')) {
+                setTimeout(function() {
+                    $('#cookie-banner').fadeIn().addClass('d-block');
+                }, 2000); // Mostra o aviso após 2 segundos
+            }
+
+            // Ação do botão Aceitar
+            $('#btn-accept-cookies').on('click', function() {
+                // Salva a decisão no navegador por 30 dias (ou até limpar cache)
+                localStorage.setItem('cookies_accepted', 'true');
+
+                // Esconde o banner com animação
+                $('#cookie-banner').removeClass('animate__fadeInUp').addClass('animate__fadeOutDown');
+
+                setTimeout(function() {
+                    $('#cookie-banner').remove();
+                }, 1000);
+            });
+
+
             $('.js-datatable').each(function() {
                 // 1. Captura correta do título (pegando o h5)
                 var tituloCard = $(this).closest('.card').find('.card-header h5').text().trim();

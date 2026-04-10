@@ -58,7 +58,7 @@ O projeto foi construído seguindo as diretrizes da **Lei de Acesso à Informaç
 
 1.  **Clonar o repositório:**
     ```bash
-    git clone [https://github.com/seu-usuario/portal-transparencia.git](https://github.com/seu-usuario/portal-transparencia.git)
+    git clone [https://github.com/GuilhermeLegramante/portal-transparencia.git](https://github.com/GuilhermeLegramante/portal-transparencia.git)
     ```
 
 2.  **Configurar o ambiente:**

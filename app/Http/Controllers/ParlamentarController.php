@@ -16,6 +16,7 @@ class ParlamentarController extends Controller
     public function index(Request $request)
     {
         $idcliente = config('app.client_id');
+
         $legislaturas = $this->repo->getLegislaturas($idcliente);
         $legSelecionada = $request->get('legislatura', $legislaturas->first()->id ?? null);
 
