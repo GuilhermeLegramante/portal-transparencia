@@ -689,9 +689,12 @@ body.dark-mode .btn-login:hover {
     left: 0;
     width: 100%;
     background-color: #ffffff;
-    z-index: 9999;
+    /* Um z-index de 9999 garante que ele fique acima da navbar e de modais */
+    z-index: 10000;
+    box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.15);
+    border-top: 3px solid var(--bs-primary);
+    /* Usa a cor primária do seu bootstrap */
     display: none;
-    /* Inicia oculto para o JS decidir se mostra */
 }
 
 /* Modo escuro (Opcional, caso use o botão de dark mode que já tem no layout) */
