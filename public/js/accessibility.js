@@ -2,8 +2,11 @@
 const btnDark = document.getElementById('toggle-dark-mode');
 const iconDark = document.getElementById('dark-mode-icon');
 const textDark = document.getElementById('dark-mode-text');
+const btnContrast = document.getElementById('toggle-contrast'); // Botão de contraste
 
 function updateDarkUI(isDark) {
+    if (!btnDark || !iconDark || !textDark) return; // Segurança caso os IDs mudem
+
     if (isDark) {
         iconDark.classList.replace('bi-moon-stars', 'bi-sun-fill');
         textDark.textContent = 'Modo Claro';
@@ -15,30 +18,29 @@ function updateDarkUI(isDark) {
     }
 }
 
-btnDark.addEventListener('click', () => {
-    const isDark = document.body.classList.toggle('dark-mode');
-    document.body.classList.remove('high-contrast');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    updateDarkUI(isDark);
-});
-
-document.getElementById('toggle-contrast').addEventListener('click', () => {
-    document.body.classList.toggle('high-contrast');
-    document.body.classList.remove('dark-mode');
-    updateDarkUI(false);
-});
-
-// Controle de Fonte
-function changeFontSize(action) {
-    const el = document.documentElement;
-    let size = parseFloat(window.getComputedStyle(el).fontSize);
-    if (action === 'increase' && size < 24) el.style.fontSize = (size + 2) + 'px';
-    if (action === 'decrease' && size > 12) el.style.fontSize = (size - 2) + 'px';
+// Verifica se o botão Dark existe antes de adicionar o evento
+if (btnDark) {
+    btnDark.addEventListener('click', () => {
+        const isDark = document.body.classList.toggle('dark-mode');
+        document.body.classList.remove('high-contrast');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        updateDarkUI(isDark);
+    });
 }
 
-// Inicialização
+// Verifica se o botão de Contraste existe antes de adicionar o evento
+if (btnContrast) {
+    btnContrast.addEventListener('click', () => {
+        document.body.classList.toggle('high-contrast');
+        document.body.classList.remove('dark-mode');
+        updateDarkUI(false);
+    });
+}
+
+// Inicialização (Melhorada)
 window.addEventListener('DOMContentLoaded', () => {
-    if (localStorage.getItem('theme') === 'dark') {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
         document.body.classList.add('dark-mode');
         updateDarkUI(true);
     }
