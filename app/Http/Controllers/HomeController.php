@@ -53,6 +53,7 @@ class HomeController extends Controller
 
         // Cálculos de porcentagem
         if ($dados['gasto_previsto'] > 0) {
+            // Percentual de comprometimento (%) = (valor_executado / valor_orcado) * 100
             $dados['perc_comprometido'] = ($dados['gasto_executado'] / $dados['gasto_previsto']) * 100;
         }
         if ($dados['arrecadacao_prev'] > 0) {
