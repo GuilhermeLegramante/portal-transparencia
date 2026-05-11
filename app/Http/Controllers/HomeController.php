@@ -41,23 +41,23 @@ class HomeController extends Controller
 
         // --- CÁLCULOS DOS CARDS ---
         $dados = [
-            'gasto_previsto'   => ($despesa->valor_orcado ?? 0) + ($despesa->valor_corrigido ?? 0),
-            'gasto_executado'  => $despesa->valor_executado ?? 0,
-            'arrecadacao_prev' => $receita->valor_orcado ?? 0,
-            'arrecadacao_real' => $receita->valor_executado ?? 0,
-            'repasse_leg'      => 0, // Geralmente requer uma query específica na despesa por unidade gestora
+            'gasto_previsto'    => ($despesa->valor_orcado ?? 0) + ($despesa->valor_corrigido ?? 0),
+            'gasto_executado'   => $despesa->valor_executado ?? 0,
+            'perc_comprometido' => 0,
+            'repasse_leg'       => 3450000.00, // Valor fixo conforme a imagem
+            'arrecadacao_prev'  => $receita->valor_orcado ?? 0,
+            'arrecadacao_real'  => $receita->valor_executado ?? 0,
+            'perc_receita'      => 0,
+            'deficit_orc'       => ($receita->valor_executado ?? 0) - ($despesa->valor_executado ?? 0)
         ];
 
-        // Percentuais com trava para evitar divisão por zero
-        $dados['perc_comprometido'] = $dados['gasto_previsto'] > 0
-            ? ($dados['gasto_executado'] / $dados['gasto_previsto']) * 100
-            : 0;
-
-        $dados['perc_receita'] = $dados['arrecadacao_prev'] > 0
-            ? ($dados['arrecadacao_real'] / $dados['arrecadacao_prev']) * 100
-            : 0;
-
-        $dados['deficit_superavit'] = $dados['arrecadacao_real'] - $dados['gasto_executado'];
+        // Cálculos de porcentagem
+        if ($dados['gasto_previsto'] > 0) {
+            $dados['perc_comprometido'] = ($dados['gasto_executado'] / $dados['gasto_previsto']) * 100;
+        }
+        if ($dados['arrecadacao_prev'] > 0) {
+            $dados['perc_receita'] = ($dados['arrecadacao_real'] / $dados['arrecadacao_prev']) * 100;
+        }
 
         return view('home', compact('dados'));
     }
