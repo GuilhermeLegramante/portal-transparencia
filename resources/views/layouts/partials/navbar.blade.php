@@ -388,10 +388,10 @@
                         Ajuda
                     </a>
                     <ul class="dropdown-menu shadow border-0" aria-labelledby="navbarAjuda">
-                        <li><a class="dropdown-item" href="#">Glossário</a></li>
+                        {{-- <li><a class="dropdown-item" href="#">Glossário</a></li> --}}
                         <li><a class="dropdown-item" href="{{ route('ajuda.faq') }}">Perguntas Frequentes (FAQ)</a>
                         </li>
-                        <li><a class="dropdown-item" href="#">Links Úteis</a></li>
+                        {{-- <li><a class="dropdown-item" href="#">Links Úteis</a></li> --}}
                     </ul>
                 </li>
             </ul>
