@@ -18,9 +18,9 @@
                             rápida e sem burocracia.
                         </p>
                         <div class="d-flex gap-3">
-                            <a href="#saiba-mais" class="btn btn-primary btn-lg px-4 shadow-sm border-0">Saiba Mais</a>
-                            <a href="{{ route('ajuda.faq') }}"
-                                class="btn btn-outline-secondary btn-lg px-4 bg-white">Dúvidas?</a>
+                            {{-- <a href="#saiba-mais" class="btn btn-primary btn-lg px-4 shadow-sm border-0">Saiba Mais</a> --}}
+                            {{-- <a href="{{ route('ajuda.faq') }}"
+                                class="btn btn-outline-secondary btn-lg px-4 bg-white">Dúvidas?</a> --}}
                         </div>
                     </div>
                     <div class="col-md-5 text-center animate__animated animate__zoomIn d-none d-md-block">
@@ -58,8 +58,8 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="{{ route('planejamento.loa.despesa', ['filtro' => 'elemento']) }}"
-                            class="btn btn-primary btn-lg mt-4 px-5 shadow-sm">Consultar Agora</a>
+                        {{-- <a href="{{ route('planejamento.loa.despesa', ['filtro' => 'elemento']) }}"
+                            class="btn btn-primary btn-lg mt-4 px-5 shadow-sm">Consultar Agora</a> --}}
                     </div>
                     <div class="col-md-5 text-center animate__animated animate__fadeInRight d-none d-md-block">
                         <img src="{{ asset('img/lupa-gastos.png') }}" class="img-fluid drop-shadow"
