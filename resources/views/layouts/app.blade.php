@@ -31,7 +31,9 @@
             : '';
 
         // Busca a data da última publicação de forma eficiente
-        $ultimaAtualizacao = \DB::table('glbclientepublicacao')->where('idcliente', config('app.client_id'))->max('datahora');
+        $ultimaAtualizacao = \DB::table('glbclientepublicacao')
+            ->where('idcliente', config('app.client_id'))
+            ->max('datahora');
 
         // Formata a data para o padrão brasileiro, ou exibe a data atual como fallback
         $dataFormatada = $ultimaAtualizacao
@@ -47,8 +49,8 @@
             </div>
             <div class="access-controls d-flex gap-3">
                 <div class="btn-group btn-group-sm">
-                    <button onclick="changeFontSize('increase')" class="btn btn-light border shadow-sm">A+</button>
-                    <button onclick="changeFontSize('decrease')" class="btn btn-light border shadow-sm">A-</button>
+                    <button id="btn-increase" class="btn btn-light border shadow-sm">A+</button>
+                    <button id="btn-decrease" class="btn btn-light border shadow-sm">A-</button>
                 </div>
                 {{-- <button id="toggle-contrast" class="btn btn-sm btn-dark shadow-sm">
                     <i class="bi bi-circle-half"></i> Contraste
@@ -109,6 +111,25 @@
     <script src="{{ asset('js/ui-features.js') }}"></script>
 
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btnInc = document.getElementById('btn-increase');
+            const btnDec = document.getElementById('btn-decrease');
+
+            if (btnInc) {
+                btnInc.addEventListener('click', () => changeFontSize('increase'));
+            }
+            if (btnDec) {
+                btnDec.addEventListener('click', () => changeFontSize('decrease'));
+            }
+        });
+
+        function changeFontSize(action) {
+            const el = document.documentElement;
+            let size = parseFloat(window.getComputedStyle(el).fontSize);
+            if (action === 'increase' && size < 24) el.style.fontSize = (size + 2) + 'px';
+            if (action === 'decrease' && size > 12) el.style.fontSize = (size - 2) + 'px';
+        }
+        
         $(document).ready(function() {
             const COOKIE_KEY = 'portal_transparencia_cookies';
             const $banner = $('#cookie-banner');
