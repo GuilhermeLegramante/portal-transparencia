@@ -239,6 +239,34 @@
                                     });
 
                                     if (tabelaPrincipal) {
+                                        tabelaPrincipal.table.body.forEach(function(linha) {
+                                            // Percorrer cada célula da linha
+                                            linha.forEach(function(celula) {
+                                                // Se a célula contiver "R$", forçamos o noWrap
+                                                if (typeof celula.text ===
+                                                    'string' && celula.text
+                                                    .includes('R$')) {
+                                                    celula.noWrap = true;
+                                                }
+
+                                                // Aplicar também especificamente às células que são alinhadas à direita
+                                                // (Geralmente onde estão os teus números)
+                                                if (celula.alignment ===
+                                                    'right') {
+                                                    celula.noWrap = true;
+                                                }
+                                            });
+                                        });
+
+                                        // OPCIONAL: Se o rodapé (tfoot) ainda quebrar, podes forçar especificamente na última linha
+                                        var ultimaLinha = tabelaPrincipal.table.body[
+                                            tabelaPrincipal.table.body.length - 1];
+                                        ultimaLinha.forEach(function(celula) {
+                                            celula.noWrap = true;
+                                            celula.fontSize =
+                                            7; // Reduzir um ponto a fonte no rodapé ajuda a caber tudo
+                                        });
+
                                         // FORÇAR 100% DE LARGURA
                                         // O '*' faz com que cada coluna divida o espaço disponível igualmente
                                         tabelaPrincipal.table.widths = Array(tabelaPrincipal
@@ -279,7 +307,8 @@
                                         var logo = "{{ $logoBase64 }}";
                                         return {
                                             margin: [40, 20, 40,
-                                            0], // Margens do header
+                                                0
+                                            ], // Margens do header
                                             table: {
                                                 widths: [60, '*', 120],
                                                 body: [
@@ -326,7 +355,7 @@
                                                                         new Date()
                                                                         .toLocaleString(
                                                                             'pt-BR'
-                                                                            ),
+                                                                        ),
                                                                     fontSize: 7,
                                                                     alignment: 'right'
                                                                 }

@@ -64,7 +64,7 @@
 
             {{-- Rodapé com Totais Gerais acumulados --}}
             <tfoot class="table-light fw-bold">
-                <tr>
+                <tr class="text-nowrap">
                     <td></td> {{-- Sob a Lupa --}}
                     <td></td> {{-- Sob a Inscrição --}}
                     <td class="text-end text-uppercase">Totais:</td>
