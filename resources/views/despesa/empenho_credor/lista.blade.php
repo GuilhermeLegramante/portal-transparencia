@@ -35,6 +35,21 @@
 
                 </tr>
             @endforeach
+
+            <tfoot class="table-light fw-bold">
+                <tr class="text-nowrap">
+                    <td colspan="2" class="text-end">TOTAIS:</td>
+                    <td class="text-end">
+                        R$ {{ number_format($credores->sum('total_empenhado'), 2, ',', '.') }}
+                    </td>
+                    <td class="text-end">
+                        R$ {{ number_format($credores->sum('total_liquidado'), 2, ',', '.') }}
+                    </td>
+                    <td class="text-end text-danger">
+                        R$ {{ number_format($credores->sum('saldo_pagar'), 2, ',', '.') }}
+                    </td>
+                </tr>
+            </tfoot>
         </x-tabela-transparencia>
         @include('layouts.partials.back')
     </div>
