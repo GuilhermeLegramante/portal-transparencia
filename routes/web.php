@@ -12,6 +12,7 @@ use App\Http\Controllers\ExecucaoLocalizadorController;
 use App\Http\Controllers\ExecucaoOrgaoController;
 use App\Http\Controllers\ExecucaoRecursoController;
 use App\Http\Controllers\FolhaPagamentoController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LicitacaoController;
 use App\Http\Controllers\ParlamentarController;
 use App\Http\Controllers\PatrimonioController;
@@ -25,9 +26,7 @@ use App\Http\Controllers\SessaoController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 /**
  * Rotas para o planejamento
