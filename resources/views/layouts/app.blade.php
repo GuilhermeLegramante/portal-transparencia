@@ -129,7 +129,7 @@
             if (action === 'increase' && size < 24) el.style.fontSize = (size + 2) + 'px';
             if (action === 'decrease' && size > 12) el.style.fontSize = (size - 2) + 'px';
         }
-        
+
         $(document).ready(function() {
             const COOKIE_KEY = 'portal_transparencia_cookies';
             const $banner = $('#cookie-banner');
@@ -349,10 +349,14 @@
                                     doc['footer'] = function(currentPage, pageCount) {
                                         return {
                                             columns: [{
-                                                    text: 'Relatório Gerado pelo Sistema',
+                                                    text: 'Gerado em: ' + window
+                                                        .location
+                                                        .href, // Captura a URL atual
                                                     alignment: 'left',
                                                     margin: [40, 0],
-                                                    fontSize: 7
+                                                    fontSize: 7,
+                                                    link: window.location
+                                                        .href // Torna o texto um link clicável no PDF
                                                 },
                                                 {
                                                     text: 'Página ' + currentPage
