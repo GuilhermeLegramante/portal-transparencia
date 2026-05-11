@@ -146,21 +146,59 @@
     </div>
 
     <style>
-        /* Ajuste para remover a sombra azul padrão do Bootstrap ao clicar */
+        /* 1. Ajustes Gerais do Accordion */
         .accordion-button:focus {
             box-shadow: none;
             border-color: rgba(0, 0, 0, .125);
         }
 
-        /* Estilo para quando o item estiver aberto */
+        /* Estilo para quando o item estiver aberto (Modo Claro) */
         .accordion-button:not(.collapsed) {
-            color: #d9534f;
-            background-color: #f8f9fa;
+            color: var(--bs-primary);
+            /* Use a variável primária do sistema */
+            background-color: rgba(var(--bs-primary-rgb), 0.05);
         }
 
-        /* Seta do accordion */
-        .accordion-button::after {
-            background-size: 1rem;
+        /* 2. Regras para o MODO ESCURO */
+        body.dark-mode .card {
+            background-color: #1e1e1e;
+            border-color: #333;
+        }
+
+        body.dark-mode .accordion-item {
+            background-color: #2d2d2d;
+            border-color: #444;
+        }
+
+        body.dark-mode .accordion-button {
+            background-color: #2d2d2d;
+            color: #e0e0e0;
+            /* Texto do título no modo escuro */
+        }
+
+        body.dark-mode .accordion-button:not(.collapsed) {
+            background-color: #3d3d3d;
+            color: #fff;
+        }
+
+        body.dark-mode .accordion-body {
+            background-color: #1e1e1e;
+            color: #b0b0b0 !important;
+            /* Texto interno no modo escuro */
+        }
+
+        /* Garante que links e negritos fiquem visíveis no escuro */
+        body.dark-mode .accordion-body strong {
+            color: #fff;
+        }
+
+        body.dark-mode .accordion-body a {
+            color: #4dabff;
+        }
+
+        /* Ajuste da seta do Accordion no modo escuro */
+        body.dark-mode .accordion-button::after {
+            filter: invert(1) grayscale(1) brightness(2);
         }
     </style>
 @endsection
