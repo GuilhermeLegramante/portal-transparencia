@@ -168,8 +168,8 @@
                 var nomeCliente = {!! json_encode($nomeCliente) !!};
                 var cnpjCliente = {!! json_encode($cnpjCliente) !!};
 
-                // Captura a orientação vinda do PHP (padrão 'portrait' se não vier nada)
-                const orientacaoPDF = {!! json_encode($orientacaoPDF ?? 'portrait') !!};
+                // Captura a orientação vinda do PHP (padrão 'landscape' se não vier nada)
+                const orientacaoPDF = {!! json_encode($orientacaoPDF ?? 'landscape') !!};
 
                 if (!$.fn.DataTable.isDataTable(this)) {
                     $(this).DataTable({

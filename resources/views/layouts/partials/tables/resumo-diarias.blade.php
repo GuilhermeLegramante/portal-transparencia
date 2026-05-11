@@ -1,4 +1,6 @@
 @php
+    $orientacaoPDF = 'landscape'; // Padrão para paisagem, pode ser alterado dinamicamente se necessário
+
     $columns = [
         ['label' => 'Exercício', 'icone' => '', 'align' => 'text-center'],
         ['label' => 'Total', 'icone' => '', 'align' => 'text-end'],

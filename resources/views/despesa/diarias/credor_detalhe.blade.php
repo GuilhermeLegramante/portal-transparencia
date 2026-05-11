@@ -13,6 +13,8 @@
         @include('layouts.partials.credor')
 
         @php
+            $orientacaoPDF = 'landscape'; // Padrão para paisagem, pode ser alterado dinamicamente se necessário
+
             $columns = [
                 ['label' => '', 'icone' => 'fa-search', 'align' => 'text-center'],
                 ['label' => 'Número', 'icone' => '', 'align' => 'text-center'],

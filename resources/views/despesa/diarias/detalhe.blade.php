@@ -12,6 +12,8 @@
         @include('layouts.partials.cards.diarias')
 
         @php
+            $orientacaoPDF = 'landscape'; // Padrão para paisagem, pode ser alterado dinamicamente se necessário
+
             $columns = [
                 ['label' => '', 'icone' => 'fa-search', 'align' => 'text-center'], // Coluna da Lupa
                 ['label' => 'Inscrição', 'icone' => 'fa-id-card', 'align' => 'text-start'], // Nova Coluna
