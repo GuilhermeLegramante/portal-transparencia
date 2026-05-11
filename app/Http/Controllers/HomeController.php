@@ -44,7 +44,7 @@ class HomeController extends Controller
             'gasto_previsto'    => ($despesa->valor_orcado ?? 0) + ($despesa->valor_corrigido ?? 0),
             'gasto_executado'   => $despesa->valor_executado ?? 0,
             'perc_comprometido' => 0,
-            'repasse_leg'       => 3450000.00, // Valor fixo conforme a imagem
+            'repasse_leg'       => ($receita->valor_orcado ?? 0) - ($despesa->valor_orcado ?? 0),
             'arrecadacao_prev'  => $receita->valor_orcado ?? 0,
             'arrecadacao_real'  => $receita->valor_executado ?? 0,
             'perc_receita'      => 0,
