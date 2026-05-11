@@ -29,6 +29,14 @@
         $logoBase64 = file_exists($logoPath)
             ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath))
             : '';
+
+        // Busca a data da última publicação de forma eficiente
+        $ultimaAtualizacao = \DB::table('glbclientepublicacao')->where('idcliente', config('app.client_id'))->max('datahora');
+
+        // Formata a data para o padrão brasileiro, ou exibe a data atual como fallback
+        $dataFormatada = $ultimaAtualizacao
+            ? \Carbon\Carbon::parse($ultimaAtualizacao)->format('d/m/Y')
+            : date('d/m/Y');
     @endphp
 
     <div class="accessibility-bar d-none d-md-block">

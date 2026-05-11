@@ -23,8 +23,12 @@
                     <li class="mb-3">
                         <i class="bi bi-telephone text-primary me-3"></i>(55) 3254-1311
                     </li>
-                    <li>
+                    <li class="mb-3">
                         <i class="bi bi-envelope text-primary me-3"></i>pmcacequi@hotmail.com
+                    </li>
+                    <li class="pt-2 border-top">
+                        <i class="bi bi-clock-history text-primary me-3"></i>
+                        <span class="fw-bold text-dark">Atualizado em:</span> {{ date('d/m/Y') }}
                     </li>
                 </ul>
             </div>
