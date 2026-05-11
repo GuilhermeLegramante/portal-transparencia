@@ -56,7 +56,7 @@
             @endforeach
 
             <tfoot class="table-light fw-bold">
-                <tr>
+                <tr class="text-nowrap">
                     <td colspan="4" class="text-end">TOTALIZADORES:</td>
                     <td class="text-end">R$ {{ number_format($empenhos->sum('total_empenhado'), 2, ',', '.') }}</td>
                     <td class="text-end">R$ {{ number_format($empenhos->sum('total_liquidado'), 2, ',', '.') }}</td>

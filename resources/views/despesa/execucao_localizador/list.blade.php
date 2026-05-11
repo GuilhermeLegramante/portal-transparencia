@@ -57,7 +57,7 @@
             @endforeach
 
             <tfoot class="table-light fw-bold">
-                <tr>
+                <tr class="text-nowrap">
                     <td colspan="1" class="text-end">TOTAIS:</td>
                     <td class="text-end">R$ {{ number_format($data->sum('valor_orcado'), 2, ',', '.') }}</td>
                     <td class="text-end">R$ {{ number_format($data->sum('valor_corrigido'), 2, ',', '.') }}</td>

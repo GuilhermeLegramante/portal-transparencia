@@ -48,7 +48,7 @@
             @endforeach
 
             <tfoot class="table-light fw-bold">
-                <tr>
+                <tr class="text-nowrap">
                     <td colspan="3" class="text-end">TOTAIS DO ÓRGÃO:</td>
                     <td class="text-end">R$ {{ number_format($empenhos->sum('saldo_empenhado'), 2, ',', '.') }}</td>
                     <td class="text-end">R$ {{ number_format($empenhos->sum('saldo_liquidar'), 2, ',', '.') }}</td>
