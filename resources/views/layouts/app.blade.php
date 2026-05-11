@@ -273,67 +273,75 @@
                                         };
                                     }
 
-                                    // 3. Inserir cabeçalho personalizado
-                                    var logo = "{{ $logoBase64 }}";
-                                    doc.content.splice(0, 0, {
-                                        margin: [0, 0, 0, 20],
-                                        table: {
-                                            widths: [60, '*', 120],
-                                            body: [
-                                                [{
-                                                        image: logo,
-                                                        width: 50,
-                                                        alignment: 'left'
-                                                    },
-                                                    {
-                                                        stack: [{
-                                                                text: tituloCard
-                                                                    .toUpperCase(),
-                                                                fontSize: 14,
-                                                                bold: true,
-                                                                color: '#1e293b'
-                                                            },
-                                                            {
-                                                                text: nomeCliente,
-                                                                fontSize: 10,
-                                                                bold: true,
-                                                                margin: [0,
-                                                                    2,
-                                                                    0, 0
-                                                                ]
-                                                            },
-                                                            {
-                                                                text: 'CNPJ: ' +
-                                                                    cnpjCliente,
-                                                                fontSize: 8,
-                                                                color: '#64748b'
-                                                            }
-                                                        ],
-                                                        alignment: 'left'
-                                                    },
-                                                    {
-                                                        stack: [{
-                                                                text: 'RELATÓRIO DE SISTEMA',
-                                                                fontSize: 7,
-                                                                alignment: 'right',
-                                                                bold: true
-                                                            },
-                                                            {
-                                                                text: 'Emissão: ' +
-                                                                    new Date()
-                                                                    .toLocaleString(
-                                                                        'pt-BR'
-                                                                    ),
-                                                                fontSize: 7,
-                                                                alignment: 'right'
-                                                            }
-                                                        ]
-                                                    }
+                                    // 1. Definir o Cabeçalho que se repete em todas as páginas
+                                    doc['header'] = function(currentPage, pageCount,
+                                        pageSize) {
+                                        var logo = "{{ $logoBase64 }}";
+                                        return {
+                                            margin: [40, 20, 40,
+                                            0], // Margens do header
+                                            table: {
+                                                widths: [60, '*', 120],
+                                                body: [
+                                                    [{
+                                                            image: logo,
+                                                            width: 50,
+                                                            alignment: 'left'
+                                                        },
+                                                        {
+                                                            stack: [{
+                                                                    text: tituloCard
+                                                                        .toUpperCase(),
+                                                                    fontSize: 12,
+                                                                    bold: true,
+                                                                    color: '#1e293b'
+                                                                },
+                                                                {
+                                                                    text: nomeCliente,
+                                                                    fontSize: 9,
+                                                                    bold: true,
+                                                                    margin: [0,
+                                                                        2,
+                                                                        0, 0
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    text: 'CNPJ: ' +
+                                                                        cnpjCliente,
+                                                                    fontSize: 8,
+                                                                    color: '#64748b'
+                                                                }
+                                                            ],
+                                                            alignment: 'left'
+                                                        },
+                                                        {
+                                                            stack: [{
+                                                                    text: 'RELATÓRIO DE SISTEMA',
+                                                                    fontSize: 7,
+                                                                    alignment: 'right',
+                                                                    bold: true
+                                                                },
+                                                                {
+                                                                    text: 'Emissão: ' +
+                                                                        new Date()
+                                                                        .toLocaleString(
+                                                                            'pt-BR'
+                                                                            ),
+                                                                    fontSize: 7,
+                                                                    alignment: 'right'
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
                                                 ]
-                                            ]
-                                        },
-                                        layout: 'noBorders'
-                                    });
+                                            },
+                                            layout: 'noBorders'
+                                        };
+                                    };
+
+                                    // 2. Ajustar a margem superior do conteúdo para não sobrepor o header
+                                    // O primeiro valor [esquerda, cima, direita, baixo]
+                                    doc.pageMargins = [40, 80, 40, 40];
 
                                     // Ajustes de fontes globais
                                     doc.defaultStyle.fontSize = 8;
