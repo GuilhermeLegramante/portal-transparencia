@@ -19,9 +19,9 @@
 
             <div class="vr mx-2 d-none d-md-block text-secondary opacity-25"></div>
 
-            <a href="#" class="btn btn-login btn-sm rounded-pill px-3 border fw-medium d-flex align-items-center">
+            {{-- <a href="#" class="btn btn-login btn-sm rounded-pill px-3 border fw-medium d-flex align-items-center">
                 <i class="fas fa-user-circle me-2"></i> Logar
-            </a>
+            </a> --}}
         </div>
     </div>
 </div>
