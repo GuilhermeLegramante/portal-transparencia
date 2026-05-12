@@ -98,4 +98,113 @@
             opacity: 0.8;
         }
     </style>
+    <script>
+        /**
+         * Esta função é chamada pelo customize do PDF no app.blade.php
+         * Ela injeta os dados do credor no topo do documento.
+         */
+        function personalizarPDFEspecifico(doc) {
+            // 1. Definição dos dados capturados do PHP
+            const credorNome = "{{ $credor->nome }}";
+            const credorDocumento = "{{ $credor->tipo_pessoa == 'F' ? $credor->cpf : $credor->cnpj }}";
+            const credorInscricao = "{{ $credor->inscricao }}";
+            const credorEndereco =
+                "{{ $credor->nome_logradouro ?? 'Não informado' }}, {{ $credor->numero_imovel ?? 'S/N' }}";
+
+            // 2. Criação do quadro de informações do Credor
+            var quadroCredor = {
+                margin: [0, 0, 0, 15], // Margem inferior para separar da tabela
+                table: {
+                    widths: ['*'],
+                    body: [
+                        [{
+                            fillColor: '#f1f5f9', // Fundo cinza suave (estilo Bootstrap soft-blue)
+                            padding: [12, 10, 12, 10],
+                            stack: [{
+                                    text: 'IDENTIFICAÇÃO DO CREDOR',
+                                    fontSize: 10,
+                                    bold: true,
+                                    color: '#0d6efd',
+                                    margin: [0, 0, 0, 8]
+                                },
+                                {
+                                    columns: [{
+                                            width: '*',
+                                            stack: [{
+                                                    text: 'Nome / Razão Social:',
+                                                    fontSize: 7,
+                                                    color: '#64748b',
+                                                    bold: true
+                                                },
+                                                {
+                                                    text: credorNome,
+                                                    fontSize: 9,
+                                                    bold: true,
+                                                    color: '#1e293b'
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            width: 'auto',
+                                            stack: [{
+                                                    text: 'CPF/CNPJ:',
+                                                    fontSize: 7,
+                                                    color: '#64748b',
+                                                    bold: true
+                                                },
+                                                {
+                                                    text: credorDocumento,
+                                                    fontSize: 9,
+                                                    color: '#1e293b'
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    margin: [0, 8, 0, 0],
+                                    columns: [{
+                                            width: '*',
+                                            stack: [{
+                                                    text: 'Endereço:',
+                                                    fontSize: 7,
+                                                    color: '#64748b',
+                                                    bold: true
+                                                },
+                                                {
+                                                    text: credorEndereco,
+                                                    fontSize: 8,
+                                                    color: '#1e293b'
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            width: 'auto',
+                                            stack: [{
+                                                    text: 'Inscrição:',
+                                                    fontSize: 7,
+                                                    color: '#64748b',
+                                                    bold: true
+                                                },
+                                                {
+                                                    text: credorInscricao,
+                                                    fontSize: 8,
+                                                    color: '#1e293b'
+                                                }
+                                            ],
+                                            margin: [20, 0, 0, 0]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }]
+                    ]
+                },
+                layout: 'noBorders'
+            };
+
+            // 3. Inserção no início do conteúdo (antes da tabela principal)
+            doc.content.splice(0, 0, quadroCredor);
+        }
+    </script>
 @endsection

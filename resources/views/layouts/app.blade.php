@@ -111,6 +111,98 @@
     <script src="{{ asset('js/ui-features.js') }}"></script>
 
     <script>
+        /**
+         * Concentra toda a lógica de estilização comum a todos os relatórios PDF
+         */
+        function aplicarConfiguracoesGlobaisPDF(doc) {
+            // 1. Margens e Fonte Padrão
+            doc.pageMargins = [40, 80, 40, 40];
+            doc.defaultStyle.fontSize = 8;
+
+            // 2. Estilo do Cabeçalho da Tabela
+            doc.styles.tableHeader = {
+                fillColor: '#f8fafc',
+                color: '#475569',
+                bold: true,
+                fontSize: 8,
+                alignment: 'left'
+            };
+
+            // 3. Configuração do Cabeçalho (Header) com Logo
+            doc['header'] = function(currentPage, pageCount, pageSize) {
+                return {
+                    margin: [40, 20, 40, 0],
+                    table: {
+                        widths: [60, '*', 120],
+                        body: [
+                            [{
+                                    image: CLIENT_CONFIG.logo,
+                                    width: 50,
+                                    alignment: 'left'
+                                },
+                                {
+                                    stack: [{
+                                            text: 'RELATÓRIO DE SISTEMA',
+                                            fontSize: 12,
+                                            bold: true,
+                                            color: '#1e293b'
+                                        },
+                                        {
+                                            text: CLIENT_CONFIG.name,
+                                            fontSize: 9,
+                                            bold: true,
+                                            margin: [0, 2, 0, 0]
+                                        },
+                                        {
+                                            text: 'CNPJ: ' + CLIENT_CONFIG.cnpj,
+                                            fontSize: 8,
+                                            color: '#64748b'
+                                        }
+                                    ],
+                                    alignment: 'left'
+                                }
+                            ]
+                        ]
+                    },
+                    layout: 'noBorders'
+                };
+            };
+
+            // 4. Configuração do Rodapé (Footer)
+            doc['footer'] = function(currentPage, pageCount) {
+                return {
+                    columns: [{
+                            text: 'Gerado em: ' + window.location.href,
+                            alignment: 'left',
+                            margin: [40, 0],
+                            fontSize: 7,
+                            link: window.location.href
+                        },
+                        {
+                            text: 'Página ' + currentPage.toString() + ' de ' + pageCount,
+                            alignment: 'right',
+                            margin: [0, 0, 40, 0],
+                            fontSize: 7
+                        }
+                    ],
+                    margin: [0, 10, 0, 0]
+                };
+            };
+
+            // 5. Lógica de NoWrap para valores em "R$"
+            doc.content.forEach(function(item) {
+                if (item.table && item.table.body) {
+                    item.table.body.forEach(function(linha) {
+                        linha.forEach(function(celula) {
+                            if (typeof celula.text === 'string' && celula.text.includes('R$')) {
+                                celula.noWrap = true;
+                            }
+                        });
+                    });
+                }
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const btnInc = document.getElementById('btn-increase');
             const btnDec = document.getElementById('btn-decrease');
@@ -229,184 +321,13 @@
                                         dataHora;
                                 },
                                 customize: function(doc) {
-                                    // 2. Localizar a tabela principal (geralmente é o último item do content antes do splice)
-                                    var tabelaPrincipal = null;
-                                    doc.content.forEach(function(item) {
-                                        if (item.table && item.table.body && item
-                                            .table.body[0].length > 1) {
-                                            tabelaPrincipal = item;
-                                        }
-                                    });
+                                    // Aplica o padrão visual de todos os relatórios
+                                    aplicarConfiguracoesGlobaisPDF(doc);
 
-                                    if (tabelaPrincipal) {
-                                        tabelaPrincipal.table.body.forEach(function(linha) {
-                                            // Percorrer cada célula da linha
-                                            linha.forEach(function(celula) {
-                                                // Se a célula contiver "R$", forçamos o noWrap
-                                                if (typeof celula.text ===
-                                                    'string' && celula.text
-                                                    .includes('R$')) {
-                                                    celula.noWrap = true;
-                                                }
-
-                                                // Aplicar também especificamente às células que são alinhadas à direita
-                                                // (Geralmente onde estão os teus números)
-                                                if (celula.alignment ===
-                                                    'right') {
-                                                    celula.noWrap = true;
-                                                }
-                                            });
-                                        });
-
-                                        // OPCIONAL: Se o rodapé (tfoot) ainda quebrar, podes forçar especificamente na última linha
-                                        var ultimaLinha = tabelaPrincipal.table.body[
-                                            tabelaPrincipal.table.body.length - 1];
-                                        ultimaLinha.forEach(function(celula) {
-                                            celula.noWrap = true;
-                                            celula.fontSize =
-                                            7; // Reduzir um ponto a fonte no rodapé ajuda a caber tudo
-                                        });
-
-                                        // FORÇAR 100% DE LARGURA
-                                        // O '*' faz com que cada coluna divida o espaço disponível igualmente
-                                        tabelaPrincipal.table.widths = Array(tabelaPrincipal
-                                            .table.body[0].length).fill('*');
-
-                                        // Margens da tabela
-                                        tabelaPrincipal.margin = [0, 5, 0, 5];
-
-                                        // Estilo das linhas (sem verticais, igual à imagem)
-                                        tabelaPrincipal.layout = {
-                                            hLineWidth: function(i) {
-                                                return 0.5;
-                                            },
-                                            vLineWidth: function(i) {
-                                                return 0;
-                                            },
-                                            hLineColor: function(i) {
-                                                return '#e2e8f0';
-                                            },
-                                            paddingLeft: function(i) {
-                                                return 8;
-                                            },
-                                            paddingRight: function(i) {
-                                                return 8;
-                                            },
-                                            paddingTop: function(i) {
-                                                return 6;
-                                            },
-                                            paddingBottom: function(i) {
-                                                return 6;
-                                            }
-                                        };
+                                    // Se a página específica (ex: detalhe.blade) definiu uma função extra, executa-a
+                                    if (typeof personalizarPDFEspecifico === 'function') {
+                                        personalizarPDFEspecifico(doc);
                                     }
-
-                                    // 1. Definir o Cabeçalho que se repete em todas as páginas
-                                    doc['header'] = function(currentPage, pageCount,
-                                        pageSize) {
-                                        var logo = "{{ $logoBase64 }}";
-                                        return {
-                                            margin: [40, 20, 40,
-                                                0
-                                            ], // Margens do header
-                                            table: {
-                                                widths: [60, '*', 120],
-                                                body: [
-                                                    [{
-                                                            image: logo,
-                                                            width: 50,
-                                                            alignment: 'left'
-                                                        },
-                                                        {
-                                                            stack: [{
-                                                                    text: tituloCard
-                                                                        .toUpperCase(),
-                                                                    fontSize: 12,
-                                                                    bold: true,
-                                                                    color: '#1e293b'
-                                                                },
-                                                                {
-                                                                    text: nomeCliente,
-                                                                    fontSize: 9,
-                                                                    bold: true,
-                                                                    margin: [0,
-                                                                        2,
-                                                                        0, 0
-                                                                    ]
-                                                                },
-                                                                {
-                                                                    text: 'CNPJ: ' +
-                                                                        cnpjCliente,
-                                                                    fontSize: 8,
-                                                                    color: '#64748b'
-                                                                }
-                                                            ],
-                                                            alignment: 'left'
-                                                        },
-                                                        {
-                                                            stack: [{
-                                                                    text: 'RELATÓRIO DE SISTEMA',
-                                                                    fontSize: 7,
-                                                                    alignment: 'right',
-                                                                    bold: true
-                                                                },
-                                                                {
-                                                                    text: 'Emissão: ' +
-                                                                        new Date()
-                                                                        .toLocaleString(
-                                                                            'pt-BR'
-                                                                        ),
-                                                                    fontSize: 7,
-                                                                    alignment: 'right'
-                                                                }
-                                                            ]
-                                                        }
-                                                    ]
-                                                ]
-                                            },
-                                            layout: 'noBorders'
-                                        };
-                                    };
-
-                                    // 2. Ajustar a margem superior do conteúdo para não sobrepor o header
-                                    // O primeiro valor [esquerda, cima, direita, baixo]
-                                    doc.pageMargins = [40, 80, 40, 40];
-
-                                    // Ajustes de fontes globais
-                                    doc.defaultStyle.fontSize = 8;
-                                    doc.styles.tableHeader = {
-                                        fillColor: '#f8fafc',
-                                        color: '#475569',
-                                        bold: true,
-                                        fontSize: 8,
-                                        alignment: 'left'
-                                    };
-
-                                    // 1. Defina o rodapé dinâmico (Footer) para todas as páginas
-                                    doc['footer'] = function(currentPage, pageCount) {
-                                        return {
-                                            columns: [{
-                                                    text: 'Gerado em: ' + window
-                                                        .location
-                                                        .href, // Captura a URL atual
-                                                    alignment: 'left',
-                                                    margin: [40, 0],
-                                                    fontSize: 7,
-                                                    link: window.location
-                                                        .href // Torna o texto um link clicável no PDF
-                                                },
-                                                {
-                                                    text: 'Página ' + currentPage
-                                                        .toString() + ' de ' +
-                                                        pageCount,
-                                                    alignment: 'right',
-                                                    margin: [0, 0, 40, 0],
-                                                    fontSize: 7
-                                                }
-                                            ],
-                                            margin: [0, 10, 0, 0]
-                                        };
-                                    };
                                 }
                             }
                         ]
