@@ -20,17 +20,12 @@
             ['label' => 'Matrícula', 'align' => 'text-center'],
             ['label' => 'Nome do Servidor', 'align' => 'text-start'],
             ['label' => 'Data de Admissão', 'align' => 'text-center'],
-            ['label' => 'Ação', 'align' => 'text-center'],
         ]">
             @foreach ($servidores as $s)
                 <tr>
                     <td class="text-center">{{ $s->matricula }}</td>
                     <td class="fw-bold">{{ $s->nome }}</td>
                     <td class="text-center">{{ date('d/m/Y', strtotime($s->data_admissao)) }}</td>
-                    <td class="text-center">
-                        {{-- Espaço para link de ficha financeira ou funcional futura --}}
-                        <span class="badge bg-secondary">Ver Ficha</span>
-                    </td>
                 </tr>
             @endforeach
         </x-tabela-transparencia>
