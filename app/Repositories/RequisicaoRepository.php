@@ -49,7 +49,7 @@ class RequisicaoRepository
             )
             ->where('requisicao.idcliente', $idcliente)
             ->where('requisicao.exercicio', $exercicio)
-            ->groupBy('requisicao.exercicio', 'conta.idunidadeorcamentaria', 'requisicao.idcliente') // idcliente incluído aqui
+            ->groupBy('requisicao.exercicio', 'conta.idunidadeorcamentaria', 'requisicao.idcliente', 'conta.idcliente') // idcliente incluído aqui
             ->orderBy('nome')
             ->get();
     }
