@@ -97,7 +97,7 @@
                                     @endforeach
                                 </tbody>
                                 <tfoot class="bg-light">
-                                    <tr>
+                                    <tr class="text-nowrap">
                                         <td colspan="3" class="text-end fw-bold">Total do Fornecedor:</td>
                                         <td class="text-end pe-3 text-primary fw-bold">R$
                                             {{ number_format($itensVencidos->sum('valor_total'), 2, ',', '.') }}</td>

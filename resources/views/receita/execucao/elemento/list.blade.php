@@ -39,7 +39,7 @@
 
             {{-- RODAPÉ COM TOTAIS --}}
             <tfoot class="table-light fw-bold">
-                <tr>
+                <tr class="text-nowrap">
                     <td></td> {{-- Coluna Estrutural --}}
                     <td class="text-end">TOTAIS:</td> {{-- Coluna Descrição --}}
 

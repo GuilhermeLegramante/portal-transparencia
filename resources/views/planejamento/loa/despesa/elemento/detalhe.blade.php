@@ -41,7 +41,7 @@
 
             {{-- Linha de Totalizador --}}
             <tfoot class="table-light">
-                <tr>
+                <tr class="text-nowrap">
                     <td colspan="3" class="text-end text-uppercase">Total do Exercício:</td>
                     <td class="text-end text-primary" style="font-size: 1.1rem;">
                         R$ {{ number_format($totalGeralOrcado, 2, ',', '.') }}

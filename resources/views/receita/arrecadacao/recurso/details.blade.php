@@ -52,7 +52,7 @@
         {{-- Linha de Totais Acumulados --}}
         @if ($dados->count() > 0)
             <tfoot class="bg-light">
-                <tr class="fw-bold">
+                <tr class="fw-bold text-nowrap">
                     <td class="text-uppercase">Total Acumulado no Ano</td>
                     <td class="text-end">R$ {{ number_format($dados->sum('valor_arrecadado'), 2, ',', '.') }}</td>
                     <td class="text-end text-danger">R$ {{ number_format($dados->sum('valor_deduzido'), 2, ',', '.') }}

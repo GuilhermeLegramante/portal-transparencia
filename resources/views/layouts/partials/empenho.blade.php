@@ -122,7 +122,7 @@
     @endforeach
     {{-- No seu empenho.blade.php --}}
     <tfoot class="table-light fw-bold">
-        <tr>
+        <tr class="text-nowrap">
             <td></td>
             <td></td>
             <td></td> {{-- Células vazias em vez de colspan --}}

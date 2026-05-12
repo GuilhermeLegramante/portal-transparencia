@@ -58,7 +58,7 @@
 
         {{-- Rodapé opcional para somar os totais da página --}}
         <tfoot class="table-light fw-bold">
-            <tr>
+            <tr class="text-nowrap">
                 <td colspan="2" class="text-end">TOTAIS:</td>
                 <td class="text-end">R$ {{ number_format($elementos->sum('total_empenhado'), 2, ',', '.') }}</td>
                 <td class="text-end">R$ {{ number_format($elementos->sum('total_anulado'), 2, ',', '.') }}</td>

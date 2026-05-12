@@ -92,7 +92,7 @@
                             @endforeach
                         </tbody>
                         <tfoot class="table-light">
-                            <tr class="fw-bold">
+                            <tr class="fw-bold text-nowrap">
                                 <td colspan="3" class="text-end">TOTAIS</td>
                                 <td class="text-end">R$ {{ number_format($totP, 2, ',', '.') }}</td>
                                 <td class="text-end text-danger">R$ {{ number_format($totD, 2, ',', '.') }}</td>

@@ -33,7 +33,7 @@
                 </tr>
             @endforeach
             <tfoot class="table-light">
-                <tr>
+                <tr class="text-nowrap">
                     <td colspan="4" class="text-end fw-bold">VALOR TOTAL REQUISITADO:</td>
                     <td class="text-end text-primary fw-bold">R$
                         {{ number_format($itens->sum('valor_total'), 2, ',', '.') }}</td>

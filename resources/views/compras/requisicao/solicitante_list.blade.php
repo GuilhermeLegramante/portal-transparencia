@@ -26,6 +26,22 @@
                     </td>
                 </tr>
             @endforeach
+
+            <tfoot class="table-light fw-bold">
+                <tr class="text-nowrap">
+                    <td class="text-end">TOTAIS:</td>
+
+                    <td class="text-center">
+                        {{ $dados->sum('quantidade_requisicao') }}
+                    </td>
+
+                    <td class="text-end text-primary">
+                        R$ {{ number_format($dados->sum('total_requisitado'), 2, ',', '.') }}
+                    </td>
+
+                    <td></td> {{-- Coluna de Ação vazia --}}
+                </tr>
+            </tfoot>
         </x-tabela-transparencia>
         @include('layouts.partials.back')
     </div>

@@ -52,7 +52,7 @@
             {{-- Rodapé com Totais --}}
             @if ($dados->count() > 0)
                 <tfoot class="table-light">
-                    <tr class="fw-bold">
+                    <tr class="fw-bold text-nowrap">
                         <td>TOTAL ACUMULADO</td>
                         <td class="text-end text-success">R$
                             {{ number_format($dados->sum('valor_arrecadado'), 2, ',', '.') }}</td>
