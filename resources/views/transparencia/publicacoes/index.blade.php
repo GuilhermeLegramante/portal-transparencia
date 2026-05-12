@@ -28,7 +28,7 @@
             ['label' => 'Categorias', 'align' => 'text-start'], // 4
             ['label' => 'Documento', 'align' => 'text-center'], // 5
         ]">
-            @forelse ($publicacoes as $pub)
+            @foreach ($publicacoes as $pub)
                 <tr>
                     <td class="text-center text-muted small">{{ $pub->codigo }}</td> {{-- 1 --}}
                     <td class="text-center">{{ date('d/m/Y', strtotime($pub->data)) }}</td> {{-- 2 --}}
@@ -42,18 +42,10 @@
                         {{-- Botão de documento... --}}
                     </td> {{-- 5 --}}
                 </tr>
-            @empty
-                <tr>
-                    {{-- O colspan DEVE ser igual ao número de colunas (5) --}}
-                    <td colspan="5" class="text-center py-4 text-muted">
-                        Nenhuma publicação encontrada.
-                    </td>
-                </tr>
-            @endforelse
+            @endforeach
 
-            {{-- SE VOCÊ ADICIONOU UM TFOOT, ELE DEVE TER 5 TDS OU COLSPAN QUE SOME 5 --}}
             <tfoot class="table-light fw-bold">
-                <tr>
+                <tr class="text-nowrap">
                     <td colspan="4" class="text-end">Total de Registros:</td>
                     <td class="text-center">{{ count($publicacoes) }}</td>
                 </tr>
