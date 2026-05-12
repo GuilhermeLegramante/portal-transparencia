@@ -30,8 +30,8 @@
                     <td>{{ $f->fornecedor }}</td>
                     <td class="text-end fw-bold text-success">R$ {{ number_format($f->valor_unitario, 2, ',', '.') }}</td>
                     <td class="text-center">
-                        <span class="badge {{ $f->fornecedor_ativo == 'ATIVO' ? 'bg-success' : 'bg-danger' }}">
-                            {{ $f->fornecedor_ativo }}
+                        <span class="badge {{ $f->fornecedor_ativo == '1' ? 'bg-success' : 'bg-danger' }}">
+                            {{ $f->fornecedor_ativo == '1' ? 'Ativo' : 'Inativo' }}
                         </span>
                     </td>
                 </tr>
