@@ -42,109 +42,89 @@
 
     <script>
         function personalizarPDFEspecifico(doc) {
-            // 1. Definição dos dados capturados do PHP
-            const credorNome = "{{ $credor->nome }}";
-            const credorDocumento = "{{ $credor->tipo_pessoa == 'F' ? $credor->cpf : $credor->cnpj }}";
+            try {
+                // 1. Captura segura dos dados (ajustado para as variáveis do seu detalhe-empenho.blade.php)
+                const credorNome = "{{ $credor->nome }}";
+                const credorDoc = "{{ $credor->tipo_pessoa == 'F' ? $credor->cpf : $credor->cnpj }}";
+                const empenhoNum = "{{ $empenho->numero }} / {{ $exercicio }}";
+                const empenhoEmi = "{{ date('d/m/Y', strtotime($empenho->dataemissao)) }}";
+                const empenhoElem = "{{ $empenho->elemento }}";
 
-            const empenhoNumero = "{{ $empenho->numero }} / {{ $exercicio }}";
-            const empenhoEmissao = "{{ date('d/m/Y', strtotime($empenho->dataemissao)) }}";
-            const empenhoElemento = "{{ $empenho->elemento }}";
-            const empenhoModalidade = "{{ $empenho->modalidade }}";
-
-            // 2. Criação do bloco combinado (Empenho + Credor)
-            var blocoInformacoes = {
-                margin: [0, 0, 0, 15],
-                table: {
-                    widths: ['*', '*'], // Divide a página ao meio
-                    body: [
-                        // Títulos das colunas
-                        [{
-                                text: 'DADOS DO EMPENHO',
-                                fontSize: 9,
-                                bold: true,
-                                color: '#0d6efd',
-                                margin: [0, 0, 0, 5]
-                            },
-                            {
-                                text: 'IDENTIFICAÇÃO DO CREDOR',
-                                fontSize: 9,
-                                bold: true,
-                                color: '#0d6efd',
-                                margin: [0, 0, 0, 5]
-                            }
-                        ],
-                        // Conteúdo dos quadros
-                        [{
-                                fillColor: '#f1f5f9',
-                                padding: [10, 10, 10, 10],
-                                stack: [{
-                                        text: 'Número/Exercício: ' + empenhoNumero,
-                                        fontSize: 8,
-                                        bold: true,
-                                        margin: [0, 2]
-                                    },
-                                    {
-                                        text: 'Data Emissão: ' + empenhoEmissao,
-                                        fontSize: 8,
-                                        margin: [0, 2]
-                                    },
-                                    {
-                                        text: 'Modalidade: ' + empenhoModalidade,
-                                        fontSize: 8,
-                                        margin: [0, 2]
-                                    },
-                                    {
-                                        text: 'Elemento: ' + empenhoElemento,
-                                        fontSize: 8,
-                                        color: '#1e293b',
-                                        bold: true,
-                                        margin: [0, 2]
-                                    }
-                                ]
-                            },
-                            {
-                                fillColor: '#f1f5f9',
-                                padding: [10, 10, 10, 10],
-                                stack: [{
-                                        text: 'Nome / Razão Social:',
-                                        fontSize: 7,
-                                        color: '#64748b'
-                                    },
-                                    {
-                                        text: credorNome,
-                                        fontSize: 9,
-                                        bold: true,
-                                        color: '#1e293b',
-                                        margin: [0, 0, 0, 4]
-                                    },
-                                    {
-                                        text: 'CPF/CNPJ:',
-                                        fontSize: 7,
-                                        color: '#64748b'
-                                    },
-                                    {
-                                        text: credorDocumento,
-                                        fontSize: 9,
-                                        color: '#1e293b'
-                                    }
-                                ]
-                            }
+                // 2. Criação do quadro
+                var quadroCombinado = {
+                    margin: [0, 0, 0, 15],
+                    table: {
+                        // Usar porcentagens em vez de '*' evita o erro NaN em muitos navegadores
+                        widths: ['48%', '48%'],
+                        body: [
+                            [{
+                                    text: 'DADOS DO EMPENHO',
+                                    fontSize: 9,
+                                    bold: true,
+                                    color: '#0d6efd'
+                                },
+                                {
+                                    text: 'IDENTIFICAÇÃO DO CREDOR',
+                                    fontSize: 9,
+                                    bold: true,
+                                    color: '#0d6efd'
+                                }
+                            ],
+                            [{
+                                    fillColor: '#f8fafc',
+                                    padding: [8, 8, 8, 8],
+                                    stack: [{
+                                            text: 'Nº/Exercício: ' + empenhoNum,
+                                            fontSize: 8,
+                                            bold: true
+                                        },
+                                        {
+                                            text: 'Emissão: ' + empenhoEmi,
+                                            fontSize: 8
+                                        },
+                                        {
+                                            text: 'Elemento: ' + empenhoElem,
+                                            fontSize: 8
+                                        }
+                                    ]
+                                },
+                                {
+                                    fillColor: '#f8fafc',
+                                    padding: [8, 8, 8, 8],
+                                    stack: [{
+                                            text: 'Nome: ' + credorNome,
+                                            fontSize: 8,
+                                            bold: true
+                                        },
+                                        {
+                                            text: 'Documento: ' + credorDoc,
+                                            fontSize: 8
+                                        }
+                                    ]
+                                }
+                            ]
                         ]
-                    ]
-                },
-                layout: 'noBorders'
-            };
+                    },
+                    layout: 'noBorders'
+                };
 
-            // 3. Inserção no início do conteúdo (antes da tabela de itens)
-            doc.content.splice(0, 0, blocoInformacoes);
-
-            // 4. Ajuste de larguras da tabela de itens para ocupar 100% da página
-            doc.content.forEach(function(item) {
-                if (item.table && item.table.body && item.table.body[0].length > 1) {
-                    // Colunas: Número(auto), Descrição(*), Quantidade(auto), Unitário(auto), Total(auto)
-                    item.table.widths = ['auto', '*', 'auto', 'auto', 'auto'];
+                // 3. Inserir no topo
+                if (doc.content && Array.isArray(doc.content)) {
+                    doc.content.splice(0, 0, quadroCombinado);
                 }
-            });
+
+                // 4. Ajuste da tabela principal (Itens) para evitar NaN no widths
+                doc.content.forEach(function(item) {
+                    if (item.table && item.table.body && item.table.body[0].length > 1) {
+                        // Forçamos larguras fixas ou seguras para a tabela de itens
+                        // Total de 5 colunas no empenho: Número, Descrição, Qtd, Unit, Total
+                        item.table.widths = [40, '*', 60, 70, 70];
+                    }
+                });
+
+            } catch (err) {
+                console.error("Erro ao personalizar PDF:", err);
+            }
         }
     </script>
 @endsection
