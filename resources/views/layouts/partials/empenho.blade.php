@@ -126,7 +126,7 @@
             <td></td>
             <td></td>
             <td></td> {{-- Células vazias em vez de colspan --}}
-            <td class="text-end">TOTAL DOS ITENS:</td>
+            <td class="text-end">TOTAL:</td>
             <td class="text-end text-primary">R$ {{ number_format($itens->sum('valor_total'), 2, ',', '.') }}</td>
         </tr>
     </tfoot>
