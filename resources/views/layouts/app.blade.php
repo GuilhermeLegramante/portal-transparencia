@@ -115,6 +115,77 @@
          * Concentra toda a lógica de estilização comum a todos os relatórios PDF
          */
         function aplicarConfiguracoesGlobaisPDF(doc) {
+            var tabelaPrincipal = null;
+            doc.content.forEach(function(item) {
+                if (item.table && item.table.body && item
+                    .table.body[0].length > 1) {
+                    tabelaPrincipal = item;
+                }
+            });
+
+            if (tabelaPrincipal) {
+                tabelaPrincipal.table.body.forEach(function(linha) {
+                    // Percorrer cada célula da linha
+                    linha.forEach(function(celula) {
+                        // Se a célula contiver "R$", forçamos o noWrap
+                        if (typeof celula.text ===
+                            'string' && celula.text
+                            .includes('R$')) {
+                            celula.noWrap = true;
+                        }
+
+                        // Aplicar também especificamente às células que são alinhadas à direita
+                        // (Geralmente onde estão os teus números)
+                        if (celula.alignment ===
+                            'right') {
+                            celula.noWrap = true;
+                        }
+                    });
+                });
+
+                // OPCIONAL: Se o rodapé (tfoot) ainda quebrar, podes forçar especificamente na última linha
+                var ultimaLinha = tabelaPrincipal.table.body[
+                    tabelaPrincipal.table.body.length - 1];
+                ultimaLinha.forEach(function(celula) {
+                    celula.noWrap = true;
+                    celula.fontSize =
+                        7; // Reduzir um ponto a fonte no rodapé ajuda a caber tudo
+                });
+
+                // FORÇAR 100% DE LARGURA
+                // O '*' faz com que cada coluna divida o espaço disponível igualmente
+                tabelaPrincipal.table.widths = Array(tabelaPrincipal
+                    .table.body[0].length).fill('*');
+
+                // Margens da tabela
+                tabelaPrincipal.margin = [0, 5, 0, 5];
+
+                // Estilo das linhas (sem verticais, igual à imagem)
+                tabelaPrincipal.layout = {
+                    hLineWidth: function(i) {
+                        return 0.5;
+                    },
+                    vLineWidth: function(i) {
+                        return 0;
+                    },
+                    hLineColor: function(i) {
+                        return '#e2e8f0';
+                    },
+                    paddingLeft: function(i) {
+                        return 8;
+                    },
+                    paddingRight: function(i) {
+                        return 8;
+                    },
+                    paddingTop: function(i) {
+                        return 6;
+                    },
+                    paddingBottom: function(i) {
+                        return 6;
+                    }
+                };
+            }
+
             // 1. Margens e Fonte Padrão
             doc.pageMargins = [40, 80, 40, 40];
             doc.defaultStyle.fontSize = 8;
