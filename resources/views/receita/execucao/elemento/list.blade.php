@@ -36,30 +36,31 @@
                     </td>
                 </tr>
             @endforeach
+
+            {{-- RODAPÉ COM TOTAIS --}}
+            <tfoot class="table-light fw-bold">
+                <tr>
+                    <td></td> {{-- Coluna Estrutural --}}
+                    <td class="text-end">TOTAIS:</td> {{-- Coluna Descrição --}}
+
+                    <td class="text-end">
+                        R$ {{ number_format($dados->sum('valor_orcado'), 2, ',', '.') }}
+                    </td>
+
+                    <td class="text-end text-primary">
+                        R$ {{ number_format($dados->sum('valor_executado'), 2, ',', '.') }}
+                    </td>
+
+                    @php
+                        $totalDif = $dados->sum('valor_executado') - $dados->sum('valor_orcado');
+                    @endphp
+                    <td class="text-end {{ $totalDif >= 0 ? 'text-success' : 'text-danger' }}">
+                        {{ $totalDif >= 0 ? '+' : '' }} {{ number_format($totalDif, 2, ',', '.') }}
+                    </td>
+                </tr>
+            </tfoot>
         </x-tabela-transparencia>
 
-        {{-- RODAPÉ COM TOTAIS --}}
-        <tfoot class="table-light fw-bold">
-            <tr>
-                <td></td> {{-- Coluna Estrutural --}}
-                <td class="text-end">TOTAIS:</td> {{-- Coluna Descrição --}}
-
-                <td class="text-end">
-                    R$ {{ number_format($dados->sum('valor_orcado'), 2, ',', '.') }}
-                </td>
-
-                <td class="text-end text-primary">
-                    R$ {{ number_format($dados->sum('valor_executado'), 2, ',', '.') }}
-                </td>
-
-                @php
-                    $totalDif = $dados->sum('valor_executado') - $dados->sum('valor_orcado');
-                @endphp
-                <td class="text-end {{ $totalDif >= 0 ? 'text-success' : 'text-danger' }}">
-                    {{ $totalDif >= 0 ? '+' : '' }} {{ number_format($totalDif, 2, ',', '.') }}
-                </td>
-            </tr>
-        </tfoot>
         @include('layouts.partials.back')
     </div>
 @endsection
