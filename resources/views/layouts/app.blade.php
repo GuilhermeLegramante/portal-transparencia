@@ -115,40 +115,62 @@
          * Concentra toda a lógica de estilização comum a todos os relatórios PDF
          */
         function aplicarConfiguracoesGlobaisPDF(doc) {
-            // 1. Localizar a tabela principal no conteúdo do PDF primeiro
             var tabelaPrincipal = null;
+
+            var numColunas = tabelaPrincipal.table.body[0].length;
+
+            // Se por algum motivo o número for inválido ou zero, define um padrão
+            if (isNaN(numColunas) || numColunas <= 0) {
+                numColunas = 1;
+            }
+
+            tabelaPrincipal.table.widths = Array(numColunas).fill('*');
+            
             doc.content.forEach(function(item) {
-                if (item.table && item.table.body && item.table.body.length > 0) {
+                if (item.table && item.table.body && item
+                    .table.body[0].length > 1) {
                     tabelaPrincipal = item;
                 }
             });
 
-            // 2. Só aplicar configurações se a tabela existir
             if (tabelaPrincipal) {
-                var numColunas = tabelaPrincipal.table.body[0].length;
-
-                // PROTEÇÃO: Garante que numColunas seja um número válido e maior que zero
-                if (!numColunas || isNaN(numColunas)) {
-                    numColunas = 1;
-                }
-
-                // FORÇAR 100% DE LARGURA (Preenche com '*' para cada coluna encontrada)
-                tabelaPrincipal.table.widths = Array(numColunas).fill('*');
-
-                // Aplicar NoWrap e estilos nas células
                 tabelaPrincipal.table.body.forEach(function(linha) {
+                    // Percorrer cada célula da linha
                     linha.forEach(function(celula) {
-                        // Força noWrap em valores financeiros ou alinhados à direita
-                        if (celula.text && typeof celula.text === 'string' && celula.text.includes('R$')) {
+                        // Se a célula contiver "R$", forçamos o noWrap
+                        if (typeof celula.text ===
+                            'string' && celula.text
+                            .includes('R$')) {
                             celula.noWrap = true;
                         }
-                        if (celula.alignment === 'right') {
+
+                        // Aplicar também especificamente às células que são alinhadas à direita
+                        // (Geralmente onde estão os teus números)
+                        if (celula.alignment ===
+                            'right') {
                             celula.noWrap = true;
                         }
                     });
                 });
 
-                // Estilização das linhas (removendo verticais igual à sua imagem)
+                // OPCIONAL: Se o rodapé (tfoot) ainda quebrar, podes forçar especificamente na última linha
+                var ultimaLinha = tabelaPrincipal.table.body[
+                    tabelaPrincipal.table.body.length - 1];
+                ultimaLinha.forEach(function(celula) {
+                    celula.noWrap = true;
+                    celula.fontSize =
+                        7; // Reduzir um ponto a fonte no rodapé ajuda a caber tudo
+                });
+
+                // FORÇAR 100% DE LARGURA
+                // O '*' faz com que cada coluna divida o espaço disponível igualmente
+                tabelaPrincipal.table.widths = Array(tabelaPrincipal
+                    .table.body[0].length).fill('*');
+
+                // Margens da tabela
+                tabelaPrincipal.margin = [0, 5, 0, 5];
+
+                // Estilo das linhas (sem verticais, igual à imagem)
                 tabelaPrincipal.layout = {
                     hLineWidth: function(i) {
                         return 0.5;
@@ -172,13 +194,20 @@
                         return 6;
                     }
                 };
-
-                tabelaPrincipal.margin = [0, 5, 0, 5];
             }
 
-            // 3. Configurações de página e fontes (sempre executadas)
+            // 1. Margens e Fonte Padrão
             doc.pageMargins = [40, 80, 40, 40];
             doc.defaultStyle.fontSize = 8;
+
+            // 2. Estilo do Cabeçalho da Tabela
+            doc.styles.tableHeader = {
+                fillColor: '#f8fafc',
+                color: '#475569',
+                bold: true,
+                fontSize: 8,
+                alignment: 'left'
+            };
 
             // 3. Configuração do Cabeçalho (Header) com Logo
             doc['header'] = function(currentPage, pageCount, pageSize) {

@@ -41,90 +41,127 @@
     </div>
 
     <script>
+        /**
+         * Esta função injeta os dados do Credor e do Empenho no topo do PDF.
+         */
         function personalizarPDFEspecifico(doc) {
-            try {
-                // 1. Captura segura dos dados (ajustado para as variáveis do seu detalhe-empenho.blade.php)
-                const credorNome = "{{ $credor->nome }}";
-                const credorDoc = "{{ $credor->tipo_pessoa == 'F' ? $credor->cpf : $credor->cnpj }}";
-                const empenhoNum = "{{ $empenho->numero }} / {{ $exercicio }}";
-                const empenhoEmi = "{{ date('d/m/Y', strtotime($empenho->dataemissao)) }}";
-                const empenhoElem = "{{ $empenho->elemento }}";
+            // 1. Definição dos dados capturados do PHP
+            const credorNome = "{{ $credor->nome }}";
+            const credorDocumento = "{{ $credor->tipo_pessoa == 'F' ? $credor->cpf : $credor->cnpj }}";
+            const credorInscricao = "{{ $credor->inscricao }}";
+            const credorEndereco =
+                "{{ $credor->nome_logradouro ?? 'Não informado' }}, {{ $credor->numero_imovel ?? 'S/N' }}";
 
-                // 2. Criação do quadro
-                var quadroCombinado = {
-                    margin: [0, 0, 0, 15],
-                    table: {
-                        // Usar porcentagens em vez de '*' evita o erro NaN em muitos navegadores
-                        widths: ['48%', '48%'],
-                        body: [
-                            [{
-                                    text: 'DADOS DO EMPENHO',
-                                    fontSize: 9,
-                                    bold: true,
-                                    color: '#0d6efd'
-                                },
-                                {
+            const empenhoNum = "{{ $empenho->numero }} / {{ $exercicio }}";
+            const empenhoEmi = "{{ date('d/m/Y', strtotime($empenho->dataemissao)) }}";
+            const empenhoElem = "{{ $empenho->elemento }}";
+            const empenhoMod = "{{ $empenho->modalidade }}";
+
+            // 2. Quadro do Credor
+            var quadroCredor = {
+                margin: [0, 0, 0, 5],
+                table: {
+                    widths: ['100%'],
+                    body: [
+                        [{
+                            fillColor: '#f1f5f9',
+                            padding: [10, 8, 10, 8],
+                            stack: [{
                                     text: 'IDENTIFICAÇÃO DO CREDOR',
                                     fontSize: 9,
                                     bold: true,
-                                    color: '#0d6efd'
-                                }
-                            ],
-                            [{
-                                    fillColor: '#f8fafc',
-                                    padding: [8, 8, 8, 8],
-                                    stack: [{
-                                            text: 'Nº/Exercício: ' + empenhoNum,
+                                    color: '#0d6efd',
+                                    margin: [0, 0, 0, 4]
+                                },
+                                {
+                                    columns: [{
+                                            text: 'Nome: ' + credorNome,
                                             fontSize: 8,
-                                            bold: true
+                                            bold: true,
+                                            width: '*'
                                         },
                                         {
-                                            text: 'Emissão: ' + empenhoEmi,
-                                            fontSize: 8
-                                        },
-                                        {
-                                            text: 'Elemento: ' + empenhoElem,
-                                            fontSize: 8
+                                            text: 'Doc: ' + credorDocumento,
+                                            fontSize: 8,
+                                            width: 'auto'
                                         }
                                     ]
                                 },
                                 {
-                                    fillColor: '#f8fafc',
-                                    padding: [8, 8, 8, 8],
-                                    stack: [{
-                                            text: 'Nome: ' + credorNome,
+                                    text: 'Endereço: ' + credorEndereco,
+                                    fontSize: 7,
+                                    color: '#64748b',
+                                    margin: [0, 2, 0, 0]
+                                }
+                            ]
+                        }]
+                    ]
+                },
+                layout: 'noBorders'
+            };
+
+            // 3. Quadro do Empenho (Logo abaixo)
+            var quadroEmpenho = {
+                margin: [0, 0, 0, 15],
+                table: {
+                    widths: ['100%'],
+                    body: [
+                        [{
+                            fillColor: '#f8fafc', // Tom levemente diferente para distinguir
+                            padding: [10, 8, 10, 8],
+                            stack: [{
+                                    text: 'DADOS DO EMPENHO',
+                                    fontSize: 9,
+                                    bold: true,
+                                    color: '#0d6efd',
+                                    margin: [0, 0, 0, 4]
+                                },
+                                {
+                                    columns: [{
+                                            text: 'Nº/Exercício: ' + empenhoNum,
                                             fontSize: 8,
-                                            bold: true
+                                            bold: true,
+                                            width: '*'
                                         },
                                         {
-                                            text: 'Documento: ' + credorDoc,
-                                            fontSize: 8
+                                            text: 'Emissão: ' + empenhoEmi,
+                                            fontSize: 8,
+                                            width: 'auto'
+                                        }
+                                    ]
+                                },
+                                {
+                                    margin: [0, 2, 0, 0],
+                                    columns: [{
+                                            text: 'Elemento: ' + empenhoElem,
+                                            fontSize: 8,
+                                            width: '*'
+                                        },
+                                        {
+                                            text: 'Modalidade: ' + empenhoMod,
+                                            fontSize: 8,
+                                            width: 'auto'
                                         }
                                     ]
                                 }
                             ]
-                        ]
-                    },
-                    layout: 'noBorders'
-                };
+                        }]
+                    ]
+                },
+                layout: 'noBorders'
+            };
 
-                // 3. Inserir no topo
-                if (doc.content && Array.isArray(doc.content)) {
-                    doc.content.splice(0, 0, quadroCombinado);
+            // 4. Inserção no PDF (Empenho entra depois do Credor)
+            // Usamos splice para garantir que fiquem no topo antes da tabela de itens
+            doc.content.splice(0, 0, quadroCredor, quadroEmpenho);
+
+            // 5. Ajuste preventivo para a tabela de itens não dar NaN
+            doc.content.forEach(function(item) {
+                if (item.table && item.table.body && item.table.body[0].length > 1) {
+                    // Força as larguras da tabela principal (Itens)
+                    item.table.widths = [40, '*', 60, 80, 80];
                 }
-
-                // 4. Ajuste da tabela principal (Itens) para evitar NaN no widths
-                doc.content.forEach(function(item) {
-                    if (item.table && item.table.body && item.table.body[0].length > 1) {
-                        // Forçamos larguras fixas ou seguras para a tabela de itens
-                        // Total de 5 colunas no empenho: Número, Descrição, Qtd, Unit, Total
-                        item.table.widths = [40, '*', 60, 70, 70];
-                    }
-                });
-
-            } catch (err) {
-                console.error("Erro ao personalizar PDF:", err);
-            }
+            });
         }
     </script>
 @endsection
