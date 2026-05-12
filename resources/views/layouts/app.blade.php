@@ -116,6 +116,16 @@
          */
         function aplicarConfiguracoesGlobaisPDF(doc) {
             var tabelaPrincipal = null;
+
+            var numColunas = tabelaPrincipal.table.body[0].length;
+
+            // Se por algum motivo o número for inválido ou zero, define um padrão
+            if (isNaN(numColunas) || numColunas <= 0) {
+                numColunas = 1;
+            }
+
+            tabelaPrincipal.table.widths = Array(numColunas).fill('*');
+            
             doc.content.forEach(function(item) {
                 if (item.table && item.table.body && item
                     .table.body[0].length > 1) {
