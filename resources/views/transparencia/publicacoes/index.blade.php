@@ -28,19 +28,20 @@
             ['label' => 'Categorias', 'align' => 'text-start'],
             ['label' => 'Documento', 'align' => 'text-center'],
         ]">
-            @forelse($publicacoes as $pub)
+            @forelse ($publicacoes as $pub)
                 <tr>
-                    <td class="text-center font-monospace">{{ $pub->codigo }}</td>
+                    <td class="text-center text-muted small">{{ $pub->codigo }}</td>
                     <td class="text-center">{{ date('d/m/Y', strtotime($pub->data)) }}</td>
-                    <td>
-                        <span class="fw-bold d-block text-uppercase small">{{ $pub->descricao }}</span>
+                    <td class="text-start">
+                        <span class="fw-bold text-dark">{{ $pub->descricao }}</span>
                     </td>
                     <td>
                         @php $tags = explode(';', $pub->categoria); @endphp
                         @foreach ($tags as $tag)
                             @if (!empty($tag))
-                                <span
-                                    class="badge bg-light text-dark border shadow-sm small mb-1">{{ trim($tag) }}</span>
+                                <span class="badge bg-light text-dark border shadow-sm small mb-1">
+                                    {{ trim($tag) }}
+                                </span>
                             @endif
                         @endforeach
                     </td>
@@ -56,10 +57,11 @@
                     </td>
                 </tr>
             @empty
+                {{-- Importante: O DataTables às vezes reclama se houver um TR dentro do tbody 
+             que não segue a contagem exata de colunas durante a inicialização --}}
                 <tr>
                     <td colspan="5" class="text-center py-4 text-muted">
-                        <i class="fa fa-info-circle me-2"></i>Nenhuma publicação encontrada para o exercício
-                        {{ $exercicio }}.
+                        <i class="fa fa-info-circle me-2"></i>Nenhuma publicação encontrada.
                     </td>
                 </tr>
             @endforelse
