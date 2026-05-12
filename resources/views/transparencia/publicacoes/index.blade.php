@@ -65,6 +65,16 @@
                     </td>
                 </tr>
             @endforelse
+
+            <tfoot class="table-light fw-bold">
+                <tr>
+                    {{-- Se você quer uma linha de totalizadores, use 5 TDs --}}
+                    <td class="text-end" colspan="2">TOTAL DE REGISTROS:</td>
+                    <td class="text-start">{{ count($publicacoes) }}</td>
+                    <td></td> {{-- Coluna Categorias --}}
+                    <td></td> {{-- Coluna Documento --}}
+                </tr>
+            </tfoot>
         </x-tabela-transparencia>
     </div>
 @endsection
