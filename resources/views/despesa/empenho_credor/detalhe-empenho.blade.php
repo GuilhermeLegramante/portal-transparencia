@@ -39,4 +39,114 @@
             <i class="fa fa-arrow-left"></i> Voltar
         </a>
     </div>
+
+    <script>
+        /**
+         * Injeta blocos de Credor e Empenho no topo do PDF
+         */
+        function personalizarPDFEspecifico(doc) {
+            // --- DADOS DO EMPENHO ---
+            const nEmpenho = "{{ $empenho->numero }} / {{ $exercicio }}";
+            const dataEmissao = "{{ date('d/m/Y', strtotime($empenho->dataemissao)) }}";
+            const modalidade = "{{ $empenho->modalidade }} / {{ $empenho->especie }}";
+            const elemento = "{{ $empenho->elemento }}";
+
+            // --- DADOS DO CREDOR ---
+            const credorNome = "{{ $empenho->nome_municipe }}";
+            const credorDoc = "{{ $empenho->documento }}";
+
+            // Bloco Combinado: Empenho e Credor
+            var cabecalhoDetalhado = {
+                margin: [0, 0, 0, 15],
+                table: {
+                    widths: ['*', '*'],
+                    body: [
+                        // Linha 1: Títulos dos Quadros
+                        [{
+                                text: 'IDENTIFICAÇÃO DO EMPENHO',
+                                fontSize: 9,
+                                bold: true,
+                                color: '#0d6efd',
+                                margin: [0, 0, 0, 5]
+                            },
+                            {
+                                text: 'DADOS DO CREDOR',
+                                fontSize: 9,
+                                bold: true,
+                                color: '#0d6efd',
+                                margin: [0, 0, 0, 5]
+                            }
+                        ],
+                        // Linha 2: Conteúdo em colunas
+                        [{
+                                fillColor: '#f8fafc',
+                                padding: [10, 8, 10, 8],
+                                stack: [{
+                                        text: 'Número/Exercício: ' + nEmpenho,
+                                        fontSize: 8,
+                                        margin: [0, 2]
+                                    },
+                                    {
+                                        text: 'Emissão: ' + dataEmissao,
+                                        fontSize: 8,
+                                        margin: [0, 2]
+                                    },
+                                    {
+                                        text: 'Modalidade: ' + modalidade,
+                                        fontSize: 8,
+                                        margin: [0, 2]
+                                    },
+                                    {
+                                        text: 'Elemento: ' + elemento,
+                                        fontSize: 8,
+                                        bold: true,
+                                        color: '#1e293b'
+                                    }
+                                ]
+                            },
+                            {
+                                fillColor: '#f8fafc',
+                                padding: [10, 8, 10, 8],
+                                stack: [{
+                                        text: 'Nome / Razão Social:',
+                                        fontSize: 7,
+                                        color: '#64748b'
+                                    },
+                                    {
+                                        text: credorNome,
+                                        fontSize: 9,
+                                        bold: true,
+                                        color: '#1e293b',
+                                        margin: [0, 0, 0, 4]
+                                    },
+                                    {
+                                        text: 'CPF/CNPJ:',
+                                        fontSize: 7,
+                                        color: '#64748b'
+                                    },
+                                    {
+                                        text: credorDoc,
+                                        fontSize: 9,
+                                        color: '#1e293b'
+                                    }
+                                ]
+                            }
+                        ]
+                    ]
+                },
+                layout: 'noBorders'
+            };
+
+            // Injeta antes da tabela de itens
+            doc.content.splice(0, 0, cabecalhoDetalhado);
+
+            // Ajuste opcional: Forçar a tabela de itens a ocupar 100% da largura
+            doc.content.forEach(function(item) {
+                if (item.table && item.table.body && item.table.body[0].length > 1) {
+                    // No empenho.blade as colunas são: Número, Descrição, Qtd, Unitário, Total
+                    item.table.widths = ['auto', '*', 'auto', 'auto', 'auto'];
+                }
+            });
+        }
+    </script>
 @endsection

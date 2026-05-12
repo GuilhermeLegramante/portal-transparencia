@@ -120,9 +120,13 @@
             <td class="text-end fw-bold">R$ {{ number_format($it->valor_total, 2, ',', '.') }}</td>
         </tr>
     @endforeach
+    {{-- No seu empenho.blade.php --}}
     <tfoot class="table-light fw-bold">
         <tr>
-            <td colspan="4" class="text-end">TOTAL DOS ITENS:</td>
+            <td></td>
+            <td></td>
+            <td></td> {{-- Células vazias em vez de colspan --}}
+            <td class="text-end">TOTAL DOS ITENS:</td>
             <td class="text-end text-primary">R$ {{ number_format($itens->sum('valor_total'), 2, ',', '.') }}</td>
         </tr>
     </tfoot>
