@@ -80,8 +80,30 @@
                         <div class="card-body">
                             <p class="mb-1"><strong>Termo/Nº:</strong> {{ $baixa->termo }} / {{ $baixa->numero }}</p>
                             <p class="mb-1"><strong>Data:</strong> {{ date('d/m/Y', strtotime($baixa->data)) }}</p>
-                            <p class="mb-1"><strong>Operação:</strong> {{ $baixa->tipooperacao }}</p>
-                            <p class="mb-1"><strong>Destinação:</strong> {{ $baixa->destinacao }}</p>
+                            <p class="mb-1">
+                                <strong>Operação:</strong>
+                                {{ match ($baixa->tipooperacao) {
+                                    'PER' => 'Perda',
+                                    'DOA' => 'Doação',
+                                    'DEV' => 'Devolução',
+                                    'INC' => 'Incorporação',
+                                    'INS' => 'Inservibilidade',
+                                    'IMO' => 'Imóveis',
+                                    'DEM' => 'Demais',
+                                    default => $baixa->tipooperacao,
+                                } }}
+                            </p>
+
+                            <p class="mb-1">
+                                <strong>Destinação:</strong>
+                                {{ match ($baixa->destinacao) {
+                                    'DOA' => 'Doação',
+                                    'ALI' => 'Alienação',
+                                    'SUC' => 'Sucata',
+                                    'OUT' => 'Outros',
+                                    default => $baixa->destinacao,
+                                } }}
+                            </p>
                         </div>
                     </div>
                 </div>
