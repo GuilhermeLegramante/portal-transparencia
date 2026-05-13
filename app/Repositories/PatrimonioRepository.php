@@ -45,24 +45,50 @@ class PatrimonioRepository
 
     public function getDetalhes($idcliente, $idPatrimonio)
     {
-        // 1. Dados Cabeçalho (Patrimônio)
-        $dados = DB::table('patpatrimonio as p')
+        // 1. Dados Básicos do Patrimônio
+        $patrimonio = DB::table('patpatrimonio as p')
             ->leftJoin('almproduto as prod', function ($j) {
-                $j->on('prod.id', '=', 'p.idproduto')->on('prod.idcliente', '=', 'p.idcliente');
+                $j->on('prod.id', '=', 'p.idproduto')
+                    ->on('prod.idcliente', '=', 'p.idcliente');
             })
             ->select('p.*', 'prod.nome as nome_produto')
             ->where('p.id', $idPatrimonio)
             ->where('p.idcliente', $idcliente)
             ->first();
 
-        if (!$dados) return null;
+        if (!$patrimonio) return null;
+
+        // 2. Movimentações (Múltiplos registros)
+        $movimentacoes = DB::table('patpatrimoniomovimento')
+            ->where('idcliente', $idcliente)
+            ->where('idpatrimonio', $idPatrimonio)
+            ->orderBy('codigo')
+            ->get();
+
+        // 3. Dados de Baixa (Registro único)
+        $baixa = DB::table('patpatrimoniobaixa')
+            ->where('idcliente', $idcliente)
+            ->where('idpatrimonio', $idPatrimonio)
+            ->first();
+
+        // 4. Dados de Veículo
+        $veiculo = DB::table('patpatrimonioveiculo')
+            ->where('idcliente', $idcliente)
+            ->where('idpatrimonio', $idPatrimonio)
+            ->first();
+
+        // 5. Dados de Semovente
+        $semovente = DB::table('patpatrimoniosemovente')
+            ->where('idcliente', $idcliente)
+            ->where('idpatrimonio', $idPatrimonio)
+            ->first();
 
         return [
-            'patrimonio' => $dados,
-            // 'movimentacoes' => DB::table('patmovimentacao')->where('idpatrimonio', $idPatrimonio)->where('idcliente', $idcliente)->get(),
-            // 'baixa' => DB::table('patbaixa')->where('idpatrimonio', $idPatrimonio)->where('idcliente', $idcliente)->first(),
-            // 'veiculo' => DB::table('patveiculo')->where('idpatrimonio', $idPatrimonio)->where('idcliente', $idcliente)->first(),
-            // 'semovente' => DB::table('patsemovente')->where('idpatrimonio', $idPatrimonio)->where('idcliente', $idcliente)->first(),
+            'patrimonio'    => $patrimonio,
+            'movimentacoes' => $movimentacoes,
+            'baixa'         => $baixa,
+            'veiculo'       => $veiculo,
+            'semovente'     => $semovente
         ];
     }
 }

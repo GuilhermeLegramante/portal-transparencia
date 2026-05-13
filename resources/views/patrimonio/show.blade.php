@@ -44,65 +44,86 @@
             </div>
         </div>
 
-        <div class="row">
-            {{-- Movimentações --}}
-            {{-- <div class="col-md-6 mb-4">
-                <div class="card h-100 shadow-sm border-0">
-                    <div class="card-header">Movimentações</div>
-                    <div class="card-body p-0">
-                        <table class="table table-sm mb-0">
-                            <thead class="bg-light">
+        {{-- 1. SEÇÃO DE MOVIMENTAÇÕES --}}
+        @if ($movimentacoes->count() > 0)
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-light fw-bold"><i class="fa fa-history me-2"></i>Movimentações do Bem</div>
+                <div class="card-body p-0">
+                    <table class="table table-sm mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-3">Código</th>
+                                <th>Descrição</th>
+                                <th class="text-end pe-3">Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($movimentacoes as $mov)
                                 <tr>
-                                    <th>Código</th>
-                                    <th>Descrição</th>
-                                    <th class="text-end">Valor</th>
+                                    <td class="ps-3">{{ $mov->codigo }}</td>
+                                    <td>{{ $mov->descricao }}</td>
+                                    <td class="text-end pe-3">R$ {{ number_format($mov->valor, 2, ',', '.') }}</td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($movimentacoes as $m)
-                                    <tr>
-                                        <td>{{ $m->codigo }}</td>
-                                        <td>{{ $m->descricao }}</td>
-                                        <td class="text-end">R$ {{ number_format($m->valor, 2, ',', '.') }}</td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="3" class="text-center p-3 text-muted">Sem movimentações</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        @endif
+
+        <div class="row">
+            {{-- 2. SEÇÃO DE BAIXA --}}
+            @if ($baixa)
+                <div class="col-md-6">
+                    <div class="card shadow-sm border-0 mb-4 border-start border-4 border-danger">
+                        <div class="card-header bg-white fw-bold text-danger">Dados da Baixa</div>
+                        <div class="card-body">
+                            <p class="mb-1"><strong>Termo/Nº:</strong> {{ $baixa->termo }} / {{ $baixa->numero }}</p>
+                            <p class="mb-1"><strong>Data:</strong> {{ date('d/m/Y', strtotime($baixa->data)) }}</p>
+                            <p class="mb-1"><strong>Operação:</strong> {{ $baixa->tipooperacao }}</p>
+                            <p class="mb-1"><strong>Destinação:</strong> {{ $baixa->destinacao }}</p>
+                        </div>
                     </div>
                 </div>
-            </div> --}}
+            @endif
 
-            {{-- Dados Específicos (Veículo / Baixa / Semovente) --}}
-            <div class="col-md-6 mb-4">
-                {{-- Veículo --}}
-                {{-- @if ($veiculo)
-                    <div class="card shadow-sm border-0 mb-3 border-start border-4 border-info">
-                        <div class="card-header fw-bold">Dados do Veículo</div>
-                        <div class="card-body py-2">
-                            <p class="mb-1 small"><strong>Marca/Modelo:</strong> {{ $veiculo->marca }} /
-                                {{ $veiculo->modelo }} ({{ $veiculo->ano }})</p>
-                            <p class="mb-1 small"><strong>Placa:</strong> {{ $veiculo->placa }} |
-                                <strong>Combustível:</strong> {{ $veiculo->combustivel }}</p>
+            {{-- 3. SEÇÃO DE VEÍCULO --}}
+            @if ($veiculo)
+                <div class="col-md-6">
+                    <div class="card shadow-sm border-0 mb-4 border-start border-4 border-primary">
+                        <div class="card-header bg-white fw-bold text-primary">Informações do Veículo</div>
+                        <div class="card-body small">
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Marca:</strong> {{ $veiculo->marca }}<br>
+                                    <strong>Modelo:</strong> {{ $veiculo->modelo }}<br>
+                                    <strong>Placa:</strong> <span class="badge bg-dark">{{ $veiculo->placa }}</span>
+                                </div>
+                                <div class="col-6">
+                                    <strong>Ano:</strong> {{ $veiculo->anofabricacao }}/{{ $veiculo->anomodelo }}<br>
+                                    <strong>Cor:</strong> {{ $veiculo->cor }}<br>
+                                    <strong>Combustível:</strong> {{ $veiculo->combustivel }}
+                                </div>
+                            </div>
                         </div>
                     </div>
-                @endif --}}
+                </div>
+            @endif
 
-                {{-- Baixa --}}
-                {{-- @if ($baixa)
-                    <div class="card shadow-sm border-0 mb-3 border-start border-4 border-danger">
-                        <div class="card-header fw-bold">Dados da Baixa</div>
-                        <div class="card-body py-2 small">
-                            <strong>Termo:</strong> {{ $baixa->termo }} ({{ $baixa->numero }}) | <strong>Data:</strong>
-                            {{ date('d/m/Y', strtotime($baixa->data)) }}<br>
-                            <strong>Destinação:</strong> {{ $baixa->destination }}
+            {{-- 4. SEÇÃO DE SEMOVENTE --}}
+            @if ($semovente)
+                <div class="col-md-6">
+                    <div class="card shadow-sm border-0 mb-4 border-start border-4 border-success">
+                        <div class="card-header bg-white fw-bold text-success">Dados do Semovente</div>
+                        <div class="card-body">
+                            <p class="mb-1"><strong>Registro/Brinco:</strong> {{ $semovente->registro }} /
+                                {{ $semovente->brinco }}</p>
+                            <p class="mb-1"><strong>Espécie:</strong> {{ $semovente->especie }}</p>
+                            <p class="mb-1"><strong>Sexo:</strong> {{ $semovente->sexo == 'M' ? 'Macho' : 'Fêmea' }}</p>
                         </div>
                     </div>
-                @endif --}}
-            </div>
+                </div>
+            @endif
         </div>
         @include('layouts.partials.back')
     </div>
