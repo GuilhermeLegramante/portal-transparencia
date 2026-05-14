@@ -24,11 +24,25 @@ class TenantMiddleware
 
         // Busca o cliente no banco global
         $cliente = DB::table('glbcliente')
-            ->join('glbclientedado', 'glbcliente.id', '=', 'glbclientedado.idcliente')
-            ->join('cadlogradouro', 'cadlogradouro.id', '=', 'glbclientedado.idlogradouro')
-            ->join('cadbairro', 'cadbairro.id', '=', 'glbclientedado.idbairro')
-            ->join('cadmunicipio', 'cadmunicipio.id', '=', 'cadbairro.idmunicipio')
-            ->join('caduf', 'caduf.id', '=', 'cadmunicipio.iduf')
+            ->join('glbclientedado', function ($join) {
+                $join->on('glbclientedado.idcliente', '=', 'glbcliente.id');
+            })
+            ->join('cadlogradouro', function ($join) {
+                $join->on('cadlogradouro.id', '=', 'glbclientedado.idlogradouro')
+                    ->on('cadlogradouro.idcliente', '=', 'glbcliente.id');
+            })
+            ->join('cadbairro', function ($join) {
+                $join->on('cadbairro.id', '=', 'glbclientedado.idbairro')
+                    ->on('cadbairro.idcliente', '=', 'glbcliente.id');
+            })
+            ->join('cadmunicipio', function ($join) {
+                $join->on('cadmunicipio.id', '=', 'cadbairro.idmunicipio')
+                    ->on('cadmunicipio.idcliente', '=', 'glbcliente.id');
+            })
+            ->join('caduf', function ($join) {
+                $join->on('caduf.id', '=', 'cadmunicipio.iduf')
+                    ->on('caduf.idcliente', '=', 'glbcliente.id');
+            })
             ->select(
                 'glbcliente.id',
                 'glbcliente.identificador',
@@ -45,7 +59,8 @@ class TenantMiddleware
                 'cadmunicipio.nome AS municipio',
                 'caduf.sigla AS uf'
             )
-            ->where('identificador', $identificador)->first();
+            ->where('glbcliente.identificador', $identificador)
+            ->first();
 
 
         if (!$cliente) {
