@@ -396,6 +396,24 @@
                         {{-- <li><a class="dropdown-item" href="#">Links Úteis</a></li> --}}
                     </ul>
                 </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {{ request()->is('sic*') ? 'active fw-bold' : '' }}"
+                        href="#" id="navbarSIC" role="button" data-bs-toggle='dropdown'>
+                        SIC
+                    </a>
+                    <ul class="dropdown-menu shadow border-0">
+                        <li><a class="dropdown-item" href="{{ route('sic.index') }}">Sobre o SIC / Guia</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item fw-bold text-primary" href="{{ route('sic.login') }}">Solicitar
+                                Informação (Login)</a></li>
+                        <li><a class="dropdown-item" href="{{ route('sic.estatisticas') }}">Consulta Estatística</a>
+                        </li>
+                        <li><a class="dropdown-item" href="{{ route('sic.contato') }}">Fale Conosco</a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </div>

@@ -23,6 +23,7 @@ use App\Http\Controllers\ReceitaController;
 use App\Http\Controllers\RegistroPrecoController;
 use App\Http\Controllers\RequisicaoController;
 use App\Http\Controllers\SessaoController;
+use App\Http\Controllers\SicController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -278,3 +279,24 @@ Route::prefix('parlamentar')->name('parlamentar.')->group(function () {
 Route::get('/ajuda/faq', function () {
     return view('ajuda.faq');
 })->name('ajuda.faq');
+
+/** 
+ * Rotas para o SIC (Sistema de Informação ao Cidadão)
+ */
+Route::prefix('sic')->name('sic.')->group(function () {
+    // Página inicial (Explicativa)
+    Route::get('/', [SicController::class, 'index'])->name('index');
+    
+    // Contato Direto
+    Route::get('/contato', [SicController::class, 'contato'])->name('contato');
+    Route::post('/contato/enviar', [SicController::class, 'enviarEmail'])->name('enviar');
+
+    // Estatísticas (Público)
+    Route::get('/estatisticas', [SicController::class, 'estatisticas'])->name('estatisticas');
+
+    // Área Logada do Cidadão
+    Route::middleware('auth:cidadao')->group(function () {
+        Route::get('/meus-pedidos', [SicController::class, 'meusPedidos'])->name('pedidos');
+        Route::get('/novo-pedido', [SicController::class, 'createPedido'])->name('novo-pedido');
+    });
+});

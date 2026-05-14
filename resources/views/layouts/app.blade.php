@@ -69,6 +69,7 @@
     </div>
 
     @include('layouts.partials.topbar')
+    
     <div class="sticky-top shadow-sm">
         @include('layouts.partials.navbar')
     </div>
