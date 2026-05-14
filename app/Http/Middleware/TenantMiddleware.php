@@ -37,7 +37,7 @@ class TenantMiddleware
                 'glbclientedado.email',
                 'glbclientedado.telefone',
                 'glbclientedado.numero',
-                'glbclientedado.site',
+                'glbclientedado.website AS site',
                 'glbclientedado.funcionamento',
                 'cadlogradouro.nome AS logradouro',
                 'cadlogradouro.cep AS cep',
