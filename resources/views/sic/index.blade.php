@@ -1,25 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container-fluid px-lg-5">
+    <div class="container-fluid px-lg-5 py-4 bg-light-gray min-vh-100">
         <x-breadcrumb :items="$breadcrumb" />
 
-        <div class="row mb-5">
-            <div class="col-12">
-                <div class="card border-0 rounded-4 overflow-hidden shadow-lg bg-gradient-primary text-white">
-                    <div class="card-body p-5 d-flex align-items-center position-relative">
-                        <div class="flex-grow-1">
-                            <h1 class="display-5 fw-bold mb-3">Serviço de Informação ao Cidadão</h1>
-                            <p class="fs-5 opacity-75 mb-0 max-w-600">
-                                Garantindo o seu direito constitucional de acesso à informação pública de forma rápida e
-                                transparente.
-                            </p>
-                        </div>
-                        <div class="d-none d-lg-block position-absolute end-0 bottom-0 opacity-25 p-4">
-                            <i class="fas fa-bullhorn fa-10x"></i>
-                        </div>
-                    </div>
-                </div>
+        <div class="row mb-5 mt-3">
+            <div class="col-md-8">
+                <h1 class="fw-bold text-dark border-start border-primary border-5 ps-3">SIC</h1>
+                <p class="text-muted fs-5">Serviço de Informação ao Cidadão - {{ config('app.client_full_name') }}</p>
+            </div>
+            <div class="col-md-4 text-md-end d-flex align-items-center justify-content-md-end">
+                <span class="badge bg-white text-primary border border-primary px-3 py-2 rounded-pill shadow-sm">
+                    <i class="fas fa-landmark me-2"></i>Acesso à Informação
+                </span>
             </div>
         </div>
 
@@ -27,30 +20,34 @@
             <div class="col-lg-8">
                 <div class="row g-4">
                     <div class="col-md-6">
-                        <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift">
-                            <div class="card-body p-4 text-center">
-                                <div class="icon-circle bg-soft-primary text-primary mx-auto mb-3">
-                                    <i class="fas fa-user-plus"></i>
+                        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden card-hover">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="icon-square bg-soft-blue text-primary me-3">
+                                        <i class="fas fa-plus"></i>
+                                    </div>
+                                    <h5 class="fw-bold mb-0">Novo Pedido</h5>
                                 </div>
-                                <h4 class="fw-bold">Cadastro</h4>
-                                <p class="text-muted small">Primeiro passo para quem deseja fazer uma solicitação formal.
-                                </p>
-                                <a href="{{ route('sic.cadastro') }}"
-                                    class="btn btn-outline-primary rounded-pill px-4">Cadastrar-se</a>
+                                <p class="text-muted small">Ainda não possui cadastro? Registre-se para solicitar
+                                    informações formais.</p>
+                                <a href="{{ route('sic.cadastro') }}" class="btn btn-primary w-100 rounded-3 fw-bold">Criar
+                                    Cadastro</a>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift">
-                            <div class="card-body p-4 text-center text-white bg-primary">
-                                <div class="icon-circle bg-white-soft text-white mx-auto mb-3">
-                                    <i class="fas fa-key"></i>
+                        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden card-hover">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="icon-square bg-soft-green text-success me-3">
+                                        <i class="fas fa-sign-in-alt"></i>
+                                    </div>
+                                    <h5 class="fw-bold mb-0">Entrar no Sistema</h5>
                                 </div>
-                                <h4 class="fw-bold">Acesso</h4>
-                                <p class="small opacity-75">Já possui conta? Acesse para pedir informações ou acompanhar
-                                    status.</p>
-                                <a href="{{ route('sic.login') }}" class="btn btn-light rounded-pill px-4 fw-bold">Fazer
-                                    Login</a>
+                                <p class="text-muted small">Já é cadastrado? Acesse seu perfil para acompanhar seus pedidos.
+                                </p>
+                                <a href="{{ route('sic.login') }}"
+                                    class="btn btn-outline-dark w-100 rounded-3 fw-bold">Fazer Login</a>
                             </div>
                         </div>
                     </div>
@@ -58,123 +55,114 @@
 
                 <div class="card mt-4 border-0 shadow-sm rounded-4">
                     <div class="card-body p-4">
-                        <h5 class="fw-bold mb-4 border-bottom pb-2 text-secondary">
-                            <i class="fas fa-question-circle me-2"></i>Como realizar um pedido?
-                        </h5>
-                        <div class="d-flex align-items-start mb-3">
-                            <span class="badge bg-primary rounded-circle p-2 me-3 mt-1">01</span>
-                            <p class="mb-0"><strong>Autenticação:</strong> Faça seu login ou crie uma conta no portal.</p>
-                        </div>
-                        <div class="d-flex align-items-start mb-3">
-                            <span class="badge bg-primary rounded-circle p-2 me-3 mt-1">02</span>
-                            <p class="mb-0"><strong>Formulário:</strong> Descreva de forma clara e objetiva a informação
-                                desejada.</p>
-                        </div>
-                        <div class="d-flex align-items-start">
-                            <span class="badge bg-primary rounded-circle p-2 me-3 mt-1">03</span>
-                            <p class="mb-0"><strong>Protocolo:</strong> Guarde o seu número para acompanhar o prazo legal
-                                de resposta.</p>
+                        <h5 class="fw-bold mb-4 text-dark"><i class="fas fa-book-reader me-2 text-primary"></i> Guia Rápido
+                            de Utilização</h5>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="p-3 border rounded-3 bg-white text-center h-100">
+                                    <div class="h3 fw-bold text-light-gray mb-1">01</div>
+                                    <h6 class="fw-bold">Cadastro</h6>
+                                    <p class="small text-muted mb-0">Identifique-se de forma segura.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-3 border rounded-3 bg-white text-center h-100">
+                                    <div class="h3 fw-bold text-light-gray mb-1">02</div>
+                                    <h6 class="fw-bold">Solicitação</h6>
+                                    <p class="small text-muted mb-0">Envie sua pergunta ou pedido.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-3 border rounded-3 bg-white text-center h-100">
+                                    <div class="h3 fw-bold text-light-gray mb-1">03</div>
+                                    <h6 class="fw-bold">Resposta</h6>
+                                    <p class="small text-muted mb-0">Receba no prazo legal.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="col-lg-4">
-                <div class="card border-0 shadow-sm rounded-4 h-100">
-                    <div class="card-header bg-white p-4 border-0 pb-0">
-                        <h5 class="fw-bold mb-0">Atendimento Presencial</h5>
-                    </div>
+                <div class="card border-0 shadow-sm rounded-4 mb-4">
                     <div class="card-body p-4">
-                        <div class="info-item mb-4">
-                            <label class="text-uppercase small text-muted fw-bold d-block mb-1">Localização</label>
-                            <div class="d-flex">
-                                <i class="fas fa-map-marker-alt text-danger me-3 mt-1"></i>
-                                <span>{{ config('app.client_address') }}</span>
-                            </div>
+                        <h6 class="fw-bold mb-3 border-bottom pb-2">Unidade de Atendimento</h6>
+                        <div class="mb-3 d-flex">
+                            <i class="fas fa-map-marker-alt text-primary me-3 mt-1"></i>
+                            <span class="small">{{ config('app.client_address') }}</span>
                         </div>
-                        <div class="info-item mb-4">
-                            <label class="text-uppercase small text-muted fw-bold d-block mb-1">E-mail</label>
-                            <div class="d-flex">
-                                <i class="fas fa-envelope text-primary me-3 mt-1"></i>
-                                <span>{{ config('app.client_email') }}</span>
-                            </div>
+                        <div class="mb-3 d-flex">
+                            <i class="fas fa-clock text-primary me-3 mt-1"></i>
+                            <span class="small">{{ config('app.client_operation_hours') }}</span>
                         </div>
-                        <div class="info-item mb-4">
-                            <label class="text-uppercase small text-muted fw-bold d-block mb-1">Funcionamento</label>
-                            <div class="d-flex">
-                                <i class="fas fa-clock text-success me-3 mt-1"></i>
-                                <span>{{ config('app.client_operation_hours') }}</span>
-                            </div>
+                        <div class="d-flex">
+                            <i class="fas fa-envelope text-primary me-3 mt-1"></i>
+                            <span class="small">{{ config('app.client_email') }}</span>
                         </div>
-                        <hr>
-                        <a href="{{ route('sic.estatisticas') }}" class="btn btn-soft-dark w-100 rounded-pill mb-2 mt-3">
-                            <i class="fas fa-chart-pie me-2"></i>Ver Estatísticas
-                        </a>
-                        <a href="{{ route('sic.contato') }}" class="btn btn-soft-primary w-100 rounded-pill">
-                            <i class="fas fa-comments me-2"></i>Dúvidas Rápidas
-                        </a>
                     </div>
                 </div>
+
+                <a href="{{ route('sic.estatisticas') }}"
+                    class="btn btn-white w-100 shadow-sm rounded-3 py-3 mb-2 border text-dark fw-bold">
+                    <i class="fas fa-chart-line me-2 text-primary"></i> Estatísticas de Pedidos
+                </a>
+                <a href="{{ route('sic.contato') }}"
+                    class="btn btn-white w-100 shadow-sm rounded-3 py-3 border text-dark fw-bold">
+                    <i class="fas fa-question-circle me-2 text-primary"></i> Dúvidas e Orientações
+                </a>
             </div>
         </div>
     </div>
 
     <style>
-        .bg-gradient-primary {
-            background: linear-gradient(135deg, #0d6efd 0%, #0046b8 100%);
+        .bg-light-gray {
+            background-color: #f8f9fa;
         }
 
-        .bg-soft-primary {
-            background-color: #e7f1ff;
+        .bg-soft-blue {
+            background-color: #eef4ff;
         }
 
-        .bg-white-soft {
-            background-color: rgba(255, 255, 255, 0.2);
+        .bg-soft-green {
+            background-color: #f0fff4;
         }
 
-        .btn-soft-primary {
-            background-color: #e7f1ff;
-            color: #0d6efd;
-            font-weight: bold;
-        }
-
-        .btn-soft-primary:hover {
-            background-color: #0d6efd;
-            color: #fff;
-        }
-
-        .btn-soft-dark {
-            background-color: #f1f1f1;
-            color: #333;
-            font-weight: bold;
+        .text-light-gray {
+            color: #dee2e6;
         }
 
         .rounded-4 {
             border-radius: 1rem !important;
         }
 
-        .max-w-600 {
-            max-width: 600px;
-        }
-
-        .icon-circle {
-            width: 60px;
-            height: 60px;
+        .icon-square {
+            width: 45px;
+            height: 45px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 50%;
-            font-size: 1.5rem;
+            border-radius: 12px;
+            font-size: 1.2rem;
         }
 
-        .hover-lift {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            cursor: pointer;
+        .card-hover {
+            transition: all 0.3s ease;
         }
 
-        .hover-lift:hover {
+        .card-hover:hover {
             transform: translateY(-5px);
-            box-shadow: 0 1rem 3rem rgba(0, 0, 0, .1) !important;
+            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08) !important;
+        }
+
+        .btn-white {
+            background-color: #fff;
+            border: 1px solid #eee;
+        }
+
+        .btn-white:hover {
+            background-color: #f8f9fa;
+            border-color: #ddd;
         }
     </style>
 @endsection
