@@ -96,7 +96,7 @@ class TenantMiddleware
                 ->max('datahora');
         });
 
-        Config::set('app.client_updated_at', $updatedAt ? date('d/m/Y H:i', strtotime($updatedAt)) : 'N/A');
+        Config::set('app.client_updated_at', $updatedAt ? date('d/m/Y', strtotime($updatedAt)) : 'N/A');
 
         return $next($request);
     }
