@@ -8,7 +8,7 @@
                     <div class="card-body p-5">
                         <h3 class="fw-bold mb-4 text-center">Cadastro de Cidadão</h3>
 
-                        <form action="{{ route('sic.cadastro') }}" method="POST">
+                        <form action="{{ route('sic.registrar') }}" method="POST">
                             @csrf
                             {{-- O idcliente é passado oculto ou tratado no Controller via config --}}
                             <input type="hidden" name="idcliente" value="{{ config('app.client_id') }}">
