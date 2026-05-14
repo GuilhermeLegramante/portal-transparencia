@@ -18,8 +18,6 @@ class TenantMiddleware
         preg_match('/-(.*?)\./', $host, $matches);
         $identificador = $matches[1] ?? null;
 
-        dd($identificador);
-
         if (!$identificador) {
             abort(404, "Cliente não identificado.");
         }
