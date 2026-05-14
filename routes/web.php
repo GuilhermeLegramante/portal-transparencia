@@ -286,7 +286,7 @@ Route::get('/ajuda/faq', function () {
 Route::prefix('sic')->name('sic.')->group(function () {
     // Página inicial (Explicativa)
     Route::get('/', [SicController::class, 'index'])->name('index');
-    
+
     // Contato Direto
     Route::get('/contato', [SicController::class, 'contato'])->name('contato');
     Route::post('/contato/enviar', [SicController::class, 'enviarEmail'])->name('enviar');
@@ -299,4 +299,7 @@ Route::prefix('sic')->name('sic.')->group(function () {
         Route::get('/meus-pedidos', [SicController::class, 'meusPedidos'])->name('pedidos');
         Route::get('/novo-pedido', [SicController::class, 'createPedido'])->name('novo-pedido');
     });
+
+    Route::get('/login', [SicController::class, 'login'])->name('login');
+    Route::get('/cadastro', [SicController::class, 'cadastro'])->name('cadastro');
 });
