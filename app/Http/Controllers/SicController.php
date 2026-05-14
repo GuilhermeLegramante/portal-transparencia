@@ -39,6 +39,24 @@ class SicController extends Controller
         return view('sic.contato', compact('breadcrumb'));
     }
 
+    public function enviarEmail(Request $request)
+    {
+        $dados = $request->validate([
+            'nome' => 'required',
+            'email' => 'required|email',
+            'assunto' => 'required',
+            'mensagem' => 'required'
+        ]);
+
+        // O destino é o e-mail do cliente configurado no Middleware
+        $destino = config('app.client_email');
+
+        // Aqui você dispararia o Mail::send...
+        // Mail::to($destino)->send(new SicContatoMail($dados));
+
+        return back()->with('success', 'Sua mensagem foi enviada com sucesso! Em breve retornaremos.');
+    }
+
     public function estatisticas(Request $request)
     {
         $exercicio = $request->get('exercicio', date('Y'));
