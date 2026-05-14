@@ -24,7 +24,7 @@ class SicController extends Controller
         ];
 
         // Dados dinâmicos para a página inicial (Exemplo de estatística rápida)
-        $totalPedidos = DB::table('sic_pedidos') // Ajuste o nome da sua tabela de pedidos
+        $totalPedidos = DB::table('sicpedido') // Ajuste o nome da sua tabela de pedidos
             ->where('idcliente', $this->idCliente)
             ->count();
 
