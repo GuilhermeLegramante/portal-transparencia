@@ -3,8 +3,8 @@
         <div class="row gy-5 mb-5">
             <div class="col-lg-4">
                 <h6 class="fw-bold text-primary text-uppercase mb-3" style="letter-spacing: 1px;">Institucional</h6>
-                <p class="text-dark fw-bold mb-1">Prefeitura Municipal de Cacequi</p>
-                <p class="text-muted small mb-4">CNPJ: 88.604.897/0001-03</p>
+                <p class="text-dark fw-bold mb-1">{{ config('app.client_full_name') }}</p>
+                <p class="text-muted small mb-4">CNPJ: {{ config('app.client_cnpj') }}</p>
 
                 <div class="d-flex gap-2">
                     <a href="#" class="social-icon" title="Facebook"><i class="bi bi-facebook"></i></a>
@@ -18,17 +18,17 @@
                 <ul class="list-unstyled small text-muted">
                     <li class="mb-3 d-flex align-items-start">
                         <i class="bi bi-geo-alt text-primary me-3 mt-1"></i>
-                        <span>Rua Bento Gonçalves, nº 363, Centro<br>Cacequi - RS, 97450-000</span>
+                        <span>{{ config('app.client_address') }}<br></span>
                     </li>
                     <li class="mb-3">
-                        <i class="bi bi-telephone text-primary me-3"></i>(55) 3254-1311
+                        <i class="bi bi-telephone text-primary me-3"></i>{{ config('app.client_phone') }}
                     </li>
                     <li class="mb-3">
-                        <i class="bi bi-envelope text-primary me-3"></i>pmcacequi@hotmail.com
+                        <i class="bi bi-envelope text-primary me-3"></i>{{ config('app.client_email') }}
                     </li>
                     <li class="pt-2 border-top">
                         <i class="bi bi-clock-history text-primary me-3"></i>
-                        <span class="fw-bold text-dark">Atualizado em:</span> {{ date('d/m/Y') }}
+                        <span class="fw-bold text-dark">Atualizado em:</span> {{ config('app.client_updated_at') }}
                     </li>
                 </ul>
             </div>
@@ -36,7 +36,7 @@
             <div class="col-lg-4 text-lg-end">
                 <h6 class="fw-bold text-dark text-uppercase mb-3" style="letter-spacing: 1px;">Transparência</h6>
                 <div class="mb-4">
-                    <a href="https://www.cacequi.rs.gov.br" target="_blank"
+                    <a href="{{ config('app.client_site') }}" target="_blank"
                         class="btn btn-outline-primary btn-sm px-4 rounded-pill">
                         Site Oficial <i class="bi bi-arrow-up-right ms-1"></i>
                     </a>
@@ -54,7 +54,7 @@
                 </div>
                 <div class="col-md-6 text-center text-md-end">
                     <span class="me-3"><i class="bi bi-shield-check me-1"></i> LGPD e Privacidade</span>
-                    <span><i class="bi bi-clock me-1"></i> Seg - Sex: 09h às 15h</span>
+                    <span><i class="bi bi-clock me-1"></i> {{ config('app.client_operation_hours') }}</span>
                 </div>
             </div>
         </div>

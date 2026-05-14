@@ -8,6 +8,15 @@ return [
     'client_name' => env('CLIENT_NAME', 'Cliente Padrão'),
     'client_full_name' => env('CLIENT_FULL_NAME', 'Prefeitura Municipal'),
     'client_cnpj' => env('CLIENT_CNPJ', '00.000.000/0000-00'),
+    'client_email' => env('CLIENT_EMAIL', 'contato@prefeitura.com'),
+    'client_phone' => env('CLIENT_PHONE', '(00) 0000-0000'),
+    'client_address' => env('CLIENT_ADDRESS', 'Endereço do Cliente'),
+    'client_city' => env('CLIENT_CITY', 'Cidade'),
+    'client_state' => env('CLIENT_STATE', 'Estado'),
+    'client_site' => env('CLIENT_SITE', 'https://www.prefeitura.com'),
+    'client_operation_hours' => env('CLIENT_OPERATION_HOURS', 'Segunda a Sexta: 8h às 12h e 13h às 17h'),
+    'client_updated_at' => env('CLIENT_UPDATED_AT', null),
+
 
     /*
     |--------------------------------------------------------------------------

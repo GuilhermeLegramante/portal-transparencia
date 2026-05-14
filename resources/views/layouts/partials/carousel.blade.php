@@ -14,7 +14,7 @@
                             Transparência</span>
                         <h2 class="display-5 fw-bold mb-3" style="color: var(--text-main);">Caro Cidadão</h2>
                         <p class="lead text-secondary mb-4">
-                            Acompanhe a aplicação dos recursos públicos de <strong>Cacequi</strong> de forma clara,
+                            Acompanhe a aplicação dos recursos públicos de forma clara,
                             rápida e sem burocracia.
                         </p>
                         <div class="d-flex gap-3">

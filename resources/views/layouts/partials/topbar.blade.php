@@ -1,7 +1,8 @@
 <div class="top-bar py-1 border-bottom">
     <div class="container d-flex justify-content-between align-items-center flex-wrap">
         <div class="contact-info small text-muted">
-            <i class="fas fa-envelope me-1"></i> pmcacequi@hotmail.com
+            <i class="fas fa-envelope me-1"></i> {{ config('app.client_email') }} |
+            <i class="fas fa-phone me-1"></i> {{ config('app.client_phone') }}
         </div>
 
         <div class="d-flex align-items-center flex-wrap gap-2 py-2">
