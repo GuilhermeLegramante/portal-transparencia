@@ -28,7 +28,7 @@
                     </li>
                     <li class="pt-2 border-top">
                         <i class="bi bi-clock-history text-primary me-3"></i>
-                        <span class="fw-bold text-dark">Atualizado em:</span> {{ date('d/m/Y', config('app.client_updated_at')) }}
+                        <span class="fw-bold text-dark">Atualizado em:</span> {{ Carbon\Carbon::parse(config('app.client_updated_at'))->format('d/m/Y') }}
                     </li>
                 </ul>
             </div>
