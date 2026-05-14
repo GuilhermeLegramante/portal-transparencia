@@ -32,7 +32,7 @@ class TenantMiddleware
             ->select(
                 'glbcliente.id',
                 'glbcliente.identificador',
-                'glbclientedado.nome',
+                'glbcliente.nome',
                 'glbclientedado.cnpj',
                 'glbclientedado.email',
                 'glbclientedado.telefone',
@@ -71,7 +71,7 @@ class TenantMiddleware
         $updatedAt = DB::table('glbclientepublicacao')
             ->where('idcliente', $cliente->id)
             ->max('datahora');
-            
+
         Config::set('app.client_updated_at', $updatedAt ? date('Y-m-d H:i:s', strtotime($updatedAt)) : null);
 
         return $next($request);
