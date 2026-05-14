@@ -61,6 +61,8 @@
                                         <li><a class="dropdown-item"
                                                 href="{{ route('planejamento.loa.receita', ['filtro' => 'recurso']) }}">Por
                                                 Recurso</a></li>
+                                        <li><a class="dropdown-item" href="{{ $baseUrl }}duodecimo">Duodécimo</a>
+                                        </li>
                                     </ul>
                                 </li>
                             </ul>
