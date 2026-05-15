@@ -27,7 +27,6 @@ class EmpenhoCredorController extends Controller
      */
     public function index()
     {
-        dd(config('app.client_id'));
         $resumoAnual = $this->empenhoRepo->resumoAnualPorExercicio(config('app.client_id'));
 
         return view('despesa.empenho_credor.index', compact('resumoAnual'));
