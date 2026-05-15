@@ -27,6 +27,7 @@ class EmpenhoCredorController extends Controller
      */
     public function index()
     {
+        dd($this->idCliente);
         $resumoAnual = $this->empenhoRepo->resumoAnualPorExercicio($this->idCliente);
 
         return view('despesa.empenho_credor.index', compact('resumoAnual'));
