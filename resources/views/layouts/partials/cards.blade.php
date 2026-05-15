@@ -96,7 +96,14 @@
                         <div class="icon-shape bg-soft-blue text-primary me-3">
                             <i class="fa-solid fa-arrow-down"></i>
                         </div>
-                        <p class="text-muted small mb-0">Déficit orçamentário</p>
+                        {{-- "Déficit orçamentário", se o valor for positivo, colocar "Superávit orçamentário" --}}
+                        <p class="text-muted small mb-0">
+                            @if ($dados['deficit_orc'] > 0)
+                                Superávit orçamentário
+                            @else
+                                Déficit orçamentário
+                            @endif
+                        </p>
                     </div>
                     <h2 class="fw-bold mb-0 text-primary">{{ number_format($dados['deficit_orc'], 2, ',', '.') }}</h2>
                 </div>
