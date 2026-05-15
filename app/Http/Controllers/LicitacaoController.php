@@ -13,7 +13,7 @@ class LicitacaoController extends Controller
     public function __construct(LicitacaoRepository $repository)
     {
         $this->repository = $repository;
-        $this->idCliente = config('app.client_id');
+        
     }
 
     /**
@@ -21,7 +21,7 @@ class LicitacaoController extends Controller
      */
     public function index()
     {
-        $resumoAnual = $this->repository->getResumoLicitacoesPorExercicio($this->idCliente);
+        $resumoAnual = $this->repository->getResumoLicitacoesPorExercicio(config('app.client_id'));
 
         return view('compras.licitacoes.processo.index', compact('resumoAnual'));
     }
@@ -31,7 +31,7 @@ class LicitacaoController extends Controller
      */
     public function list($exercicio)
     {
-        $dados = $this->repository->getLicitacoesPorExercicio($this->idCliente, $exercicio);
+        $dados = $this->repository->getLicitacoesPorExercicio(config('app.client_id'), $exercicio);
 
         return view('compras.licitacoes.processo.list', compact('dados', 'exercicio'));
     }
@@ -41,10 +41,10 @@ class LicitacaoController extends Controller
      */
     public function show($id)
     {
-        $licitacao  = $this->repository->getLicitacaoDetalhes($this->idCliente, $id);
-        $comissao   = $this->repository->getComissaoLicitacao($this->idCliente, $id);
-        $itens      = $this->repository->getItensLicitacao($this->idCliente, $id);
-        $vencedores = $this->repository->getVencedoresLicitacao($this->idCliente, $id);
+        $licitacao  = $this->repository->getLicitacaoDetalhes(config('app.client_id'), $id);
+        $comissao   = $this->repository->getComissaoLicitacao(config('app.client_id'), $id);
+        $itens      = $this->repository->getItensLicitacao(config('app.client_id'), $id);
+        $vencedores = $this->repository->getVencedoresLicitacao(config('app.client_id'), $id);
 
         return view('compras.licitacoes.processo.show', compact('licitacao', 'comissao', 'itens', 'vencedores'));
     }

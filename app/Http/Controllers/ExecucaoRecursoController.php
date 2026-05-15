@@ -18,19 +18,19 @@ class ExecucaoRecursoController extends Controller
         $this->municipeRepo = $municipeRepo;
         $this->execucaoRepo = $execucaoRepo;
 
-        $this->idCliente = config('app.client_id');
+        
     }
 
     public function index()
     {
-        $resumoAnual = $this->execucaoRepo->getResumoGeralPorExercicio($this->idCliente);
+        $resumoAnual = $this->execucaoRepo->getResumoGeralPorExercicio(config('app.client_id'));
 
         return view('despesa.execucao_recurso.index', compact('resumoAnual'));
     }
 
     public function list($exercicio)
     {
-        $data = $this->execucaoRepo->getExecucaoPorRecurso($exercicio, $this->idCliente);
+        $data = $this->execucaoRepo->getExecucaoPorRecurso($exercicio, config('app.client_id'));
 
         return view('despesa.execucao_recurso.list', compact('data', 'exercicio'));
     }

@@ -13,7 +13,7 @@ class CronogramaPagamentoController extends Controller
     public function __construct(CronogramaPagamentoRepository $repo)
     {
         $this->repo = $repo;
-        $this->idCliente = config('app.client_id');
+        
     }
 
     public function index(Request $request)
@@ -22,8 +22,8 @@ class CronogramaPagamentoController extends Controller
         $credorId = $request->get('credor_id'); // Opcional
         $recursoId = $request->get('recurso_id'); // Opcional
 
-        $resumoRecursos = $this->repo->getResumoPorRecurso($this->idCliente, $exercicio);
-        $pagamentos = $this->repo->getListagemCompleta($this->idCliente, $exercicio, $credorId, $recursoId);
+        $resumoRecursos = $this->repo->getResumoPorRecurso(config('app.client_id'), $exercicio);
+        $pagamentos = $this->repo->getListagemCompleta(config('app.client_id'), $exercicio, $credorId, $recursoId);
 
         $breadcrumb = [
             'Finanças' => '#',

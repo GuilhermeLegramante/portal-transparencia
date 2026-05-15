@@ -18,19 +18,19 @@ class ExecucaoLocalizadorController extends Controller
         $this->municipeRepo = $municipeRepo;
         $this->execucaoRepo = $execucaoRepo;
 
-        $this->idCliente = config('app.client_id');
+        
     }
 
     public function index()
     {
-        $resumoAnual = $this->execucaoRepo->getResumoGeralPorExercicio($this->idCliente);
+        $resumoAnual = $this->execucaoRepo->getResumoGeralPorExercicio(config('app.client_id'));
 
         return view('despesa.execucao_localizador.index', compact('resumoAnual'));
     }
 
     public function list($exercicio)
     {
-        $data = $this->execucaoRepo->getExecucaoPorLocalizador($exercicio, $this->idCliente);
+        $data = $this->execucaoRepo->getExecucaoPorLocalizador($exercicio, config('app.client_id'));
 
         return view('despesa.execucao_localizador.list', compact('data', 'exercicio'));
     }

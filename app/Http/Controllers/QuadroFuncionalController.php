@@ -14,7 +14,7 @@ class QuadroFuncionalController extends Controller
     public function __construct(QuadroFuncionalRepository $repository)
     {
         $this->repository = $repository;
-        $this->idCliente = config('app.client_id');
+        
     }
 
     // Auxiliar para carregar filtros e resumo
@@ -22,17 +22,17 @@ class QuadroFuncionalController extends Controller
     {
         // Busca ID da situação "Em Atividade" (Código 1) como padrão
         $situacaoPadrao = DB::table('folsituacaocontratual')
-            ->where('idcliente', $this->idCliente)
+            ->where('idcliente', config('app.client_id'))
             ->where('codigo', 1)
             ->value('id');
 
         $sitId = $request->get('situacao', $situacaoPadrao);
 
         return [
-            'resumo' => $this->repository->getResumoGeral($this->idCliente),
-            'situacoes' => DB::table('folsituacaocontratual')->where('idcliente', $this->idCliente)->get(),
+            'resumo' => $this->repository->getResumoGeral(config('app.client_id')),
+            'situacoes' => DB::table('folsituacaocontratual')->where('idcliente', config('app.client_id'))->get(),
             'sitId' => $sitId,
-            'idcliente' => $this->idCliente
+            'idcliente' => config('app.client_id')
         ];
     }
 
@@ -82,12 +82,12 @@ class QuadroFuncionalController extends Controller
         $config = $mapa[$tipo];
 
         // Busca os servidores usando o método que já temos no Repository
-        $servidores = $this->repository->getDetalhesContratos($this->idCliente, $sitId, $config['coluna'], $idCategoria);
+        $servidores = $this->repository->getDetalhesContratos(config('app.client_id'), $sitId, $config['coluna'], $idCategoria);
 
         // Busca o nome da categoria para o cabeçalho (Ex: "Secretaria de Saúde" ou "Professor")
         $categoriaNome = DB::table($config['tabela'])
             ->where('id', $idCategoria)
-            ->where('idcliente', $this->idCliente)
+            ->where('idcliente', config('app.client_id'))
             ->value('nome');
 
         return view('pessoal.quadro.show_servidores', compact('servidores', 'categoriaNome', 'config'));

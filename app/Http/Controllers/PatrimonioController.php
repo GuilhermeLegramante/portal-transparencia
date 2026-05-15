@@ -13,14 +13,14 @@ class PatrimonioController extends Controller
     public function __construct(PatrimonioRepository $repo)
     {
         $this->repo = $repo;
-        $this->idCliente = config('app.client_id');
+        
     }
 
     public function index(Request $request)
     {
         $filtrosAtivos = $request->only(['classe', 'especie', 'classificacao']);
-        $opcoesFiltros = $this->repo->getFiltros($this->idCliente);
-        $patrimonios = $this->repo->getPatrimonios($this->idCliente, $filtrosAtivos);
+        $opcoesFiltros = $this->repo->getFiltros(config('app.client_id'));
+        $patrimonios = $this->repo->getPatrimonios(config('app.client_id'), $filtrosAtivos);
 
         $breadcrumb = ['Patrimônio' => '#', 'Listagem de Bens' => ''];
 
@@ -29,7 +29,7 @@ class PatrimonioController extends Controller
 
     public function show($id)
     {
-        $detalhes = $this->repo->getDetalhes($this->idCliente, $id);
+        $detalhes = $this->repo->getDetalhes(config('app.client_id'), $id);
 
         if (!$detalhes) return redirect()->back()->with('error', 'Bem não encontrado.');
 

@@ -18,19 +18,19 @@ class ExecucaoOrgaoController extends Controller
         $this->municipeRepo = $municipeRepo;
         $this->execucaoRepo = $execucaoRepo;
 
-        $this->idCliente = config('app.client_id');
+        
     }
 
     public function index()
     {
-        $resumoAnual = $this->execucaoRepo->getResumoGeralPorExercicio($this->idCliente);
+        $resumoAnual = $this->execucaoRepo->getResumoGeralPorExercicio(config('app.client_id'));
 
         return view('despesa.execucao_orgao.index', compact('resumoAnual'));
     }
 
     public function list($exercicio)
     {
-        $data = $this->execucaoRepo->getExecucaoPorOrgao($exercicio, $this->idCliente);
+        $data = $this->execucaoRepo->getExecucaoPorOrgao($exercicio, config('app.client_id'));
 
         return view('despesa.execucao_orgao.list', compact('data', 'exercicio'));
     }

@@ -19,7 +19,7 @@ class EmpenhoElementoController extends Controller
         $this->municipeRepo = $municipeRepo;
         $this->empenhoRepo = $empenhoRepo;
 
-        $this->idCliente = config('app.client_id');
+        
     }
 
     /**
@@ -27,7 +27,7 @@ class EmpenhoElementoController extends Controller
      */
     public function index()
     {
-        $resumoAnual = $this->empenhoRepo->resumoAnualPorExercicio($this->idCliente);
+        $resumoAnual = $this->empenhoRepo->resumoAnualPorExercicio(config('app.client_id'));
 
         return view('despesa.empenho_elemento.index', compact('resumoAnual'));
     }
@@ -37,7 +37,7 @@ class EmpenhoElementoController extends Controller
      */
     public function listaElementos($exercicio)
     {
-        $elementos = $this->empenhoRepo->listaElementos($exercicio, $this->idCliente);
+        $elementos = $this->empenhoRepo->listaElementos($exercicio, config('app.client_id'));
 
         return view('despesa.empenho_elemento.lista', compact('elementos', 'exercicio'));
     }
@@ -78,9 +78,9 @@ class EmpenhoElementoController extends Controller
             config('app.client_id')
         );
 
-        $empenho = $this->empenhoRepo->findById($empenho_id, $exercicio, $this->idCliente);
+        $empenho = $this->empenhoRepo->findById($empenho_id, $exercicio, config('app.client_id'));
 
-        $itens = $this->empenhoRepo->findItemsByEmpenhoId($empenho_id, $this->idCliente);
+        $itens = $this->empenhoRepo->findItemsByEmpenhoId($empenho_id, config('app.client_id'));
 
         return view('despesa.empenho_elemento.detalhe-empenho', compact('elemento', 'empenho', 'itens', 'exercicio', 'elemento_id'));
     }

@@ -13,7 +13,7 @@ class SicController extends Controller
     public function __construct()
     {
         // O idCliente já vem configurado pelo seu TenantMiddleware
-        $this->idCliente = config('app.client_id');
+        
     }
 
     public function index()
@@ -25,7 +25,7 @@ class SicController extends Controller
 
         // Dados dinâmicos para a página inicial (Exemplo de estatística rápida)
         $totalPedidos = DB::table('sicpedido') // Ajuste o nome da sua tabela de pedidos
-            ->where('idcliente', $this->idCliente)
+            ->where('idcliente', config('app.client_id'))
             ->count();
 
         return view('sic.index', compact('breadcrumb', 'totalPedidos'));
@@ -80,7 +80,7 @@ class SicController extends Controller
                 'pedido.situacao',
                 'pedido.avaliacao'
             )
-            ->where('pedido.idcliente', $this->idCliente)
+            ->where('pedido.idcliente', config('app.client_id'))
             ->whereYear('pedido.datahora', $exercicio)
             ->orderBy('pedido.datahora', 'desc')
             ->get();
@@ -130,7 +130,7 @@ class SicController extends Controller
         // Verifica se o e-mail já existe para ESTE cliente específico
         $usuarioExistente = DB::table('sicusuario')
             ->where('email', $request->email)
-            ->where('idcliente', $this->idCliente)
+            ->where('idcliente', config('app.client_id'))
             ->first();
 
         if ($usuarioExistente) {
@@ -139,7 +139,7 @@ class SicController extends Controller
 
         // Insere no banco usando a tabela que você enviou no SQL
         DB::table('sicusuario')->insert([
-            'idcliente'  => $this->idCliente,
+            'idcliente'  => config('app.client_id'),
             'nome'       => $request->name,
             'email'      => $request->email,
             'senha'      => Hash::make($request->password), // Sempre criptografe a senha
@@ -164,7 +164,7 @@ class SicController extends Controller
         // Busca o usuário garantindo que ele pertence ao cliente atual (Multitenant)
         $user = DB::table('sicusuario')
             ->where('email', $credentials['email'])
-            ->where('idcliente', $this->idCliente)
+            ->where('idcliente', config('app.client_id'))
             ->first();
 
         if ($user && Hash::check($credentials['password'], $user->senha)) {

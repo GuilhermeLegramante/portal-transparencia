@@ -15,39 +15,39 @@ class RequisicaoController extends Controller
     public function __construct(RequisicaoRepository $repository)
     {
         $this->repository = $repository;
-        $this->idCliente = config('app.client_id');
+        
     }
 
     // --- VISÃO: POR FORNECEDOR ---
     public function indexFornecedor()
     {
-        $dados = $this->repository->getResumoPorExercicio($this->idCliente);
+        $dados = $this->repository->getResumoPorExercicio(config('app.client_id'));
         return view('compras.requisicao.index', ['dados' => $dados, 'tipo' => 'fornecedor', 'titulo' => 'por Fornecedor']);
     }
 
     public function listFornecedor($exercicio)
     {
-        $dados = $this->repository->getFornecedores($this->idCliente, $exercicio);
+        $dados = $this->repository->getFornecedores(config('app.client_id'), $exercicio);
         return view('compras.requisicao.fornecedor_list', compact('dados', 'exercicio'));
     }
 
     public function showFornecedor($exercicio, $idfornecedor)
     {
-        $itens = $this->repository->getItensPorFornecedor($this->idCliente, $exercicio, $idfornecedor);
-        $header = DB::table('cadmunicipe')->where('id', $idfornecedor)->where('idcliente', $this->idCliente)->first();
+        $itens = $this->repository->getItensPorFornecedor(config('app.client_id'), $exercicio, $idfornecedor);
+        $header = DB::table('cadmunicipe')->where('id', $idfornecedor)->where('idcliente', config('app.client_id'))->first();
         return view('compras.requisicao.show_detalhes', compact('itens', 'header', 'exercicio'));
     }
 
     // --- VISÃO: POR SOLICITANTE (UNIDADE) ---
     public function indexSolicitante()
     {
-        $dados = $this->repository->getResumoPorExercicio($this->idCliente);
+        $dados = $this->repository->getResumoPorExercicio(config('app.client_id'));
         return view('compras.requisicao.index', ['dados' => $dados, 'tipo' => 'solicitante', 'titulo' => 'por Solicitante']);
     }
 
     public function listSolicitante($exercicio)
     {
-        $dados = $this->repository->getSolicitantes($this->idCliente, $exercicio);
+        $dados = $this->repository->getSolicitantes(config('app.client_id'), $exercicio);
         return view('compras.requisicao.solicitante_list', compact('dados', 'exercicio'));
     }
 
@@ -66,25 +66,25 @@ class RequisicaoController extends Controller
             ->selectRaw("IF(item.idproduto IS NOT NULL, 
                 (SELECT nome FROM almproduto WHERE id = item.idproduto AND idcliente = item.idcliente),
                 (SELECT nome FROM comservico WHERE id = item.idservico AND idcliente = item.idcliente)) as nome")
-            ->where('item.idcliente', $this->idCliente)
+            ->where('item.idcliente', config('app.client_id'))
             ->where('requisicao.exercicio', $exercicio)
             ->where('conta.idunidadeorcamentaria', $idunidade)
             ->orderBy('data')->orderBy('nome')->get();
 
-        $header = DB::table('ctbunidadeorcamentaria')->where('id', $idunidade)->where('idcliente', $this->idCliente)->first();
+        $header = DB::table('ctbunidadeorcamentaria')->where('id', $idunidade)->where('idcliente', config('app.client_id'))->first();
         return view('compras.requisicao.show_detalhes', compact('itens', 'header', 'exercicio'));
     }
 
     // --- VISÃO: POR ELEMENTO ---
     public function indexElemento()
     {
-        $dados = $this->repository->getResumoPorExercicio($this->idCliente);
+        $dados = $this->repository->getResumoPorExercicio(config('app.client_id'));
         return view('compras.requisicao.index', ['dados' => $dados, 'tipo' => 'elemento', 'titulo' => 'por Elemento']);
     }
 
     public function listElemento($exercicio)
     {
-        $dados = $this->repository->getElementos($this->idCliente, $exercicio);
+        $dados = $this->repository->getElementos(config('app.client_id'), $exercicio);
         return view('compras.requisicao.elemento_list', compact('dados', 'exercicio'));
     }
 
@@ -103,12 +103,12 @@ class RequisicaoController extends Controller
             ->selectRaw("IF(item.idproduto IS NOT NULL, 
                 (SELECT nome FROM almproduto WHERE id = item.idproduto AND idcliente = item.idcliente),
                 (SELECT nome FROM comservico WHERE id = item.idservico AND idcliente = item.idcliente)) as nome")
-            ->where('item.idcliente', $this->idCliente)
+            ->where('item.idcliente', config('app.client_id'))
             ->where('requisicao.exercicio', $exercicio)
             ->where('conta.idelemento', $idelemento)
             ->orderBy('data')->orderBy('nome')->get();
 
-        $header = DB::table('ctbelemento')->where('id', $idelemento)->where('idcliente', $this->idCliente)->first();
+        $header = DB::table('ctbelemento')->where('id', $idelemento)->where('idcliente', config('app.client_id'))->first();
         return view('compras.requisicao.show_detalhes', compact('itens', 'header', 'exercicio'));
     }
 }

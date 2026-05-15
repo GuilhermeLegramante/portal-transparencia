@@ -19,7 +19,7 @@ class DespesaController extends Controller
         $this->municipeRepo = $municipeRepo;
         $this->empenhoRepo = $empenhoRepo;
 
-        $this->idCliente = config('app.client_id');
+        
     }
 
     public function resumoAnualDiarias(Request $request)
@@ -42,7 +42,7 @@ class DespesaController extends Controller
                 'empenho.exercicio as exercicio',
             ])
             ->selectRaw("SUM(movimento.emissao - movimento.anular) as valor")
-            ->where('movimento.idcliente', $this->idCliente)
+            ->where('movimento.idcliente', config('app.client_id'))
             ->where(function ($query) {
                 $query->where('elemento.estrutural', 'like', '3.3.9.0.14.%')
                     ->orWhere('elemento.estrutural', 'like', '3.3.9.2.14.%')
@@ -94,7 +94,7 @@ class DespesaController extends Controller
             ->selectRaw("SUM(movimento.emissao - movimento.anular) as saldo_empenhado")
             ->selectRaw("SUM(movimento.emissao - movimento.anular - movimento.liquidacao) as saldo_liquidar")
             ->selectRaw("SUM(movimento.liquidacao - movimento.pagamento) as saldo_pagar")
-            ->where('movimento.idcliente', $this->idCliente)
+            ->where('movimento.idcliente', config('app.client_id'))
             ->where('empenho.exercicio', $exercicio)
             ->where(function ($query) {
                 $query->where('elemento.estrutural', 'like', '3.3.9.0.14.%')
@@ -138,20 +138,20 @@ class DespesaController extends Controller
 
     public function detalheCredor( $exercicio, $credor_id)
     {
-        $credor = $this->municipeRepo->findById($credor_id, $this->idCliente);
+        $credor = $this->municipeRepo->findById($credor_id, config('app.client_id'));
 
-        $empenhos = $this->empenhoRepo->findAllByCredorId($credor_id,  $exercicio, $this->idCliente);
+        $empenhos = $this->empenhoRepo->findAllByCredorId($credor_id,  $exercicio, config('app.client_id'));
 
         return view('despesa.diarias.credor_detalhe', compact('credor', 'empenhos', 'exercicio'));
     }
 
     public function detalheEmpenho( $exercicio, $credor_id, $emp)
     {
-        $credor = $this->municipeRepo->findById($credor_id, $this->idCliente);
+        $credor = $this->municipeRepo->findById($credor_id, config('app.client_id'));
 
-        $empenho = $this->empenhoRepo->findById($emp,  $exercicio, $this->idCliente);
+        $empenho = $this->empenhoRepo->findById($emp,  $exercicio, config('app.client_id'));
 
-        $itens = $this->empenhoRepo->findItemsByEmpenhoId($emp, $this->idCliente);
+        $itens = $this->empenhoRepo->findItemsByEmpenhoId($emp, config('app.client_id'));
 
         return view('despesa.diarias.empenho_detalhe', compact('credor', 'empenho', 'itens', 'exercicio', 'credor_id'));
     }

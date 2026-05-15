@@ -13,7 +13,7 @@ class FolhaPagamentoController extends Controller
     public function __construct(FolhaPagamentoRepository $repo)
     {
         $this->repo = $repo;
-        $this->idCliente = config('app.client_id');
+        
     }
 
     public function porFuncao(Request $request)
@@ -21,8 +21,8 @@ class FolhaPagamentoController extends Controller
         $exercicio = $request->get('exercicio', date('Y'));
         $mes = $request->get('mes', date('n'));
 
-        $resumo = $this->repo->getResumoFinanceiro($this->idCliente);
-        $dados = $this->repo->getPorFuncao($this->idCliente, $exercicio, $mes);
+        $resumo = $this->repo->getResumoFinanceiro(config('app.client_id'));
+        $dados = $this->repo->getPorFuncao(config('app.client_id'), $exercicio, $mes);
 
         $breadcrumb = [
             'Pessoal' => '#',
@@ -39,8 +39,8 @@ class FolhaPagamentoController extends Controller
         $exercicio = $request->get('exercicio', date('Y'));
         $mes = $request->get('mes', date('n'));
 
-        $resumo = $this->repo->getResumoFinanceiro($this->idCliente);
-        $dados = $this->repo->getPorLotacao($this->idCliente, $exercicio, $mes);
+        $resumo = $this->repo->getResumoFinanceiro(config('app.client_id'));
+        $dados = $this->repo->getPorLotacao(config('app.client_id'), $exercicio, $mes);
 
         $breadcrumb = [
             'Pessoal' => '#',
@@ -57,8 +57,8 @@ class FolhaPagamentoController extends Controller
         $exercicio = $request->get('exercicio', date('Y'));
         $mes = $request->get('mes', date('n'));
 
-        $resumo = $this->repo->getResumoFinanceiro($this->idCliente);
-        $dados = $this->repo->getPorRegime($this->idCliente, $exercicio, $mes);
+        $resumo = $this->repo->getResumoFinanceiro(config('app.client_id'));
+        $dados = $this->repo->getPorRegime(config('app.client_id'), $exercicio, $mes);
 
         $breadcrumb = [
             'Pessoal' => '#',
@@ -76,8 +76,8 @@ class FolhaPagamentoController extends Controller
         $mes = $request->get('mes', date('n'));
         $busca = $request->get('busca');
 
-        $resumo = $this->repo->getResumoFinanceiro($this->idCliente);
-        $dados = $this->repo->getPorServidor($this->idCliente, $exercicio, $mes, $busca);
+        $resumo = $this->repo->getResumoFinanceiro(config('app.client_id'));
+        $dados = $this->repo->getPorServidor(config('app.client_id'), $exercicio, $mes, $busca);
 
         $breadcrumb = [
             'Pessoal' => '#',
@@ -93,7 +93,7 @@ class FolhaPagamentoController extends Controller
         $mapaCampos = ['funcao' => 'idfuncao', 'lotacao' => 'idlotacao', 'regime' => 'idregime'];
         $campoFiltro = $mapaCampos[$tipo] ?? 'idfuncao';
 
-        $contratos = $this->repo->getContratosPorCategoria($this->idCliente, $exercicio, $mes, $campoFiltro, $idCategoria);
+        $contratos = $this->repo->getContratosPorCategoria(config('app.client_id'), $exercicio, $mes, $campoFiltro, $idCategoria);
 
         // Breadcrumb dinâmico baseado na origem
         $breadcrumb = [
@@ -107,8 +107,8 @@ class FolhaPagamentoController extends Controller
 
     public function showContracheque($exercicio, $mes, $idContrato)
     {
-        $itens = $this->repo->getItensContracheque($this->idCliente, $exercicio, $mes, $idContrato);
-        $contrato = $this->repo->getDadosContratoContracheque($this->idCliente, $idContrato);
+        $itens = $this->repo->getItensContracheque(config('app.client_id'), $exercicio, $mes, $idContrato);
+        $contrato = $this->repo->getDadosContratoContracheque(config('app.client_id'), $idContrato);
 
         if (!$contrato) {
             return redirect()->back()->with('error', 'Contrato não encontrado.');

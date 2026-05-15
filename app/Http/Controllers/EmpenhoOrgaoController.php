@@ -18,7 +18,7 @@ class EmpenhoOrgaoController extends Controller
         $this->municipeRepo = $municipeRepo;
         $this->empenhoRepo = $empenhoRepo;
 
-        $this->idCliente = config('app.client_id');
+        
     }
 
     /**
@@ -26,7 +26,7 @@ class EmpenhoOrgaoController extends Controller
      */
     public function index()
     {
-        $resumoAnual = $this->empenhoRepo->resumoAnualPorExercicio($this->idCliente);
+        $resumoAnual = $this->empenhoRepo->resumoAnualPorExercicio(config('app.client_id'));
 
         return view('despesa.empenho_orgao.index', compact('resumoAnual'));
     }
@@ -36,7 +36,7 @@ class EmpenhoOrgaoController extends Controller
      */
     public function listaOrgaos($exercicio)
     {
-        $orgaos = $this->empenhoRepo->listaOrgaos($exercicio, $this->idCliente);
+        $orgaos = $this->empenhoRepo->listaOrgaos($exercicio, config('app.client_id'));
 
         return view('despesa.empenho_orgao.lista', compact('orgaos', 'exercicio'));
     }
@@ -44,14 +44,14 @@ class EmpenhoOrgaoController extends Controller
     public function detalhes($exercicio, $orgao_id)
     {
         // 1. Busca os dados do Órgão para o Card de Identificação
-        $orgao = $this->empenhoRepo->findOrgaoById((int)$orgao_id, (int)$exercicio, $this->idCliente);
+        $orgao = $this->empenhoRepo->findOrgaoById((int)$orgao_id, (int)$exercicio, config('app.client_id'));
 
         if (!$orgao) {
             abort(404, 'Órgão não encontrado');
         }
 
         // 2. Busca a lista de empenhos vinculados a este órgão
-        $empenhos = $this->empenhoRepo->findEmpenhosByOrgao((int)$orgao_id, (int)$exercicio, $this->idCliente);
+        $empenhos = $this->empenhoRepo->findEmpenhosByOrgao((int)$orgao_id, (int)$exercicio, config('app.client_id'));
 
         // 3. Define as colunas (conforme a imagem que você enviou)
         $columns = [
@@ -74,9 +74,9 @@ class EmpenhoOrgaoController extends Controller
             config('app.client_id')
         );
 
-        $empenho = $this->empenhoRepo->findById($empenho_id, $exercicio, $this->idCliente);
+        $empenho = $this->empenhoRepo->findById($empenho_id, $exercicio, config('app.client_id'));
 
-        $itens = $this->empenhoRepo->findItemsByEmpenhoId($empenho_id, $this->idCliente);
+        $itens = $this->empenhoRepo->findItemsByEmpenhoId($empenho_id, config('app.client_id'));
 
         return view('despesa.empenho_orgao.detalhe-empenho', compact('orgao', 'empenho', 'itens', 'exercicio', 'orgao_id'));
     }

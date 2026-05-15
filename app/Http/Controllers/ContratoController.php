@@ -12,24 +12,24 @@ class ContratoController extends Controller
     public function __construct(ContratoRepository $repository)
     {
         $this->repository = $repository;
-        $this->idCliente = config('app.client_id');
+        
     }
 
     public function index()
     {
-        $resumoAnual = $this->repository->getResumoContratosPorExercicio($this->idCliente);
+        $resumoAnual = $this->repository->getResumoContratosPorExercicio(config('app.client_id'));
         return view('compras.licitacoes.contrato.index', compact('resumoAnual'));
     }
 
     public function list($exercicio)
     {
-        $dados = $this->repository->getContratosPorExercicio($this->idCliente, $exercicio);
+        $dados = $this->repository->getContratosPorExercicio(config('app.client_id'), $exercicio);
         return view('compras.licitacoes.contrato.list', compact('dados', 'exercicio'));
     }
 
     public function show($id)
     {
-        $idcliente = $this->idCliente;
+        $idcliente = config('app.client_id');
         $contrato = $this->repository->getContratoDetalhes($idcliente, $id);
         $ocorrencias = $this->repository->getOcorrenciasContrato($idcliente, $id);
 

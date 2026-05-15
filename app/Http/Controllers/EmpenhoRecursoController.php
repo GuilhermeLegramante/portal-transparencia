@@ -18,7 +18,7 @@ class EmpenhoRecursoController extends Controller
         $this->municipeRepo = $municipeRepo;
         $this->empenhoRepo = $empenhoRepo;
 
-        $this->idCliente = config('app.client_id');
+        
     }
 
     /**
@@ -26,7 +26,7 @@ class EmpenhoRecursoController extends Controller
      */
     public function index()
     {
-        $resumoAnual = $this->empenhoRepo->resumoAnualPorExercicio($this->idCliente);
+        $resumoAnual = $this->empenhoRepo->resumoAnualPorExercicio(config('app.client_id'));
 
         return view('despesa.empenho_recurso.index', compact('resumoAnual'));
     }
@@ -36,7 +36,7 @@ class EmpenhoRecursoController extends Controller
      */
     public function listaRecursos($exercicio)
     {
-        $recursos = $this->empenhoRepo->listaRecursos($exercicio, $this->idCliente);
+        $recursos = $this->empenhoRepo->listaRecursos($exercicio, config('app.client_id'));
 
         return view('despesa.empenho_recurso.lista', compact('recursos', 'exercicio'));
     }
@@ -44,14 +44,14 @@ class EmpenhoRecursoController extends Controller
     public function detalhes($exercicio, $recurso_id)
     {
         // 1. Busca os dados do Recurso para o Card de Identificação
-        $recurso = $this->empenhoRepo->findRecursoById((int)$recurso_id, (int)$exercicio, $this->idCliente);
+        $recurso = $this->empenhoRepo->findRecursoById((int)$recurso_id, (int)$exercicio, config('app.client_id'));
 
         if (!$recurso) {
             abort(404, 'Recurso não encontrado');
         }
 
         // 2. Busca a lista de empenhos vinculados a este recurso
-        $empenhos = $this->empenhoRepo->findEmpenhosByRecurso((int)$recurso_id, (int)$exercicio, $this->idCliente);
+        $empenhos = $this->empenhoRepo->findEmpenhosByRecurso((int)$recurso_id, (int)$exercicio, config('app.client_id'));
 
         // 3. Define as colunas (conforme a imagem que você enviou)
         $columns = [
@@ -74,9 +74,9 @@ class EmpenhoRecursoController extends Controller
             config('app.client_id')
         );
 
-        $empenho = $this->empenhoRepo->findById($empenho_id, $exercicio, $this->idCliente);
+        $empenho = $this->empenhoRepo->findById($empenho_id, $exercicio, config('app.client_id'));
 
-        $itens = $this->empenhoRepo->findItemsByEmpenhoId($empenho_id, $this->idCliente);
+        $itens = $this->empenhoRepo->findItemsByEmpenhoId($empenho_id, config('app.client_id'));
 
         return view('despesa.empenho_recurso.detalhe-empenho', compact('recurso', 'empenho', 'itens', 'exercicio', 'recurso_id'));
     }

@@ -13,14 +13,14 @@ class PublicacaoController extends Controller
     public function __construct(PublicacaoRepository $repo)
     {
         $this->repo = $repo;
-        $this->idCliente = config('app.client_id');
+        
     }
 
     public function index(Request $request)
     {
         $exercicio = $request->get('exercicio', date('Y'));
 
-        $publicacoes = $this->repo->getPublicacoesCompletas($this->idCliente, $exercicio);
+        $publicacoes = $this->repo->getPublicacoesCompletas(config('app.client_id'), $exercicio);
 
         $breadcrumb = [
             'Transparência' => '#',
