@@ -104,19 +104,13 @@
                     </td>
 
                     @auth
-                        {{-- 6. NOVA COLUNA: Ações Administrativas (Excluir) --}}
+                        {{-- 6. NOVA COLUNA: Ações Administrativas (Excluir com Modal) --}}
                         <td class="text-center">
-                            <form action="{{ route('publicacoes.destroy', $pub->codigo) }}" method="POST"
-                                onsubmit="return confirm('Tem certeza absoluta que deseja excluir permanentemente esta publicação e o arquivo PDF vinculado?');"
-                                class="d-inline">
-                                @csrf
-                                @method('DELETE')
-
-                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-3 px-2 py-1"
-                                    title="Excluir Publicação">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                            </form>
+                            <button type="button" class="btn btn-sm btn-outline-danger rounded-3 px-2 py-1"
+                                data-bs-toggle="modal" data-bs-target="#modalConfirmarExclusao" data-id="{{ $pub->codigo }}"
+                                data-descricao="{{ $pub->descricao }}" title="Excluir Publicação">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
                         </td>
                     @else
                         {{-- Se o usuário não estiver autenticado, mostramos um placeholder ou nada --}}
@@ -135,6 +129,88 @@
                 </tr>
             </tfoot>
         </x-tabela-transparencia>
+
+        {{-- Estrutura da Modal de Confirmação Decente --}}
+        <div class="modal fade" id="modalConfirmarExclusao" tabindex="-1" aria-labelledby="modalConfirmarExclusaoLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg rounded-3">
+
+                    {{-- Cabeçalho Alerta --}}
+                    <div class="modal-header bg-danger text-white border-0 py-3">
+                        <h5 class="modal-title fw-bold d-flex align-items-center gap-2" id="modalConfirmarExclusaoLabel">
+                            <i class="fas fa-exclamation-triangle"></i> Confirmar Exclusão
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+
+                    {{-- Corpo da Modal --}}
+                    <div class="modal-body p-4 text-center">
+                        <div class="mb-3 text-danger">
+                            <i class="fas fa-trash-alt fa-3x animate__animated animate__shakeX"></i>
+                        </div>
+                        <p class="text-dark fw-semibold fs-5 mb-1">Você tem certeza absoluta?</p>
+                        <p class="text-muted small mb-3">Esta ação é irreversível. O registro e o arquivo PDF serão
+                            deletados permanentemente do servidor.</p>
+
+                        {{-- Caixa destacando o item que será apagado --}}
+                        <div class="bg-light rounded-3 p-3 text-start border">
+                            <span class="d-block small fw-bold text-secondary text-uppercase mb-1">Item selecionado:</span>
+                            <span id="modal-item-descricao" class="text-dark fw-bold text-break"></span>
+                            <small class="d-block text-muted mt-1">Código do Registro: #<span
+                                    id="modal-item-id"></span></small>
+                        </div>
+                    </div>
+
+                    {{-- Rodapé com Ações --}}
+                    <div class="modal-footer bg-light border-0 justify-content-center gap-2 py-3">
+                        <button type="button" class="btn btn-outline-secondary rounded-3 px-4 fw-semibold"
+                            data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+
+                        {{-- O formulário real fica oculto aqui e será disparado pelo botão da modal --}}
+                        <form id="form-excluir-publicacao" action="" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger rounded-3 px-4 fw-bold shadow-sm">
+                                Sim, Excluir permanentemente
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        {{-- Script JavaScript para alimentar a modal dinamicamente --}}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const modalExclusao = document.getElementById('modalConfirmarExclusao');
+
+                if (modalExclusao) {
+                    modalExclusao.addEventListener('show.bs.modal', function(event) {
+                        // Botão da tabela que disparou o evento
+                        const botao = event.relatedTarget;
+
+                        // Extrai as informações dos atributos data-*
+                        const idRegistro = botao.getAttribute('data-id');
+                        const descricaoRegistro = botao.getAttribute('data-descricao');
+
+                        // Monta a rota de exclusão do Laravel dinamicamente usando a rota nomeada
+                        // Substitui uma string fake pelo ID real do loop
+                        const urlBase = "{{ route('publicacoes.destroy', ':id') }}";
+                        const urlFinal = urlBase.replace(':id', idRegistro);
+
+                        // Atualiza os componentes internos da modal com os dados do item
+                        document.getElementById('form-excluir-publicacao').setAttribute('action', urlFinal);
+                        document.getElementById('modal-item-id').textContent = idRegistro;
+                        document.getElementById('modal-item-descricao').textContent = descricaoRegistro;
+                    });
+                }
+            });
+        </script>
     </div>
 
     {{-- Estilos Auxiliares para o Design Clean --}}
