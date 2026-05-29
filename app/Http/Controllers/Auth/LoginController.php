@@ -45,6 +45,8 @@ class LoginController extends Controller
             ->whereRaw('TRIM(senha) = ?', [$senhaSha1])
             ->first();
 
+        dd($cliente); // Debug: Verifique o resultado da consulta
+
         // 3. Se encontrou o registro correspondente
         if ($cliente) {
 
