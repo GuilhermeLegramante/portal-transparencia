@@ -43,10 +43,9 @@ class LoginController extends Controller
         $cliente = DB::table('glbcliente')
             ->where('identificador', $clientName)
             ->where('senha', $senhaSha1)
-            ->first()
-            ->toSql();
+            ->first();
 
-        dd($cliente);
+        dd($clientName, $senhaSha1, $cliente);
 
         // 3. Se encontrou o registro correspondente
         if ($cliente) {
