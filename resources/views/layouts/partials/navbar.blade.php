@@ -360,16 +360,6 @@
                                     <i class="fas fa-plus-circle me-2"></i>Nova Publicação
                                 </a>
                             </li>
-                        @else
-                            {{-- Se o seu sistema não usa login nativo do Laravel ainda, deixe o link visível publicamente: --}}
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li>
-                                <a class="dropdown-item fw-bold text-primary" href="{{ route('publicacoes.create') }}">
-                                    <i class="fas fa-plus-circle me-2"></i>Cadastrar Documento
-                                </a>
-                            </li>
                         @endauth
                     </ul>
                 </li>
