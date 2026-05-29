@@ -1,32 +1,56 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container-fluid">
+    <div class="container-fluid px-lg-5 py-4">
         <x-breadcrumb :items="$breadcrumb" />
 
-        <div class="card shadow-sm border-0 mb-4">
-            <div class="card-body">
+        <div class="card shadow-sm border-0 rounded-3 mb-4 bg-white">
+            <div class="card-body p-4">
                 <form method="GET" action="{{ route('publicacoes.index') }}" class="row g-3 align-items-end">
+                    {{-- Filtro de Exercício --}}
                     <div class="col-md-3">
-                        <label class="small fw-bold">Exercício de Análise</label>
-                        <input type="number" name="exercicio" class="form-control" value="{{ $exercicio }}" min="2000"
-                            max="{{ date('Y') + 1 }}">
+                        <label class="small fw-bold text-muted text-uppercase mb-2 d-block">Exercício de Análise</label>
+                        <input type="number" name="exercicio" class="form-control border-gray rounded-3"
+                            value="{{ $exercicio }}" min="2000" max="{{ date('Y') + 1 }}">
                     </div>
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary w-100">
-                            <i class="fa fa-search me-2"></i>Filtrar
+
+                    {{-- NOVO: Filtro de Categorias Dinâmico --}}
+                    <div class="col-md-4">
+                        <label class="small fw-bold text-muted text-uppercase mb-2 d-block">Filtrar por Categoria</label>
+                        <select name="categoria" class="form-select border-gray rounded-3">
+                            <option value="">Todas as categorias</option>
+                            @foreach ($categoriasDisponiveis as $catDisponivel)
+                                <option value="{{ $catDisponivel }}" {{ $categoria == $catDisponivel ? 'selected' : '' }}>
+                                    {{ $catDisponivel }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- Botões de Ação --}}
+                    <div class="col-md-5 d-flex gap-2">
+                        <button type="submit"
+                            class="btn btn-primary rounded-3 px-4 fw-bold shadow-sm flex-grow-1 flex-md-grow-0">
+                            <i class="fa fa-search me-2"></i>Filtrar Resultados
                         </button>
+
+                        @if (!empty($categoria))
+                            <a href="{{ route('publicacoes.index', ['exercicio' => $exercicio]) }}"
+                                class="btn btn-outline-secondary rounded-3 px-3">
+                                <i class="fas fa-times me-1"></i> Limpar Filtro
+                            </a>
+                        @endif
                     </div>
                 </form>
             </div>
         </div>
 
         <x-tabela-transparencia titulo="Publicações Realizadas - Exercício {{ $exercicio }}" :colunas="[
-            ['label' => 'Código', 'align' => 'text-center'], // 1
-            ['label' => 'Data', 'align' => 'text-center'], // 2
-            ['label' => 'Descrição', 'align' => 'text-start'], // 3
-            ['label' => 'Categorias', 'align' => 'text-start'], // 4
-            ['label' => 'Documento', 'align' => 'text-center'], // 5
+            ['label' => 'Código', 'align' => 'text-center'],
+            ['label' => 'Data', 'align' => 'text-center'],
+            ['label' => 'Descrição', 'align' => 'text-start'],
+            ['label' => 'Categorias', 'align' => 'text-start'],
+            ['label' => 'Documento', 'align' => 'text-center'],
         ]">
             @foreach ($publicacoes as $pub)
                 <tr class="align-middle">
@@ -65,11 +89,6 @@
                     {{-- 5. Botão do Documento --}}
                     <td class="text-center">
                         @if ($pub->caminho_arquivo)
-                            {{-- 
-                   Utiliza o helper asset() apontando para a pasta pública storage.
-                   Se os seus arquivos estiverem organizados por subpastas dentro da storage 
-                   (ex: storage/public/cliente_2/arquivo.pdf), o banco já deve trazer o path relativo completo.
-                --}}
                             <a href="{{ asset('storage/' . $pub->caminho_arquivo) }}" target="_blank"
                                 class="btn btn-white btn-sm shadow-sm border rounded-3 px-3 fw-bold text-nowrap text-secondary btn-documento"
                                 title="Visualizar Documento">
@@ -87,7 +106,7 @@
                     <td colspan="4" class="text-end">Total de Registros:</td>
                     <td class="text-center">{{ count($publicacoes) }}</td>
                 </tr>
-            </tfoot>
+                </footer>
         </x-tabela-transparencia>
     </div>
 @endsection
