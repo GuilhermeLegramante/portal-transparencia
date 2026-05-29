@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PublicacaoStoreRequest;
 use App\Repositories\PublicacaoCadastroRepository;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Carbon; // <--- Importação importante para manipular a data
 use Exception;
 
 class PublicacaoCadastroController extends Controller
@@ -41,7 +42,6 @@ class PublicacaoCadastroController extends Controller
             }
 
             $arquivo = $request->file('arquivo');
-            // Salva em: storage/app/public/cliente_{id}/publicacoes/nome_hash.pdf
             $subPasta = "cliente_{$idcliente}/publicacoes";
             $pathSalvo = $arquivo->store($subPasta, 'public');
 
@@ -49,10 +49,18 @@ class PublicacaoCadastroController extends Controller
                 throw new Exception("Falha ao salvar arquivo físico no disco.");
             }
 
-            // Prepara a estrutura base de dados
+            // --- RESOLUÇÃO DO ERRO DO CAMPO 'mes' ---
+            // Extrai o mês da data enviada no input 'datahora' (ex: "2026-05-29T13:56" vira 5)
+            $mes = null;
+            if ($request->filled('datahora')) {
+                $mes = Carbon::parse($request->input('datahora'))->month;
+            }
+
+            // Prepara a estrutura base de dados contendo o mês que o banco exige
             $dadosBase = [
                 'idcliente' => $idcliente,
                 'exercicio' => $request->input('exercicio'),
+                'mes'       => $mes, // <--- Aqui está o campo que o banco pediu!
                 'descricao' => $request->input('descricao'),
                 'datahora'  => $request->input('datahora'),
                 'path'      => $pathSalvo
