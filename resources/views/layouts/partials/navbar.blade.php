@@ -471,7 +471,7 @@
                 @else
                     {{-- Usuário Visitante (Link de Acesso Administrativo) --}}
                     <a href="{{ route('login') }}"
-                        class="btn btn-primary rounded-3 px-4 fw-bold shadow-sm d-flex align-items-center gap-2">
+                        class="btn btn-primary rounded-3 px-4 py-2 fw-bold shadow-sm d-flex align-items-center gap-2 small">
                         <i class="fas fa-lock small"></i>
                         <span>Acesso Restrito</span>
                     </a>
