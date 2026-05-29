@@ -471,8 +471,9 @@
                 @else
                     {{-- Usuário Visitante (Link de Acesso Administrativo) --}}
                     <a href="{{ route('login') }}"
-                        class="btn btn-primary rounded-3 px-4 py-2 fw-bold shadow-sm d-flex align-items-center gap-2 small">
-                        <i class="fas fa-lock small"></i>
+                        class="btn btn-primary rounded-3 px-3 py-1.5 fw-bold shadow-sm d-inline-flex align-items-center gap-1.5 text-nowrap"
+                        style="font-size: 0.825rem; height: 36px;">
+                        <i class="fas fa-lock" style="font-size: 0.75rem;"></i>
                         <span>Acesso Restrito</span>
                     </a>
                 @endauth
