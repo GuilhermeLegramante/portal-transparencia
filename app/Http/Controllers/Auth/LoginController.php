@@ -40,13 +40,21 @@ class LoginController extends Controller
         $senhaSha1 = sha1($request->input('senha'));
 
         // 2. Busca o cliente na tabela 'glbcliente' onde o identificador bate e a senha bate
-        $cliente = DB::table('glbcliente')
-            ->whereRaw('TRIM(identificador) = ?', [$clientName])
-            ->whereRaw('TRIM(senha) = ?', [$senhaSha1])
-            ->first();
+        // $cliente = DB::table('glbcliente')
+        //     ->whereRaw('TRIM(identificador) = ?', [$clientName])
+        //     ->whereRaw('TRIM(senha) = ?', [$senhaSha1])
+        //     ->first();
 
-        dd($cliente); // Debug: Verifique o resultado da consulta
+        $pdo = DB::connection()->getPdo();
+        $stmt = $pdo->prepare("SELECT * FROM glbcliente WHERE TRIM(identificador) = :id AND TRIM(senha) = :senha");
+        $stmt->execute([
+            ':id' => trim($clientName),
+            ':senha' => trim($senhaSha1)
+        ]);
+        $cliente = $stmt->fetch(\PDO::FETCH_OBJ);
 
+        dd($cliente); // Se aqui vier os dados, o Query Builder do Laravel estava usando um escopo ou conexão errada globalmente.
+        
         // 3. Se encontrou o registro correspondente
         if ($cliente) {
 
