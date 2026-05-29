@@ -337,11 +337,41 @@
                         Patrimônio
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('publicacoes*') ? 'active fw-bold' : '' }}"
-                        href="{{ route('publicacoes.index') }}">
+                {{-- AJUSTADO: Menu Dinâmico de Publicações (Listagem + Cadastro) --}}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {{ request()->is('publicacoes*') ? 'active fw-bold' : '' }}"
+                        href="#" id="navbarPublicacoes" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
                         Publicações
                     </a>
+                    <ul class="dropdown-menu shadow border-0" aria-labelledby="navbarPublicacoes">
+                        <li>
+                            <a class="dropdown-item" href="{{ route('publicacoes.index') }}">
+                                <i class="fas fa-list me-2 opacity-75"></i>Consultar Publicações
+                            </a>
+                        </li>
+                        {{-- Opcional: Se quiser que apenas gestores logados vejam o botão de criar --}}
+                        @auth
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <a class="dropdown-item fw-bold text-success" href="{{ route('publicacoes.create') }}">
+                                    <i class="fas fa-plus-circle me-2"></i>Nova Publicação
+                                </a>
+                            </li>
+                        @else
+                            {{-- Se o seu sistema não usa login nativo do Laravel ainda, deixe o link visível publicamente: --}}
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <a class="dropdown-item fw-bold text-primary" href="{{ route('publicacoes.create') }}">
+                                    <i class="fas fa-plus-circle me-2"></i>Cadastrar Documento
+                                </a>
+                            </li>
+                        @endauth
+                    </ul>
                 </li>
 
                 <li class="nav-item dropdown">
@@ -415,6 +445,48 @@
                     </ul>
                 </li>
             </ul>
+
+            {{-- NOVO ELEMENTO: Área de Login / Controle de Sessão à Direita --}}
+            <div class="d-flex align-items-center mt-3 mt-lg-0">
+                @auth
+                    {{-- Usuário Autenticado --}}
+                    <div class="dropdown">
+                        <button
+                            class="btn btn-outline-secondary dropdown-toggle rounded-3 px-3 d-flex align-items-center gap-2"
+                            type="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle fa-lg"></i>
+                            <span class="small fw-bold">{{ Auth::user()->name ?? 'Painel' }}</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" aria-labelledby="userMenu">
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center"
+                                    href="{{ route('publicacoes.create') }}">
+                                    <i class="fas fa-file-upload me-2 text-success opacity-75"></i> Nova Publicação
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <a class="dropdown-item text-danger d-flex align-items-center" href="#"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    <i class="fas fa-sign-out-alt me-2 opacity-75"></i> Sair do Painel
+                                </a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                @else
+                    {{-- Usuário Visitante (Link de Acesso Administrativo) --}}
+                    <a href="{{ route('login') }}"
+                        class="btn btn-primary rounded-3 px-4 fw-bold shadow-sm d-flex align-items-center gap-2">
+                        <i class="fas fa-lock small"></i>
+                        <span>Acesso Restrito</span>
+                    </a>
+                @endauth
+            </div>
         </div>
     </div>
 </nav>

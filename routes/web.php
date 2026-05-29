@@ -17,6 +17,7 @@ use App\Http\Controllers\LicitacaoController;
 use App\Http\Controllers\ParlamentarController;
 use App\Http\Controllers\PatrimonioController;
 use App\Http\Controllers\PlanejamentoController;
+use App\Http\Controllers\PublicacaoCadastroController;
 use App\Http\Controllers\PublicacaoController;
 use App\Http\Controllers\QuadroFuncionalController;
 use App\Http\Controllers\ReceitaController;
@@ -27,6 +28,12 @@ use App\Http\Controllers\SicController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\File;
+use App\Http\Controllers\Auth\LoginController;
+
+// Rotas de Autenticação Customizadas
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -264,6 +271,14 @@ Route::prefix('patrimonio')->name('patrimonio.')->group(function () {
 });
 
 Route::get('/transparencia/publicacoes', [PublicacaoController::class, 'index'])->name('publicacoes.index');
+
+Route::prefix('publicacoes')->name('publicacoes.')->group(function () {
+    // Tela do formulário de cadastro
+    Route::get('/criar', [PublicacaoCadastroController::class, 'create'])->name('create');
+
+    // Ação que recebe os dados do formulário e salva
+    Route::post('/salvar', [PublicacaoCadastroController::class, 'store'])->name('store');
+});
 
 Route::prefix('parlamentar')->name('parlamentar.')->group(function () {
     Route::get('/', [ParlamentarController::class, 'index'])->name('index');
