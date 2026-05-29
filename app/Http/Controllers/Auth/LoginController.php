@@ -37,16 +37,11 @@ class LoginController extends Controller
         $senhaSha1 = sha1($request->input('senha'));
 
         // Usando LIKE binário ou comparando limpando espaços (TRIM) para forçar o banco a ignorar qualquer metadado ou espaço invisível
-        // $cliente = DB::table('glbcliente')
-        //     ->whereRaw('TRIM(identificador) LIKE ?', [trim($clientName)])
-        //     ->whereRaw('TRIM(senha) LIKE ?', [trim($senhaSha1)])
-        //     ->first();
-
         $cliente = DB::table('glbcliente')
             ->whereRaw('TRIM(identificador) LIKE ?', [trim($clientName)])
+            ->whereRaw('TRIM(senha) LIKE ?', [trim($senhaSha1)])
             ->first();
 
-        dd($cliente);
 
         if ($cliente) {
             // Valida se o cliente está ativo (no seu print, Cacequi está ativo = 1)
