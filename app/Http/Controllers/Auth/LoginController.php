@@ -27,45 +27,36 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-        // 1. Valida se a senha foi digitada
         $request->validate([
             'senha' => 'required|string',
         ], [
             'senha.required' => 'O campo senha é obrigatório.',
         ]);
 
-        $clientName = config('app.client_name');
-
-        // Criptografa a senha digitada em SHA-1 para bater com o banco de dados
+        $clientName = config('app.client_name'); // 'cacequicm'
         $senhaSha1 = sha1($request->input('senha'));
 
-        // 2. Busca o cliente na tabela 'glbcliente' onde o identificador bate e a senha bate
+        // Usando LIKE binário ou comparando limpando espaços (TRIM) para forçar o banco a ignorar qualquer metadado ou espaço invisível
         $cliente = DB::table('glbcliente')
-            // ->whereRaw('TRIM(identificador) = ?', [$clientName])
-            // ->whereRaw('TRIM(senha) = ?', [$senhaSha1])
+            ->whereRaw('TRIM(identificador) LIKE ?', [trim($clientName)])
+            ->whereRaw('TRIM(senha) LIKE ?', [trim($senhaSha1)])
             ->first();
 
-        dd($cliente); // Debug: Verifique o resultado da consulta
-
-        // 3. Se encontrou o registro correspondente
         if ($cliente) {
-
-            // Força a autenticação na sessão do Laravel usando o ID do registro encontrado.
-            // Nota: Se a sua chave primária não for 'id' (ex: 'idcliente'), ajuste para $cliente->idcliente
-            $userId = $cliente->id ?? $cliente->idcliente ?? null;
-
-            if ($userId) {
-                Auth::loginUsingId($userId);
-
-                // Regenera a sessão por segurança (evita fixation attacks)
-                $request->session()->regenerate();
-
-                // Redireciona o usuário para onde ele tentou ir ou para a página principal
-                return redirect()->intended(route('home'));
+            // Valida se o cliente está ativo (no seu print, Cacequi está ativo = 1)
+            if ($cliente->ativo == 0) {
+                return redirect()->back()
+                    ->withErrors(['login_error' => 'Este portal encontra-se inativo no momento.']);
             }
+
+            // Realiza o login utilizando o ID correto (ID 3 do seu print)
+            Auth::loginUsingId($cliente->id);
+
+            $request->session()->regenerate();
+
+            return redirect()->intended(route('home'));
         }
 
-        // 4. Se falhar, retorna com erro de credenciais inválidas
         return redirect()->back()
             ->withInput($request->only('senha'))
             ->withErrors([
