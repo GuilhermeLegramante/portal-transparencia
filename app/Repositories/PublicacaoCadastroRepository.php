@@ -11,6 +11,7 @@ class PublicacaoCadastroRepository
         return DB::table('pubprestacaoconta')->insertGetId([
             'idcliente' => $dados['idcliente'],
             'exercicio' => $dados['exercicio'],
+            'mes'       => $dados['mes'] ?? null, // Adicionado por prevenção
             'descricao' => mb_strtoupper($dados['descricao'], 'UTF-8'),
             'datahora'  => $dados['datahora'],
             'categoria' => mb_strtoupper($dados['categoria_texto'], 'UTF-8'),
@@ -21,10 +22,11 @@ class PublicacaoCadastroRepository
     public function salvarPublicacaoGeral($dados, $tagsIds)
     {
         return DB::transaction(function () use ($dados, $tagsIds) {
-            // 1. Insere na tabela principal de publicações
+            // 1. Insere na tabela principal de publicações (Incluindo o campo 'mes')
             $idPublicacao = DB::table('pubpublicacao')->insertGetId([
                 'idcliente' => $dados['idcliente'],
                 'exercicio' => $dados['exercicio'],
+                'mes'       => $dados['mes'], // <--- RESOLUÇÃO DO ERRO AQUI
                 'descricao' => mb_strtoupper($dados['descricao'], 'UTF-8'),
                 'datahora'  => $dados['datahora'],
                 'path'      => $dados['path']
