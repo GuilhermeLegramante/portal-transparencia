@@ -124,20 +124,7 @@
                             <span class="text-muted small fst-italic">Ações restritas a administradores</span>
                         </td>
                     @endauth
-                    {{-- 6. NOVA COLUNA: Ações Administrativas (Excluir) --}}
-                    <td class="text-center">
-                        <form action="{{ route('publicacoes.destroy', $pub->codigo) }}" method="POST"
-                            onsubmit="return confirm('Tem certeza absoluta que deseja excluir permanentemente esta publicação e o arquivo PDF vinculado?');"
-                            class="d-inline">
-                            @csrf
-                            @method('DELETE')
 
-                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-3 px-2 py-1"
-                                title="Excluir Publicação">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </form>
-                    </td>
                 </tr>
             @endforeach
 
