@@ -39,13 +39,13 @@ class LoginController extends Controller
         // Criptografa a senha digitada em SHA-1 para bater com o banco de dados
         $senhaSha1 = sha1($request->input('senha'));
 
-        dd($senhaSha1);
-
         // 2. Busca o cliente na tabela 'glbcliente' onde o identificador bate e a senha bate
         $cliente = DB::table('glbcliente')
             ->where('identificador', $clientName)
             ->where('senha', $senhaSha1)
             ->first();
+
+        dd($cliente);
 
         // 3. Se encontrou o registro correspondente
         if ($cliente) {
