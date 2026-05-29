@@ -52,7 +52,7 @@
             ['label' => 'Código', 'align' => 'text-center'],
             ['label' => 'Data', 'align' => 'text-center'],
             ['label' => 'Descrição', 'align' => 'text-start'],
-            ['label' => 'Categorias', 'align' => 'text-start'],
+            ['label' => 'Categoria', 'align' => 'text-start'],
             ['label' => 'Documento', 'align' => 'text-center'],
         ]">
             @foreach ($publicacoes as $pub)
