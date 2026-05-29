@@ -29,18 +29,56 @@
             ['label' => 'Documento', 'align' => 'text-center'], // 5
         ]">
             @foreach ($publicacoes as $pub)
-                <tr>
-                    <td class="text-center text-muted small">{{ $pub->codigo }}</td> {{-- 1 --}}
-                    <td class="text-center">{{ date('d/m/Y', strtotime($pub->data)) }}</td> {{-- 2 --}}
+                <tr class="align-middle">
+                    {{-- 1. Código --}}
+                    <td class="text-center text-muted small fw-semibold">
+                        #{{ $pub->codigo }}
+                    </td>
+
+                    {{-- 2. Data --}}
+                    <td class="text-center text-secondary text-nowrap">
+                        {{ date('d/m/Y', strtotime($pub->data)) }}
+                    </td>
+
+                    {{-- 3. Descrição --}}
                     <td class="text-start">
-                        <span class="fw-bold text-dark">{{ $pub->descricao }}</span>
-                    </td> {{-- 3 --}}
+                        <span class="fw-bold text-dark d-block mb-1">{{ $pub->descricao }}</span>
+                        <span class="text-muted small d-block d-md-none">Exercício: {{ $pub->exercicio }}</span>
+                    </td>
+
+                    {{-- 4. Categorias (Tags) --}}
                     <td>
-                        {{-- Conteúdo das categorias... --}}
-                    </td> {{-- 4 --}}
+                        @if ($pub->categoria)
+                            <div class="d-flex flex-wrap gap-1">
+                                @foreach (explode(';', $pub->categoria) as $tag)
+                                    <span
+                                        class="badge bg-light text-primary border border-primary-subtle px-2 py-1 rounded-pill small fw-semibold">
+                                        {{ trim($tag) }}
+                                    </span>
+                                @endforeach
+                            </div>
+                        @else
+                            <span class="text-muted small italic">Geral</span>
+                        @endif
+                    </td>
+
+                    {{-- 5. Botão do Documento --}}
                     <td class="text-center">
-                        {{-- Botão de documento... --}}
-                    </td> {{-- 5 --}}
+                        @if ($pub->caminho_arquivo)
+                            {{-- 
+                   Utiliza o helper asset() apontando para a pasta pública storage.
+                   Se os seus arquivos estiverem organizados por subpastas dentro da storage 
+                   (ex: storage/public/cliente_2/arquivo.pdf), o banco já deve trazer o path relativo completo.
+                --}}
+                            <a href="{{ asset('storage/' . $pub->caminho_arquivo) }}" target="_blank"
+                                class="btn btn-white btn-sm shadow-sm border rounded-3 px-3 fw-bold text-nowrap text-secondary btn-documento"
+                                title="Visualizar Documento">
+                                <i class="fas fa-file-pdf text-danger me-2"></i> Visualizar
+                            </a>
+                        @else
+                            <span class="text-muted small">—</span>
+                        @endif
+                    </td>
                 </tr>
             @endforeach
 
