@@ -105,7 +105,7 @@
 
                     {{-- 6. NOVA COLUNA: Ações Administrativas (Excluir) --}}
                     <td class="text-center">
-                        <form action="{{ route('publicacoes.destroy', $pub->id) }}" method="POST"
+                        <form action="{{ route('publicacoes.destroy', $pub->codigo) }}" method="POST"
                             onsubmit="return confirm('Tem certeza absoluta que deseja excluir permanentemente esta publicação e o arquivo PDF vinculado?');"
                             class="d-inline">
                             @csrf
