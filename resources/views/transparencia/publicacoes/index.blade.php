@@ -1,32 +1,59 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container-fluid">
+    <div class="container-fluid px-lg-5 py-4 bg-light-gray min-vh-100">
         <x-breadcrumb :items="$breadcrumb" />
 
-        <div class="card shadow-sm border-0 mb-4">
-            <div class="card-body">
+        {{-- Bloco do Filtro --}}
+        <div class="card shadow-sm border-0 rounded-3 mb-4 bg-white">
+            <div class="card-body p-4">
                 <form method="GET" action="{{ route('publicacoes.index') }}" class="row g-3 align-items-end">
+
+                    {{-- Campo Exercício --}}
                     <div class="col-md-3">
-                        <label class="small fw-bold">Exercício de Análise</label>
-                        <input type="number" name="exercicio" class="form-control" value="{{ $exercicio }}" min="2000"
-                            max="{{ date('Y') + 1 }}">
+                        <label class="small fw-bold text-muted text-uppercase mb-2 d-block">Exercício de Análise</label>
+                        <input type="number" name="exercicio" class="form-control border-gray rounded-3"
+                            value="{{ $exercicio }}" min="2000" max="{{ date('Y') + 1 }}">
                     </div>
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary w-100">
+
+                    {{-- NOVO: Dropdown de Categorias Dinâmico --}}
+                    <div class="col-md-4">
+                        <label class="small fw-bold text-muted text-uppercase mb-2 d-block">Filtrar por Categoria</label>
+                        <select name="categoria" class="form-select border-gray rounded-3">
+                            <option value="">Todas as categorias</option>
+                            @foreach ($categoriasDisponiveis as $catDisponivel)
+                                <option value="{{ $catDisponivel }}" {{ $categoria == $catDisponivel ? 'selected' : '' }}>
+                                    {{ $catDisponivel }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- Ações/Botões --}}
+                    <div class="col-md-5 d-flex gap-2">
+                        <button type="submit"
+                            class="btn btn-primary rounded-3 px-4 fw-bold shadow-sm flex-grow-1 flex-md-grow-0">
                             <i class="fa fa-search me-2"></i>Filtrar
                         </button>
+
+                        @if (!empty($categoria))
+                            <a href="{{ route('publicacoes.index', ['exercicio' => $exercicio]) }}"
+                                class="btn btn-outline-secondary rounded-3 px-3 d-inline-flex align-items-center">
+                                <i class="fas fa-times me-2"></i> Limpar Filtro
+                            </a>
+                        @endif
                     </div>
                 </form>
             </div>
         </div>
 
+        {{-- Tabela de Dados --}}
         <x-tabela-transparencia titulo="Publicações Realizadas - Exercício {{ $exercicio }}" :colunas="[
-            ['label' => 'Código', 'align' => 'text-center'], // 1
-            ['label' => 'Data', 'align' => 'text-center'], // 2
-            ['label' => 'Descrição', 'align' => 'text-start'], // 3
-            ['label' => 'Categorias', 'align' => 'text-start'], // 4
-            ['label' => 'Documento', 'align' => 'text-center'], // 5
+            ['label' => 'Código', 'align' => 'text-center'],
+            ['label' => 'Data', 'align' => 'text-center'],
+            ['label' => 'Descrição', 'align' => 'text-start'],
+            ['label' => 'Categorias', 'align' => 'text-start'],
+            ['label' => 'Documento', 'align' => 'text-center'],
         ]">
             @foreach ($publicacoes as $pub)
                 <tr class="align-middle">
@@ -46,7 +73,7 @@
                         <span class="text-muted small d-block d-md-none">Exercício: {{ $pub->exercicio }}</span>
                     </td>
 
-                    {{-- 4. Categorias (Tags) --}}
+                    {{-- 4. Categorias (Tags explodidas) --}}
                     <td>
                         @if ($pub->categoria)
                             <div class="d-flex flex-wrap gap-1">
@@ -62,14 +89,9 @@
                         @endif
                     </td>
 
-                    {{-- 5. Botão do Documento --}}
+                    {{-- 5. Link para o arquivo na Storage --}}
                     <td class="text-center">
                         @if ($pub->caminho_arquivo)
-                            {{-- 
-                   Utiliza o helper asset() apontando para a pasta pública storage.
-                   Se os seus arquivos estiverem organizados por subpastas dentro da storage 
-                   (ex: storage/public/cliente_2/arquivo.pdf), o banco já deve trazer o path relativo completo.
-                --}}
                             <a href="{{ asset('storage/' . $pub->caminho_arquivo) }}" target="_blank"
                                 class="btn btn-white btn-sm shadow-sm border rounded-3 px-3 fw-bold text-nowrap text-secondary btn-documento"
                                 title="Visualizar Documento">
@@ -84,10 +106,43 @@
 
             <tfoot class="table-light fw-bold">
                 <tr class="text-nowrap">
-                    <td colspan="4" class="text-end">Total de Registros:</td>
-                    <td class="text-center">{{ count($publicacoes) }}</td>
+                    <td colspan="4" class="text-end text-secondary">Total de Registros Encontrados:</td>
+                    <td class="text-center text-dark">{{ count($publicacoes) }}</td>
                 </tr>
             </tfoot>
         </x-tabela-transparencia>
     </div>
+
+    {{-- Estilos Auxiliares para o Design Clean --}}
+    <style>
+        .bg-light-gray {
+            background-color: #f8f9fa;
+        }
+
+        .border-gray {
+            border: 1px solid #dee2e6;
+        }
+
+        .btn-white {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+            transition: all 0.2s ease;
+        }
+
+        .btn-white:hover {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+            color: #1e293b;
+            transform: translateY(-1px);
+        }
+
+        .bg-light {
+            background-color: #f1f5f9 !important;
+        }
+
+        .border-primary-subtle {
+            border-color: #cbd5e1 !important;
+        }
+    </style>
 @endsection

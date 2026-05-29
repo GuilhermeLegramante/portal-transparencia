@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\DB;
 
 class PublicacaoRepository
 {
-    public function getPublicacoesCompletas($idcliente, $exercicio)
+    public function getPublicacoesCompletas($idcliente, $exercicio, $categoriaSelecionada = null)
     {
-        // Consulta para Prestações de Contas
+        // 1. Consulta para Prestações de Contas
         $prestacaoContas = DB::table('pubprestacaoconta as publicacao')
             ->select(
                 'publicacao.idcliente as cliente_id',
@@ -22,7 +22,7 @@ class PublicacaoRepository
             ->where('publicacao.idcliente', $idcliente)
             ->where('publicacao.exercicio', $exercicio);
 
-        // Consulta para Publicações Gerais com subquery de Tags
+        // 2. Consulta para Publicações Gerais com subquery de Tags
         $publicacoesGerais = DB::table('pubpublicacao as publicacao')
             ->select(
                 'publicacao.idcliente as cliente_id',
@@ -41,7 +41,23 @@ class PublicacaoRepository
             ->where('publicacao.idcliente', $idcliente)
             ->where('publicacao.exercicio', $exercicio);
 
-        // Une os resultados e ordena por data decrescente
+        // Aplica o filtro se o utilizador escolheu uma categoria
+        if (!empty($categoriaSelecionada)) {
+            // Filtro direto na coluna de texto da Prestação de Contas
+            $prestacaoContas->whereRaw('UPPER(publicacao.categoria) = ?', [strtoupper($categoriaSelecionada)]);
+
+            // Filtro via tabela pivot (pubpublicacaotag) para as Publicações Gerais
+            $publicacoesGerais->whereExists(function ($query) use ($categoriaSelecionada, $idcliente) {
+                $query->select(DB::raw(1))
+                    ->from('pubpublicacaotag as pt')
+                    ->join('pubtag as t', 't.id', '=', 'pt.idtag')
+                    ->whereColumn('pt.idpublicacao', 'publicacao.id')
+                    ->where('pt.idcliente', $idcliente)
+                    ->whereRaw('UPPER(t.nome) = ?', [strtoupper($categoriaSelecionada)]);
+            });
+        }
+
+        // Une os blocos e ordena por data decrescente
         return $prestacaoContas->unionAll($publicacoesGerais)
             ->orderBy('data', 'desc')
             ->get();
