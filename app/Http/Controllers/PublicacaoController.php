@@ -44,12 +44,9 @@ class PublicacaoController extends Controller
         ));
     }
 
-    /**
-     * Une e filtra as categorias/tags que pertencem estritamente a este cliente
-     */
     private function getCategoriasDisponiveis($idcliente)
     {
-        // Categorias em formato texto da tabela de prestação de contas
+        // 1. Categorias vindas das prestações de contas
         $categoriasPrestacao = DB::table('pubprestacaoconta')
             ->where('idcliente', $idcliente)
             ->whereNotNull('categoria')
@@ -57,7 +54,7 @@ class PublicacaoController extends Controller
             ->pluck('categoria')
             ->toArray();
 
-        // Tags associadas a este cliente através da tabela pivot pubpublicacaotag
+        // 2. Tags vinculadas a publicações gerais deste cliente
         $tagsGerais = DB::table('pubpublicacaotag as pt')
             ->join('pubtag as t', 't.id', '=', 'pt.idtag')
             ->where('pt.idcliente', $idcliente)
@@ -65,9 +62,26 @@ class PublicacaoController extends Controller
             ->pluck('t.nome')
             ->toArray();
 
-        // Mescla, remove duplicados, padroniza em UPPERCASE e ordena alfabeticamente
-        $todas = array_unique(array_merge($categoriasPrestacao, $tagsGerais));
-        $todas = array_map('strtoupper', $todas);
+        // Juntar as duas listas originais
+        $brutas = array_merge($categoriasPrestacao, $tagsGerais);
+
+        $limpas = [];
+        foreach ($brutas as $cat) {
+            // Converte para maiúsculas
+            $catFormatada = mb_strtoupper($cat, 'UTF-8');
+
+            // Remove espaços em branco antes/depois e limpa espaços duplos no meio da string
+            $catFormatada = trim(preg_replace('/\s+/', ' ', $catFormatada));
+
+            if (!empty($catFormatada)) {
+                $limpas[] = $catFormatada;
+            }
+        }
+
+        // Remove os duplicados reais após a limpeza profunda
+        $todas = array_unique($limpas);
+
+        // Ordena alfabeticamente de A a Z
         sort($todas);
 
         return $todas;
