@@ -54,6 +54,7 @@
             ['label' => 'Descrição', 'align' => 'text-start'],
             ['label' => 'Categoria', 'align' => 'text-start'],
             ['label' => 'Documento', 'align' => 'text-center'],
+            ['label' => 'Ações', 'align' => 'text-center'],
         ]">
             @foreach ($publicacoes as $pub)
                 <tr class="align-middle">
@@ -100,6 +101,21 @@
                         @else
                             <span class="text-muted small">—</span>
                         @endif
+                    </td>
+
+                    {{-- 6. NOVA COLUNA: Ações Administrativas (Excluir) --}}
+                    <td class="text-center">
+                        <form action="{{ route('publicacoes.destroy', $pub->id) }}" method="POST"
+                            onsubmit="return confirm('Tem certeza absoluta que deseja excluir permanentemente esta publicação e o arquivo PDF vinculado?');"
+                            class="d-inline">
+                            @csrf
+                            @method('DELETE')
+
+                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-3 px-2 py-1"
+                                title="Excluir Publicação">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </form>
                     </td>
                 </tr>
             @endforeach

@@ -57,4 +57,34 @@ class PublicacaoCadastroRepository
     {
         return DB::table('pubtag')->orderBy('nome', 'asc')->get();
     }
+
+    /**
+     * Remove uma publicação e limpa suas amarras na tabela pivot
+     */
+    public function excluirPublicacaoGeral($id, $idcliente)
+    {
+        return DB::transaction(function () use ($id, $idcliente) {
+            // 1. Busca os dados atuais para sabermos o caminho do arquivo físico
+            $publicacao = DB::table('pubpublicacao')
+                ->where('id', $id)
+                ->where('idcliente', $idcliente)
+                ->first();
+
+            if ($publicacao) {
+                // 2. Remove as associações de tags da publicação primeiro (Foreign Key manual)
+                DB::table('pubpublicacaotag')
+                    ->where('idpublicacao', $id)
+                    ->where('idcliente', $idcliente)
+                    ->delete();
+
+                // 3. Deleta o registro principal da publicação
+                DB::table('pubpublicacao')
+                    ->where('id', $id)
+                    ->where('idcliente', $idcliente)
+                    ->delete();
+            }
+
+            return $publicacao; // Retorna o objeto antigo para podermos apagar o arquivo físico
+        });
+    }
 }

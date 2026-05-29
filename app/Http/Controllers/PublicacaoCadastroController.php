@@ -90,4 +90,36 @@ class PublicacaoCadastroController extends Controller
                 ->with('error', 'Erro ao salvar o registro: ' . $e->getMessage());
         }
     }
+
+    /**
+     * Remove a publicação do banco e o arquivo do disco
+     */
+    public function destroy($id)
+    {
+        try {
+            $idcliente = config('app.client_id');
+
+            // Executa a exclusão lógica/banco via repositório
+            $publicacaoDeletada = $this->repo->excluirPublicacaoGeral($id, $idcliente);
+
+            if ($publicacaoDeletada) {
+                // Se o registro possuía um arquivo físico salvo, deleta-o do storage
+                if (!empty($publicacaoDeletada->path)) {
+                    if (Storage::disk('public')->exists($publicacaoDeletada->path)) {
+                        Storage::disk('public')->delete($publicacaoDeletada->path);
+                    }
+                }
+
+                return redirect()
+                    ->back()
+                    ->with('success', 'Publicação e arquivo físico excluídos com sucesso!');
+            }
+
+            return redirect()->back()->with('error', 'Publicação não encontrada ou já excluída.');
+        } catch (Exception $e) {
+            return redirect()
+                ->back()
+                ->with('error', 'Erro ao tentar excluir a publicação: ' . $e->getMessage());
+        }
+    }
 }
