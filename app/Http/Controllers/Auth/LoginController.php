@@ -45,7 +45,22 @@ class LoginController extends Controller
             ->where('senha', $senhaSha1)
             ->first();
 
-        dd($clientName, $senhaSha1, $cliente);
+        $queryLog = DB::table('glbcliente')
+            ->where('identificador', $clientName)
+            ->where('senha', $senhaSha1)
+            ->toSql();
+
+        $bindings = DB::table('glbcliente')
+            ->where('identificador', $clientName)
+            ->where('senha', $senhaSha1)
+            ->getBindings();
+
+        dd([
+            'clientName_config' => $clientName,
+            'senha_sha1_gerada' => $senhaSha1,
+            'sql_gerado_laravel' => $queryLog,
+            'parametros_passados' => $bindings
+        ]);
 
         // 3. Se encontrou o registro correspondente
         if ($cliente) {
