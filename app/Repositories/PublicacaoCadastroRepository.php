@@ -15,7 +15,7 @@ class PublicacaoCadastroRepository
             'descricao' => mb_strtoupper($dados['descricao'], 'UTF-8'),
             'datahora'  => $dados['datahora'],
             'categoria' => mb_strtoupper($dados['categoria_texto'], 'UTF-8'),
-            'path'      => $dados['path']
+            'path'      => $dados['path'],
         ]);
     }
 
@@ -29,7 +29,8 @@ class PublicacaoCadastroRepository
                 'mes'       => $dados['mes'], // <--- RESOLUÇÃO DO ERRO AQUI
                 'descricao' => mb_strtoupper($dados['descricao'], 'UTF-8'),
                 'datahora'  => $dados['datahora'],
-                'path'      => $dados['path']
+                'path'      => $dados['path'],
+                'views'     => 0
             ]);
 
             // 2. Vincula as Tags selecionadas na tabela pivot (pubpublicacaotag)
