@@ -25,6 +25,8 @@ use App\Http\Controllers\RequisicaoController;
 use App\Http\Controllers\SessaoController;
 use App\Http\Controllers\SicController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\File;
 
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -308,3 +310,20 @@ Route::prefix('sic')->name('sic.')->group(function () {
 
     Route::post('/logout', [SicController::class, 'logout'])->name('logout');
 });
+
+Route::get('storage/{path}', function ($path) {
+    $caminhoReal = storage_path("app/public/{$path}");
+
+    if (!File::exists($caminhoReal)) {
+        abort(404, "Arquivo não encontrado.");
+    }
+
+    $file = File::get($caminhoReal);
+    $type = File::mimeType($caminhoReal);
+
+    $response = Response::make($file, 200);
+    $response->header("Content-Type", $type);
+    $response->header("Content-Disposition", "inline; filename=\"" . basename($path) . "\"");
+
+    return $response;
+})->where('path', '.*'); // Aceita barras '/' na URL capturada
