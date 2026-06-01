@@ -11,7 +11,7 @@ class PublicacaoCadastroRepository
         return DB::table('pubprestacaoconta')->insertGetId([
             'idcliente' => $dados['idcliente'],
             'exercicio' => $dados['exercicio'],
-            'mes'       => $dados['mes'] ?? null, // Adicionado por prevenção
+            // 'mes'       => $dados['mes'] ?? null, // Adicionado por prevenção
             'descricao' => mb_strtoupper($dados['descricao'], 'UTF-8'),
             'datahora'  => $dados['datahora'],
             'categoria' => mb_strtoupper($dados['categoria_texto'], 'UTF-8'),
