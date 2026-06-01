@@ -125,7 +125,7 @@
 
             <tfoot class="table-light fw-bold">
                 <tr class="text-nowrap">
-                    <td colspan="4" class="text-end text-secondary">Total de Registros Encontrados:</td>
+                    <td colspan="5" class="text-end text-secondary">Total de Registros Encontrados:</td>
                     <td class="text-center text-dark">{{ count($publicacoes) }}</td>
                 </tr>
             </tfoot>
