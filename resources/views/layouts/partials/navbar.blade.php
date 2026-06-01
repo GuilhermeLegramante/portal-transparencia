@@ -360,6 +360,12 @@
                             <i class="fas fa-file-invoice-dollar me-1"></i> Prestação de Contas
                         </li>
                         <li>
+                            <a class="dropdown-item {{ request()->get('categoria') === 'BALANÇO' ? 'active fw-bold' : '' }}"
+                                href="{{ route('publicacoes.index', ['categoria' => 'BALANÇO']) }}">
+                                <i class="fas fa-balance-scale me-2 opacity-75 text-secondary"></i>Balanço
+                            </a>
+                        </li>
+                        <li>
                             <a class="dropdown-item {{ request()->get('categoria') === 'DEMONSTRATIVO' ? 'active fw-bold' : '' }}"
                                 href="{{ route('publicacoes.index', ['categoria' => 'DEMONSTRATIVO']) }}">
                                 <i class="fas fa-chart-line me-2 opacity-75 text-secondary"></i>Demonstrativo
@@ -368,7 +374,7 @@
                         <li>
                             <a class="dropdown-item {{ request()->get('categoria') === 'RELATÓRIO' ? 'active fw-bold' : '' }}"
                                 href="{{ route('publicacoes.index', ['categoria' => 'RELATÓRIO']) }}">
-                                <i class="fas fa-file-alt me-2 opacity-75 text-secondary"></i>Relatório
+                                <i class="fas fa-file-alt me-2 opacity-75 text-secondary"></i>Relatório - RGF
                             </a>
                         </li>
                         <li>
