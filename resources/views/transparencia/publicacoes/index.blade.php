@@ -105,14 +105,15 @@
 
                     @auth
                         {{-- 6. NOVA COLUNA: Ações Administrativas (Excluir com Modal) --}}
-                        <td class="text-center">
-                            <button type="button" class="btn btn-sm btn-outline-danger rounded-3 px-2 py-1"
-                                data-bs-toggle="modal" data-bs-target="#modalConfirmarExclusao" data-id="{{ $pub->codigo }}"
-                                data-descricao="{{ $pub->descricao }}" data-tipo="{{ $pub->tipo }}" {{-- <-- Agora lê direto: 'geral' ou 'prestacao' --}}
-                                title="Excluir Publicação">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </td>
+                        <button type="button" class="btn btn-sm btn-outline-danger rounded-3 px-2 py-1" data-bs-toggle="modal"
+                            data-bs-target="#modalConfirmarExclusao" data-id="{{ $pub->codigo }}"
+                            data-descricao="{{ $pub->descricao }}" data-tipo="{{ $pub->tipo }}" title="Excluir Publicação">
+
+                            {{-- TESTE TEMPORÁRIO: comente a linha abaixo após testar --}}
+                            [{{ $pub->tipo ?? 'VAZIO' }}]
+
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
                     @else
                         {{-- Se o usuário não estiver autenticado, mostramos um placeholder ou nada --}}
                         <td class="text-center">
