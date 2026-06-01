@@ -346,11 +346,40 @@
                     </a>
                     <ul class="dropdown-menu shadow border-0" aria-labelledby="navbarPublicacoes">
                         <li>
-                            <a class="dropdown-item" href="{{ route('publicacoes.index') }}">
+                            <a class="dropdown-item {{ !request()->has('categoria') && request()->is('publicacoes') ? 'active' : '' }}"
+                                href="{{ route('publicacoes.index') }}">
                                 <i class="fas fa-list me-2 opacity-75"></i>Consultar Publicações
                             </a>
                         </li>
-                        {{-- Opcional: Se quiser que apenas gestores logados vejam o botão de criar --}}
+
+                        {{-- SEÇÃO: PRESTAÇÃO DE CONTAS --}}
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li class="dropdown-header text-uppercase small fw-bold text-muted px-3 pt-1 pb-2">
+                            <i class="fas fa-file-invoice-dollar me-1"></i> Prestação de Contas
+                        </li>
+                        <li>
+                            <a class="dropdown-item {{ request()->get('categoria') === 'DEMONSTRATIVO' ? 'active fw-bold' : '' }}"
+                                href="{{ route('publicacoes.index', ['categoria' => 'DEMONSTRATIVO']) }}">
+                                <i class="fas fa-chart-line me-2 opacity-75 text-secondary"></i>Demonstrativo
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item {{ request()->get('categoria') === 'RELATÓRIO' ? 'active fw-bold' : '' }}"
+                                href="{{ route('publicacoes.index', ['categoria' => 'RELATÓRIO']) }}">
+                                <i class="fas fa-file-alt me-2 opacity-75 text-secondary"></i>Relatório
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item {{ request()->get('categoria') === 'RELATÓRIO CIRCUNSTANCIADO' ? 'active fw-bold' : '' }}"
+                                href="{{ route('publicacoes.index', ['categoria' => 'RELATÓRIO CIRCUNSTANCIADO']) }}">
+                                <i class="fas fa-file-signature me-2 opacity-75 text-secondary"></i>Relatório
+                                Circunstanciado
+                            </a>
+                        </li>
+
+                        {{-- ÁREA ADMINISTRATIVA (Apenas Logados) --}}
                         @auth
                             <li>
                                 <hr class="dropdown-divider">
