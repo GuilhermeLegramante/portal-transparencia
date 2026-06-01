@@ -142,7 +142,7 @@
                     </ul>
                 </li>
 
-                @if (config('app.client_name') === 'cacequipm')
+                @if (config('app.client_name') === 'cacequipm' || config('app.client_name') === 'sisprem')
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle {{ request()->is('receita*') ? 'active fw-bold' : '' }}"
                             href="#" id="navbarReceita" role="button" data-bs-toggle="dropdown"
