@@ -213,18 +213,9 @@
                                     const inputTipo = document.getElementById('modal-item-tipo');
                                     if (inputTipo) {
                                         inputTipo.value = tipoRegistro;
-                                    } else {
-                                        // Se o input não existir, podemos criar um input hidden dinamicamente e anexá-lo ao formulário
-                                        const form = document.getElementById('form-excluir-publicacao');
-                                        const inputHidden = document.createElement('input');
-                                        inputHidden.type = 'hidden';
-                                        inputHidden.name = 'tipo_publicacao';
-                                        inputHidden.id = 'modal-item-tipo';
-                                        inputHidden.value = tipoRegistro; // Define o valor do tipo (geral ou prestação)
-                                        form.appendChild(inputHidden);
-                                    });
-                            }
-                        });
+                                    }
+                                }
+                            });
         </script>
     </div>
 
