@@ -142,55 +142,62 @@
                     </ul>
                 </li>
 
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {{ request()->is('receita*') ? 'active fw-bold' : '' }}"
-                        href="#" id="navbarReceita" role="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        Receita
-                    </a>
-                    <ul class="dropdown-menu shadow border-0" aria-labelledby="navbarReceita">
+                @if (config('app.client_name') === 'cacequipm')
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {{ request()->is('receita*') ? 'active fw-bold' : '' }}"
+                            href="#" id="navbarReceita" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Receita
+                        </a>
+                        <ul class="dropdown-menu shadow border-0" aria-labelledby="navbarReceita">
 
-                        {{-- ARRECADAÇÃO --}}
-                        <li class="dropdown-submenu">
-                            <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
-                                Arrecadação <i class="fa fa-chevron-right ms-2" style="font-size: 0.7rem;"></i>
-                            </a>
-                            <ul class="dropdown-menu shadow border-0">
-                                <li>
-                                    <a class="dropdown-item"
-                                        href="{{ route('receita.arrecadacao.elemento.index') }}">
-                                        Por Elemento
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="{{ route('receita.arrecadacao.recurso.index') }}">
-                                        Por Recurso
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                            {{-- ARRECADAÇÃO --}}
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item d-flex justify-content-between align-items-center"
+                                    href="#">
+                                    Arrecadação <i class="fa fa-chevron-right ms-2" style="font-size: 0.7rem;"></i>
+                                </a>
+                                <ul class="dropdown-menu shadow border-0">
+                                    <li>
+                                        <a class="dropdown-item"
+                                            href="{{ route('receita.arrecadacao.elemento.index') }}">
+                                            Por Elemento
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item"
+                                            href="{{ route('receita.arrecadacao.recurso.index') }}">
+                                            Por Recurso
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
 
-                        {{-- EXECUÇÃO ORÇAMENTÁRIA --}}
-                        <li class="dropdown-submenu">
-                            <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
-                                Execução Orçamentária <i class="fa fa-chevron-right ms-2"
-                                    style="font-size: 0.7rem;"></i>
-                            </a>
-                            <ul class="dropdown-menu shadow border-0">
-                                <li>
-                                    <a class="dropdown-item" href="{{ route('receita.execucao.elemento.index') }}">
-                                        Por Elemento
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="{{ route('receita.execucao.recurso.index') }}">
-                                        Por Recurso
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
+                            {{-- EXECUÇÃO ORÇAMENTÁRIA --}}
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item d-flex justify-content-between align-items-center"
+                                    href="#">
+                                    Execução Orçamentária <i class="fa fa-chevron-right ms-2"
+                                        style="font-size: 0.7rem;"></i>
+                                </a>
+                                <ul class="dropdown-menu shadow border-0">
+                                    <li>
+                                        <a class="dropdown-item"
+                                            href="{{ route('receita.execucao.elemento.index') }}">
+                                            Por Elemento
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item"
+                                            href="{{ route('receita.execucao.recurso.index') }}">
+                                            Por Recurso
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                @endif
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle {{ request()->is('compras*') ? 'active fw-bold' : '' }}"
                         href="#" id="navbarCompras" role="button" data-bs-toggle="dropdown"
