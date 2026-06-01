@@ -192,13 +192,17 @@
 
                 if (modalExclusao) {
                     modalExclusao.addEventListener('show.bs.modal', function(event) {
-                        // Botão da tabela que disparou o evento
-                        const botao = event.relatedTarget;
+                        // Força pegar o elemento que tem o data-id (caso clique no ícone interno)
+                        const botao = event.relatedTarget.closest('[data-id]') || event.relatedTarget;
 
                         // Extrai as informações dos atributos data-*
                         const idRegistro = botao.getAttribute('data-id');
                         const descricaoRegistro = botao.getAttribute('data-descricao');
-                        const tipoRegistro = botao.getAttribute('data-tipo'); // <-- CORRIGIDO: Linha adicionada
+                        const tipoRegistro = botao.getAttribute('data-tipo');
+
+                        // DEBUG NO CONSOLE DO NAVEGADOR (Pressione F12 para ver se os dados mudam ao clicar)
+                        console.log("ID Capturado:", idRegistro);
+                        console.log("Tipo Capturado:", tipoRegistro);
 
                         // Monta a rota de exclusão do Laravel dinamicamente usando a rota nomeada
                         const urlBase = "{{ route('publicacoes.destroy', ':id') }}";
@@ -209,12 +213,12 @@
                         document.getElementById('modal-item-id').textContent = idRegistro;
                         document.getElementById('modal-item-descricao').textContent = descricaoRegistro;
 
-                        // INJEÇÃO DO VALOR NO INPUT: Força o valor textualmente direto no atributo 'value'
+                        // Garante a injeção do valor no input hidden
                         const inputTipo = document.getElementById('modal-item-tipo');
                         if (inputTipo) {
                             inputTipo.value = tipoRegistro;
                         }
-                    }); // <-- CORRIGIDO: Fechamento do Event Listener
+                    });
                 }
             });
         </script>
