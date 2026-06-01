@@ -204,11 +204,10 @@
                         console.log("ID Capturado:", idRegistro);
                         console.log("Tipo Capturado:", tipoRegistro);
 
-                        // Monta a rota de exclusão do Laravel dinamicamente usando a rota nomeada
-                        const urlBase = "{{ route('publicacoes.destroy', ':id') }}";
-                        const urlFinal = urlBase.replace(':id', idRegistro);
+                        // Substitua o trecho da URL dentro do seu script por este:
+                        const urlBase = "{{ route('publicacoes.destroy', ':id') }}?tipo_publicacao=:tipo";
+                        const urlFinal = urlBase.replace(':id', idRegistro).replace(':tipo', tipoRegistro);
 
-                        // Atualiza os componentes internos da modal com os dados do item
                         document.getElementById('form-excluir-publicacao').setAttribute('action', urlFinal);
                         document.getElementById('modal-item-id').textContent = idRegistro;
                         document.getElementById('modal-item-descricao').textContent = descricaoRegistro;

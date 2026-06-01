@@ -99,8 +99,8 @@ class PublicacaoCadastroController extends Controller
     {
         try {
             $idcliente = config('app.client_id');
-            $tipo = $request->input('tipo_publicacao'); // Captura 'geral' ou 'prestacao' vindo da modal
-
+            $tipo = $request->query('tipo_publicacao') ?? $request->input('tipo_publicacao'); // Tenta capturar tanto via query string quanto via payload do form
+          
             dd($tipo); // <--- Debug para verificar se o tipo está chegando corretamente
 
             if (empty($tipo)) {
