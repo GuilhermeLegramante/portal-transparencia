@@ -92,18 +92,18 @@ class PublicacaoCadastroController extends Controller
     }
 
     /**
-     * Remove a publicação do banco e o arquivo do disco
+     * Remove a publicação do banco (independente do tipo) e o arquivo do disco
      */
     public function destroy($id)
     {
         try {
             $idcliente = config('app.client_id');
 
-            // Executa a exclusão lógica/banco via repositório
-            $publicacaoDeletada = $this->repo->excluirPublicacaoGeral($id, $idcliente);
+            // Chama o novo método do repositório que varre as duas tabelas
+            $publicacaoDeletada = $this->repo->excluirPublicacaoDinamica($id, $idcliente);
 
             if ($publicacaoDeletada) {
-                // Se o registro possuía um arquivo físico salvo, deleta-o do storage
+                // Remove o arquivo físico do Storage se ele existir
                 if (!empty($publicacaoDeletada->path)) {
                     if (Storage::disk('public')->exists($publicacaoDeletada->path)) {
                         Storage::disk('public')->delete($publicacaoDeletada->path);
@@ -112,14 +112,14 @@ class PublicacaoCadastroController extends Controller
 
                 return redirect()
                     ->back()
-                    ->with('success', 'Publicação e arquivo físico excluídos com sucesso!');
+                    ->with('success', 'Registro e arquivo excluídos com sucesso!');
             }
 
-            return redirect()->back()->with('error', 'Publicação não encontrada ou já excluída.');
+            return redirect()->back()->with('error', 'Publicação ou Prestação de contas não encontrada.');
         } catch (Exception $e) {
             return redirect()
                 ->back()
-                ->with('error', 'Erro ao tentar excluir a publicação: ' . $e->getMessage());
+                ->with('error', 'Erro ao tentar excluir: ' . $e->getMessage());
         }
     }
 }

@@ -59,32 +59,49 @@ class PublicacaoCadastroRepository
     }
 
     /**
-     * Remove uma publicação e limpa suas amarras na tabela pivot
+     * Remove a publicação (Geral ou Prestação de Contas) e limpa seus vínculos
      */
-    public function excluirPublicacaoGeral($id, $idcliente)
+    public function excluirPublicacaoDinamica($codigo, $idcliente)
     {
-        return DB::transaction(function () use ($id, $idcliente) {
-            // 1. Busca os dados atuais para sabermos o caminho do arquivo físico
-            $publicacao = DB::table('pubpublicacao')
-                ->where('id', $id)
+        return DB::transaction(function () use ($codigo, $idcliente) {
+            // 1. Tenta buscar primeiro na tabela de Publicação Geral
+            $registro = DB::table('pubpublicacao')
+                ->where('codigo', $codigo)
                 ->where('idcliente', $idcliente)
                 ->first();
 
-            if ($publicacao) {
-                // 2. Remove as associações de tags da publicação primeiro (Foreign Key manual)
+            if ($registro) {
+                // Remove os vínculos das tags na tabela pivot
                 DB::table('pubpublicacaotag')
-                    ->where('idpublicacao', $id)
+                    ->where('idpublicacao', $registro->id)
                     ->where('idcliente', $idcliente)
                     ->delete();
 
-                // 3. Deleta o registro principal da publicação
+                // Deleta da tabela principal
                 DB::table('pubpublicacao')
-                    ->where('id', $id)
+                    ->where('codigo', $codigo)
                     ->where('idcliente', $idcliente)
                     ->delete();
+
+                return $registro;
             }
 
-            return $publicacao; // Retorna o objeto antigo para podermos apagar o arquivo físico
+            // 2. Se não encontrou na Geral, busca na tabela de Prestação de Contas
+            $registroPrestacao = DB::table('pubprestacaoconta')
+                ->where('codigo', $codigo)
+                ->where('idcliente', $idcliente)
+                ->first();
+
+            if ($registroPrestacao) {
+                DB::table('pubprestacaoconta')
+                    ->where('codigo', $codigo)
+                    ->where('idcliente', $idcliente)
+                    ->delete();
+
+                return $registroPrestacao;
+            }
+
+            return null; // Não encontrou em nenhuma das tabelas
         });
     }
 }
