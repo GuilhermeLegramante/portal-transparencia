@@ -188,29 +188,43 @@
         {{-- Script JavaScript para alimentar a modal dinamicamente --}}
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                const modalExclusao = document.getElementById('modalConfirmarExclusao');
+                        const modalExclusao = document.getElementById('modalConfirmarExclusao');
 
-                if (modalExclusao) {
-                    modalExclusao.addEventListener('show.bs.modal', function(event) {
-                        // Botão da tabela que disparou o evento
-                        const botao = event.relatedTarget;
+                        if (modalExclusao) {
+                            modalExclusao.addEventListener('show.bs.modal', function(event) {
+                                    // Botão da tabela que disparou o evento
+                                    const botao = event.relatedTarget;
 
-                        // Extrai as informações dos atributos data-*
-                        const idRegistro = botao.getAttribute('data-id');
-                        const descricaoRegistro = botao.getAttribute('data-descricao');
+                                    // Extrai as informações dos atributos data-*
+                                    const idRegistro = botao.getAttribute('data-id');
+                                    const descricaoRegistro = botao.getAttribute('data-descricao');
 
-                        // Monta a rota de exclusão do Laravel dinamicamente usando a rota nomeada
-                        // Substitui uma string fake pelo ID real do loop
-                        const urlBase = "{{ route('publicacoes.destroy', ':id') }}";
-                        const urlFinal = urlBase.replace(':id', idRegistro);
+                                    // Monta a rota de exclusão do Laravel dinamicamente usando a rota nomeada
+                                    // Substitui uma string fake pelo ID real do loop
+                                    const urlBase = "{{ route('publicacoes.destroy', ':id') }}";
+                                    const urlFinal = urlBase.replace(':id', idRegistro);
 
-                        // Atualiza os componentes internos da modal com os dados do item
-                        document.getElementById('form-excluir-publicacao').setAttribute('action', urlFinal);
-                        document.getElementById('modal-item-id').textContent = idRegistro;
-                        document.getElementById('modal-item-descricao').textContent = descricaoRegistro;
-                    });
-                }
-            });
+                                    // Atualiza os componentes internos da modal com os dados do item
+                                    document.getElementById('form-excluir-publicacao').setAttribute('action', urlFinal);
+                                    document.getElementById('modal-item-id').textContent = idRegistro;
+                                    document.getElementById('modal-item-descricao').textContent = descricaoRegistro;
+
+                                    // INJEÇÃO DO VALOR NO INPUT: Força o valor textualmente direto no atributo 'value'
+                                    const inputTipo = document.getElementById('modal-item-tipo');
+                                    if (inputTipo) {
+                                        inputTipo.value = tipoRegistro;
+                                    } else {
+                                        // Se o input não existir, podemos criar um input hidden dinamicamente e anexá-lo ao formulário
+                                        const form = document.getElementById('form-excluir-publicacao');
+                                        const inputHidden = document.createElement('input');
+                                        inputHidden.type = 'hidden';
+                                        inputHidden.name = 'tipo_publicacao';
+                                        inputHidden.id = 'modal-item-tipo';
+                                        inputHidden.value = tipoRegistro; // Define o valor do tipo (geral ou prestação)
+                                        form.appendChild(inputHidden);
+                                    });
+                            }
+                        });
         </script>
     </div>
 
