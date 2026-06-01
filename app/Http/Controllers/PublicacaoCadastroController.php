@@ -7,6 +7,7 @@ use App\Repositories\PublicacaoCadastroRepository;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Carbon; // <--- Importação importante para manipular a data
 use Exception;
+use GuzzleHttp\Psr7\Request;
 
 class PublicacaoCadastroController extends Controller
 {
