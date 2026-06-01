@@ -30,6 +30,7 @@ class PublicacaoRepository
                 'publicacao.exercicio',
                 'publicacao.id as codigo',
                 DB::raw('UPPER(publicacao.descricao) as descricao'),
+                DB::raw("'geral' as tipo"), // <--- INJETADO: Identifica que é publicação geral
                 'publicacao.datahora as data',
                 DB::raw("(SELECT UPPER(GROUP_CONCAT(DISTINCT tag.nome ORDER BY tag.nome SEPARATOR ';'))
                           FROM pubpublicacaotag categoria
@@ -38,7 +39,7 @@ class PublicacaoRepository
                           AND categoria.idcliente = publicacao.idcliente
                           GROUP BY categoria.idcliente, categoria.idpublicacao) as categoria"),
                 'publicacao.path as caminho_arquivo',
-                DB::raw("'geral' as tipo"), // <--- INJETADO: Identifica que é publicação geral
+                 // <--- INJETADO: Identifica que é publicação geral
 
             )
             ->where('publicacao.idcliente', $idcliente)
