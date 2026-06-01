@@ -110,7 +110,7 @@
                             data-descricao="{{ $pub->descricao }}" data-tipo="{{ $pub->tipo }}" title="Excluir Publicação">
 
                             {{-- TESTE TEMPORÁRIO: comente a linha abaixo após testar --}}
-                            [{{ $pub->tipo ?? 'VAZIO' }}]
+                            {{-- [{{ $pub->tipo ?? 'VAZIO' }}] --}}
 
                             <i class="fas fa-trash-alt"></i>
                         </button>
