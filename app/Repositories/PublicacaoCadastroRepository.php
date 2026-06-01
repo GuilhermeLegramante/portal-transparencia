@@ -59,49 +59,56 @@ class PublicacaoCadastroRepository
     }
 
     /**
-     * Remove a publicação (Geral ou Prestação de Contas) e limpa seus vínculos
+     * Exclui o registro na tabela exata (pubpublicacao ou pubprestacaoconta) 
+     * evitando colisões de IDs idênticos vindos do UNION.
      */
-    public function excluirPublicacaoDinamica($codigo, $idcliente)
+    public function excluirPublicacaoPorTipo($id, $idcliente, $tipo)
     {
-        return DB::transaction(function () use ($codigo, $idcliente) {
-            // 1. Tenta buscar primeiro na tabela de Publicação Geral
-            $registro = DB::table('pubpublicacao')
-                ->where('codigo', $codigo)
-                ->where('idcliente', $idcliente)
-                ->first();
+        return DB::transaction(function () use ($id, $idcliente, $tipo) {
 
-            if ($registro) {
-                // Remove os vínculos das tags na tabela pivot
-                DB::table('pubpublicacaotag')
-                    ->where('idpublicacao', $registro->id)
+            // CENÁRIO A: É uma publicação geral
+            if ($tipo === 'geral') {
+                $registro = DB::table('pubpublicacao')
+                    ->where('id', $id)
                     ->where('idcliente', $idcliente)
-                    ->delete();
+                    ->first();
 
-                // Deleta da tabela principal
-                DB::table('pubpublicacao')
-                    ->where('codigo', $codigo)
-                    ->where('idcliente', $idcliente)
-                    ->delete();
+                if ($registro) {
+                    // 1. Limpa os vínculos das tags na tabela pivot primeiro (pubpublicacaotag)
+                    DB::table('pubpublicacaotag')
+                        ->where('idpublicacao', $id)
+                        ->where('idcliente', $idcliente)
+                        ->delete();
 
-                return $registro;
+                    // 2. Deleta o registro principal da tabela pubpublicacao
+                    DB::table('pubpublicacao')
+                        ->where('id', $id)
+                        ->where('idcliente', $idcliente)
+                        ->delete();
+
+                    return $registro; // Retorna o objeto antigo para a Controller apagar o PDF
+                }
             }
 
-            // 2. Se não encontrou na Geral, busca na tabela de Prestação de Contas
-            $registroPrestacao = DB::table('pubprestacaoconta')
-                ->where('codigo', $codigo)
-                ->where('idcliente', $idcliente)
-                ->first();
-
-            if ($registroPrestacao) {
-                DB::table('pubprestacaoconta')
-                    ->where('codigo', $codigo)
+            // CENÁRIO B: É uma prestação de contas
+            if ($tipo === 'prestacao') {
+                $registroPrestacao = DB::table('pubprestacaoconta')
+                    ->where('id', $id)
                     ->where('idcliente', $idcliente)
-                    ->delete();
+                    ->first();
 
-                return $registroPrestacao;
+                if ($registroPrestacao) {
+                    // Deleta o registro direto da tabela pubprestacaoconta
+                    DB::table('pubprestacaoconta')
+                        ->where('id', $id)
+                        ->where('idcliente', $idcliente)
+                        ->delete();
+
+                    return $registroPrestacao; // Retorna o objeto antigo para a Controller apagar o PDF
+                }
             }
 
-            return null; // Não encontrou em nenhuma das tabelas
+            return null; // Caso não encontre em nenhum dos fluxos
         });
     }
 }

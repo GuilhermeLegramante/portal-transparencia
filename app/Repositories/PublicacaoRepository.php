@@ -15,6 +15,7 @@ class PublicacaoRepository
                 'publicacao.exercicio',
                 'publicacao.id as codigo',
                 DB::raw('UPPER(publicacao.descricao) as descricao'),
+                DB::raw("'prestacao' as tipo"), // <--- INJETADO: Identifica que é prestação de contas
                 'publicacao.datahora as data',
                 DB::raw('UPPER(publicacao.categoria) as categoria'),
                 'publicacao.path as caminho_arquivo'
@@ -28,6 +29,7 @@ class PublicacaoRepository
                 'publicacao.idcliente as cliente_id',
                 'publicacao.exercicio',
                 'publicacao.id as codigo',
+                DB::raw("'geral' as tipo"), // <--- INJETADO: Identifica que é publicação geral
                 DB::raw('UPPER(publicacao.descricao) as descricao'),
                 'publicacao.datahora as data',
                 DB::raw("(SELECT UPPER(GROUP_CONCAT(DISTINCT tag.nome ORDER BY tag.nome SEPARATOR ';'))

@@ -92,18 +92,23 @@ class PublicacaoCadastroController extends Controller
     }
 
     /**
-     * Remove a publicação do banco (independente do tipo) e o arquivo do disco
+     * Remove o registro do banco de dados (da tabela correta) e o PDF físico do disco
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         try {
             $idcliente = config('app.client_id');
+            $tipo = $request->input('tipo_publicacao'); // Captura 'geral' ou 'prestacao' vindo da modal
 
-            // Chama o novo método do repositório que varre as duas tabelas
-            $publicacaoDeletada = $this->repo->excluirPublicacaoDinamica($id, $idcliente);
+            if (empty($tipo)) {
+                return redirect()->back()->with('error', 'O tipo de publicação não foi informado.');
+            }
+
+            // Executa a exclusão com base no ID e no Tipo exato
+            $publicacaoDeletada = $this->repo->excluirPublicacaoPorTipo($id, $idcliente, $tipo);
 
             if ($publicacaoDeletada) {
-                // Remove o arquivo físico do Storage se ele existir
+                // Se o registro possuía um arquivo físico salvo, deleta-o do storage
                 if (!empty($publicacaoDeletada->path)) {
                     if (Storage::disk('public')->exists($publicacaoDeletada->path)) {
                         Storage::disk('public')->delete($publicacaoDeletada->path);
@@ -115,11 +120,11 @@ class PublicacaoCadastroController extends Controller
                     ->with('success', 'Registro e arquivo excluídos com sucesso!');
             }
 
-            return redirect()->back()->with('error', 'Publicação ou Prestação de contas não encontrada.');
+            return redirect()->back()->with('error', 'O registro solicitado não foi encontrado.');
         } catch (Exception $e) {
             return redirect()
                 ->back()
-                ->with('error', 'Erro ao tentar excluir: ' . $e->getMessage());
+                ->with('error', 'Erro ao tentar excluir o registro: ' . $e->getMessage());
         }
     }
 }

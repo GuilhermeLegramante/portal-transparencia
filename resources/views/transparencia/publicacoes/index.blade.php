@@ -108,7 +108,8 @@
                         <td class="text-center">
                             <button type="button" class="btn btn-sm btn-outline-danger rounded-3 px-2 py-1"
                                 data-bs-toggle="modal" data-bs-target="#modalConfirmarExclusao" data-id="{{ $pub->codigo }}"
-                                data-descricao="{{ $pub->descricao }}" title="Excluir Publicação">
+                                data-descricao="{{ $pub->descricao }}" data-tipo="{{ $pub->tipo }}" {{-- <-- Agora lê direto: 'geral' ou 'prestacao' --}}
+                                title="Excluir Publicação">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </td>
