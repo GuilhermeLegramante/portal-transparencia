@@ -101,8 +101,6 @@ class PublicacaoCadastroController extends Controller
             $idcliente = config('app.client_id');
             $tipo = $request->query('tipo_publicacao') ?? $request->input('tipo_publicacao'); // Tenta capturar tanto via query string quanto via payload do form
           
-            dd($tipo); // <--- Debug para verificar se o tipo está chegando corretamente
-
             if (empty($tipo)) {
                 return redirect()->back()->with('error', 'O tipo de publicação não foi informado.');
             }
