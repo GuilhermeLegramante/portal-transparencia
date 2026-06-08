@@ -488,7 +488,7 @@
                 new Chart(ctxUnidades, {
                     type: 'bar',
                     data: {
-                        labels: dadosUnidades.map(i => i.descricao.substring(0, 25) + '...'),
+                        labels: dadosUnidades.map(i => i.descricao),
                         datasets: [{
                             label: 'Total Empenhado (R$)',
                             data: dadosUnidades.map(i => i.valor_empenhado_exercicio),
