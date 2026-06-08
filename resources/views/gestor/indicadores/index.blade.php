@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container-fluid px-lg-5 py-4 bg-light-gray min-vh-100">
+    <div class="container-fluid px-lg-5 py-4 page-content min-vh-100">
         <x-breadcrumb :items="$breadcrumb" />
 
         {{-- Cabeçalho da Página com seletor de Exercício --}}
@@ -30,16 +30,19 @@
             </div>
         @else
             {{-- CARDS SUPERIORES: Principais Indicadores de Comprometimento --}}
-           {{-- CARDS SUPERIORES: Principais Indicadores de Comprometimento (Versão Compacta e Responsiva) --}}
+            {{-- CARDS SUPERIORES: Principais Indicadores de Comprometimento (Versão Compacta e Responsiva) --}}
             <div class="row g-3 mb-4">
                 {{-- Card Exercício Atual --}}
                 <div class="col-md-6 col-xl-3">
                     <div class="card h-100 border-0 shadow-sm rounded-3 bg-white border-start border-primary border-4">
                         <div class="card-body p-3 p-lg-4">
-                            <span class="text-muted text-uppercase small d-block fw-bold mb-1 text-nowrap">Comprometido ({{ $exercicio }})</span>
-                            <h2 class="fw-bold text-dark mb-2 fs-3">{{ number_format($pctComprometidoExercicio, 2, ',', '.') }}%</h2>
+                            <span class="text-muted text-uppercase small d-block fw-bold mb-1 text-nowrap">Comprometido
+                                ({{ $exercicio }})</span>
+                            <h2 class="fw-bold text-dark mb-2 fs-3">
+                                {{ number_format($pctComprometidoExercicio, 2, ',', '.') }}%</h2>
                             <div class="progress rounded-pill mb-2" style="height: 6px;">
-                                <div class="progress-bar bg-primary" role="progressbar" style="width: {{ $pctComprometidoExercicio }}%"></div>
+                                <div class="progress-bar bg-primary" role="progressbar"
+                                    style="width: {{ $pctComprometidoExercicio }}%"></div>
                             </div>
                             <small class="text-muted text-nowrap d-block text-truncate">Despesa Empenhada / Total</small>
                         </div>
@@ -50,12 +53,16 @@
                 <div class="col-md-6 col-xl-3">
                     <div class="card h-100 border-0 shadow-sm rounded-3 bg-white border-start border-secondary border-4">
                         <div class="card-body p-3 p-lg-4">
-                            <span class="text-muted text-uppercase small d-block fw-bold mb-1 text-nowrap">Comprometido ({{ $exercicio - 1 }})</span>
-                            <h2 class="fw-bold text-secondary mb-2 fs-3">{{ number_format($pctComprometidoAnterior, 2, ',', '.') }}%</h2>
+                            <span class="text-muted text-uppercase small d-block fw-bold mb-1 text-nowrap">Comprometido
+                                ({{ $exercicio - 1 }})</span>
+                            <h2 class="fw-bold text-secondary mb-2 fs-3">
+                                {{ number_format($pctComprometidoAnterior, 2, ',', '.') }}%</h2>
                             <div class="progress rounded-pill mb-2" style="height: 6px;">
-                                <div class="progress-bar bg-secondary" role="progressbar" style="width: {{ $pctComprometidoAnterior }}%"></div>
+                                <div class="progress-bar bg-secondary" role="progressbar"
+                                    style="width: {{ $pctComprometidoAnterior }}%"></div>
                             </div>
-                            <small class="text-muted text-nowrap d-block text-truncate">Histórico do período anterior</small>
+                            <small class="text-muted text-nowrap d-block text-truncate">Histórico do período
+                                anterior</small>
                         </div>
                     </div>
                 </div>
@@ -64,9 +71,10 @@
                 <div class="col-md-6 col-xl-3">
                     <div class="card h-100 border-0 shadow-sm rounded-3 bg-white">
                         <div class="card-body p-3 p-lg-4">
-                            <span class="text-muted text-uppercase small d-block fw-bold mb-1 text-nowrap">Orçamento Atualizado</span>
-                            <h3 class="fw-bold text-success mb-1 text-nowrap text-truncate fs-4 fs-xxl-3" 
-                                title="R$ {{ number_format($resumoAnual->valor_atualizado_exercicio, 2, ',', '.') }}" 
+                            <span class="text-muted text-uppercase small d-block fw-bold mb-1 text-nowrap">Orçamento
+                                Atualizado</span>
+                            <h3 class="fw-bold text-success mb-1 text-nowrap text-truncate fs-4 fs-xxl-3"
+                                title="R$ {{ number_format($resumoAnual->valor_atualizado_exercicio, 2, ',', '.') }}"
                                 data-bs-toggle="tooltip">
                                 R$ {{ number_format($resumoAnual->valor_atualizado_exercicio, 2, ',', '.') }}
                             </h3>
@@ -81,9 +89,10 @@
                 <div class="col-md-6 col-xl-3">
                     <div class="card h-100 border-0 shadow-sm rounded-3 bg-white">
                         <div class="card-body p-3 p-lg-4">
-                            <span class="text-muted text-uppercase small d-block fw-bold mb-1 text-nowrap">Total Pago Líquido</span>
+                            <span class="text-muted text-uppercase small d-block fw-bold mb-1 text-nowrap">Total Pago
+                                Líquido</span>
                             <h3 class="fw-bold text-info mb-1 text-nowrap text-truncate fs-4 fs-xxl-3"
-                                title="R$ {{ number_format($resumoAnual->valor_pago_exercicio, 2, ',', '.') }}" 
+                                title="R$ {{ number_format($resumoAnual->valor_pago_exercicio, 2, ',', '.') }}"
                                 data-bs-toggle="tooltip">
                                 R$ {{ number_format($resumoAnual->valor_pago_exercicio, 2, ',', '.') }}
                             </h3>
@@ -169,6 +178,10 @@
     </div>
 
     <style>
+        .page-content {
+            background: var(--bs-body-bg);
+        }
+
         .bg-light-gray {
             background-color: #f8f9fa;
         }
