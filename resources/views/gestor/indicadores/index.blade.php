@@ -552,65 +552,128 @@
     </script>
 
     <script>
+        window.charts ??= {};
+
         function renderSmartChart(canvasId, dados, titulo) {
 
-            const ctx = document.getElementById(canvasId);
-            if (!ctx || !dados || dados.length === 0) return;
+            const canvas = document.getElementById(canvasId);
 
-            // 1. Identificar chaves dinamicamente (para evitar nomes fixos de colunas)
-            const sample = dados[0];
-            // Procura colunas que contenham 'exercicio' ou 'anterior'
-            const keys = Object.keys(sample);
-            const campoAtual = keys.find(k => k.includes('exercicio') && !k.includes('pago') && !k.includes('remanejo'));
-            const campoAnt = keys.find(k => k.includes('anterior') && !k.includes('pago') && !k.includes('remanejo'));
+            if (!canvas || !dados || dados.length === 0) {
+                console.warn('Sem dados:', canvasId);
+                return;
+            }
 
-            // 2. Agrupamento seguro
-            const meses = [...new Set(dados.map(i => i.mes))].sort((a, b) => a - b);
+            const keys = Object.keys(dados[0]);
 
-            const serieAtual = meses.map(m => dados.filter(i => i.mes == m).reduce((s, i) => s + parseFloat(i[campoAtual] ||
-                0), 0));
-            const serieAnt = meses.map(m => dados.filter(i => i.mes == m).reduce((s, i) => s + parseFloat(i[campoAnt] || 0),
-                0));
+            // Procura os campos corretos
+            const campoAtual = keys.find(k =>
+                k.endsWith('_exercicio') &&
+                !k.includes('pago') &&
+                !k.includes('remanejo')
+            );
 
+            const campoAnterior = keys.find(k =>
+                k.endsWith('_anterior') &&
+                !k.includes('pago') &&
+                !k.includes('remanejo')
+            );
+
+            if (!campoAtual || !campoAnterior) {
+                console.error(
+                    `Campos não encontrados para ${canvasId}`,
+                    keys
+                );
+                return;
+            }
+
+            // Meses fixos para todos os gráficos
+            const meses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+            const serieAtual = meses.map(m => {
+                return dados
+                    .filter(i => Number(i.mes) === m)
+                    .reduce((total, item) => {
+                        return total + parseFloat(item[campoAtual] || 0);
+                    }, 0);
+            });
+
+            const serieAnterior = meses.map(m => {
+                return dados
+                    .filter(i => Number(i.mes) === m)
+                    .reduce((total, item) => {
+                        return total + parseFloat(item[campoAnterior] || 0);
+                    }, 0);
+            });
+
+            console.log('==========================');
             console.log(canvasId);
-            console.log(serieAtual);
-            console.log(serieAnt);
+            console.log('Campo Atual:', campoAtual);
+            console.log('Campo Anterior:', campoAnterior);
+            console.log('Atual:', serieAtual);
+            console.log('Anterior:', serieAnterior);
 
-            // 3. Renderização Isolada
-            new Chart(ctx, {
+            // Remove gráfico antigo
+            if (window.charts[canvasId]) {
+                window.charts[canvasId].destroy();
+            }
+
+            window.charts[canvasId] = new Chart(canvas, {
                 type: 'line',
                 data: {
-                    labels: meses.map(m => m + '/{{ $exercicio }}'),
+                    labels: [
+                        'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
+                        'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'
+                    ],
                     datasets: [{
                             label: 'Exercício Atual',
                             data: serieAtual,
                             borderColor: '#2563eb',
-                            backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                            backgroundColor: 'rgba(37,99,235,0.10)',
                             fill: true,
-                            tension: 0.3
+                            tension: 0.3,
                         },
                         {
                             label: 'Exercício Anterior',
-                            data: serieAnt,
+                            data: serieAnterior,
                             borderColor: '#94a3b8',
                             borderDash: [5, 5],
-                            tension: 0.3
+                            fill: false,
+                            tension: 0.3,
                         }
                     ]
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: titulo
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
                 }
             });
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Agora passamos a variável $dados específica de cada iteração
+
             @foreach ($graficos as $id => $dados)
-                renderSmartChart('{{ $id }}', {!! json_encode($dados) !!},
-                    'Evolução: {{ str_replace('chart', '', $id) }}');
+                renderSmartChart(
+                    '{{ $id }}',
+                    @json($dados),
+                    '{{ str_replace('chart', '', $id) }}'
+                );
             @endforeach
+
         });
     </script>
 @endpush
