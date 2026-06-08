@@ -178,13 +178,12 @@
                             <x-tabela-transparencia titulo="" :colunas="[
                                 ['label' => 'Código', 'align' => 'text-start'],
                                 ['label' => 'Descrição', 'align' => 'text-start'],
-                                ['label' => 'Mês', 'align' => 'text-center'],
                                 ['label' => 'Empenhado Anterior', 'align' => 'text-end'],
                                 ['label' => 'Empenhado Exercício', 'align' => 'text-end'],
                                 ['label' => 'Pago Anterior', 'align' => 'text-end'],
                                 ['label' => 'Pago Exercício', 'align' => 'text-end'],
                             ]">
-                                @foreach ($dadosUnidade as $item)
+                                @foreach ($resumoUnidades as $item)
                                     <tr class="align-middle">
                                         <td class="text-start font-monospace small text-dark fw-semibold">
                                             {{ $item->codigo ?? '--' }}</td>

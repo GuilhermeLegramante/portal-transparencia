@@ -55,29 +55,11 @@ class IndicadoresContabeisController extends Controller
             'Indicadores Contábeis' => ''
         ];
 
-        // --- CARREGA OS NOVOS DADOS ANALÍTICOS (MENSALIZADOS) ---
-        $unidadesMensal = collect($this->repo->getResumoUnidades($idcliente, $exercicio));
-        $funcoesMensal  = collect($this->repo->getResumoFuncoes($idcliente, $exercicio));
-        $subfuncoesMensal = collect($this->repo->getResumoSubfuncoes($idcliente, $exercicio));
-        $elementosMensal = collect($this->repo->getResumoElementos($idcliente, $exercicio));
-        $recursosMensal  = collect($this->repo->getResumoRecursos($idcliente, $exercicio));
-
-        // --- CONSOLIDAÇÃO DOS DADOS PARA AS ABAS DA VIEW ---
-
-        // 1. Unidades Orçamentárias (Ordenadas para o TOP 5 do BI)
-        $resumoUnidades = $unidadesMensal->groupBy('codigo')->map(function ($items) use ($nomesMeses) {
-            $primeiro = $items->first();
-            $mesNum = isset($primeiro->mes) ? (int)$primeiro->mes : null;
-            return (object) [
-                'codigo' => $primeiro->codigo ?? '--',
-                'mes' => $mesNum ? ($nomesMeses[$mesNum - 1] ?? str_pad($mesNum, 2, '0', STR_PAD_LEFT)) : '--',
-                'descricao' => $primeiro->descricao ?? '--',
-                'valor_empenhado_anterior' => $items->sum('valor_empenhado_anterior'),
-                'valor_empenhado_exercicio' => $items->sum('valor_empenhado_exercicio'),
-                'valor_pago_anterior' => $items->sum('valor_pago_anterior'),
-                'valor_pago_exercicio' => $items->sum('valor_pago_exercicio'),
-            ];
-        })->values();
+        $resumoUnidades = $this->repo->getResumoPorUnidade($idcliente, $exercicio);
+        $resumoSubfuncoes = $this->repo->getResumoPorSubfuncao($idcliente, $exercicio);
+        $resumoElementos = $this->repo->getResumoPorElemento($idcliente, $exercicio);
+        $resumoRecursos = $this->repo->getResumoPorRecurso($idcliente, $exercicio);
+        $resumoFuncoes = $this->repo->getResumoPorFuncao($idcliente, $exercicio);
 
         // Dados para o Gráfico de BI: Top 5 Unidades que mais empenharam no ano
         $topUnidades = collect($resumoUnidades)
@@ -85,78 +67,10 @@ class IndicadoresContabeisController extends Controller
             ->take(5)
             ->values();
 
-
-        // 2. Funções (Ordenadas para a Rosca do BI)
-        $resumoFuncoes = $funcoesMensal->groupBy('codigo')->map(function ($items) use ($nomesMeses) {
-            $primeiro = $items->first();
-            $mesNum = isset($primeiro->mes) ? (int)$primeiro->mes : null;
-            return (object) [
-                'codigo' => $primeiro->codigo ?? '--',
-                'mes' => $mesNum ? ($nomesMeses[$mesNum - 1] ?? str_pad($mesNum, 2, '0', STR_PAD_LEFT)) : '--',
-                'descricao' => $primeiro->descricao ?? '--',
-                'valor_emissao_anterior' => $items->sum('valor_emissao_anterior'),
-                'valor_emissao_exercicio' => $items->sum('valor_emissao_exercicio'),
-                'valor_pago_anterior' => $items->sum('valor_pago_anterior'),
-                'valor_pago_exercicio' => $items->sum('valor_pago_exercicio'),
-            ];
-        })->values();
-
         // Dados para o Gráfico de BI: Maiores Funções (Composição do Orçamento)
         $biFuncoes = collect($resumoFuncoes)
             ->sortByDesc('valor_emissao_exercicio')
             ->values();
-
-        // 3. Subfunções
-        $resumoSubfuncoes = $subfuncoesMensal->groupBy('codigo')->map(function ($items) use ($nomesMeses) {
-            $primeiro = $items->first();
-            $mesNum = isset($primeiro->mes) ? (int)$primeiro->mes : null;
-            return (object) [
-                'codigo' => $primeiro->codigo ?? '--',
-                'mes' => $mesNum ? ($nomesMeses[$mesNum - 1] ?? str_pad($mesNum, 2, '0', STR_PAD_LEFT)) : '--',
-                'descricao' => $primeiro->descricao ?? '--',
-                'valor_emissao_anterior' => $items->sum('valor_emissao_anterior'),
-                'valor_emissao_exercicio' => $items->sum('valor_emissao_exercicio'),
-                'valor_pago_anterior' => $items->sum('valor_pago_anterior'),
-                'valor_pago_exercicio' => $items->sum('valor_pago_exercicio'),
-            ];
-        })->values();
-
-        // 4. Elementos de Despesa
-        $resumoElementos = $elementosMensal->groupBy('estrutural')->map(function ($items) use ($nomesMeses) {
-            $primeiro = $items->first();
-            $mesNum = isset($primeiro->mes) ? (int)$primeiro->mes : null;
-            return (object) [
-                'estrutural' => $primeiro->estrutural ?? '--',
-                'mes' => $mesNum ? ($nomesMeses[$mesNum - 1] ?? str_pad($mesNum, 2, '0', STR_PAD_LEFT)) : '--',
-                'descricao' => $primeiro->descricao ?? '--',
-                'valor_emissao_anterior' => $items->sum('valor_emissao_anterior'),
-                'valor_emissao_exercicio' => $items->sum('valor_emissao_exercicio'),
-                'valor_pago_anterior' => $items->sum('valor_pago_anterior'),
-                'valor_pago_exercicio' => $items->sum('valor_pago_exercicio'),
-            ];
-        })->values();
-
-        // 5. Recursos Vinculados
-        $resumoRecursos = $recursosMensal->groupBy('codigo')->map(function ($items) use ($nomesMeses) {
-            $primeiro = $items->first();
-            $mesNum = isset($primeiro->mes) ? (int)$primeiro->mes : null;
-            return (object) [
-                'codigo' => $primeiro->codigo ?? '--',
-                'mes' => $mesNum ? ($nomesMeses[$mesNum - 1] ?? str_pad($mesNum, 2, '0', STR_PAD_LEFT)) : '--',
-                'descricao' => $primeiro->descricao ?? '--',
-                'valor_emissao_anterior' => $items->sum('valor_emissao_anterior'),
-                'valor_emissao_exercicio' => $items->sum('valor_emissao_exercicio'),
-                'valor_pago_anterior' => $items->sum('valor_pago_anterior'),
-                'valor_pago_exercicio' => $items->sum('valor_pago_exercicio'),
-            ];
-        })->values();
-
-
-        $dadosUnidade = $this->repo->getResumoPorUnidade($idcliente, $exercicio);
-        $resumoRecursos = $this->repo->getResumoPorRecurso($idcliente, $exercicio);
-        $resumoElementos = $this->repo->getResumoPorElemento($idcliente, $exercicio);
-        $resumoSubfuncoes = $this->repo->getResumoPorSubfuncao($idcliente, $exercicio);
-        $resumoFuncoes = $this->repo->getResumoPorFuncao($idcliente, $exercicio);
 
         return view('gestor.indicadores.index', compact(
             'exercicio',
@@ -174,11 +88,6 @@ class IndicadoresContabeisController extends Controller
             'resumoRecursos',
             'topUnidades',
             'biFuncoes',
-            'dadosUnidade',
-            'resumoRecursos',
-            'resumoElementos',
-            'resumoSubfuncoes',
-            'resumoFuncoes'
         ));
     }
 }
