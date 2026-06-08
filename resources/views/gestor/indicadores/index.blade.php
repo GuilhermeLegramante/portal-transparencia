@@ -207,7 +207,6 @@
                             <x-tabela-transparencia titulo="" :colunas="[
                                 ['label' => 'Código', 'align' => 'text-start'],
                                 ['label' => 'Descrição', 'align' => 'text-start'],
-                                ['label' => 'Mês', 'align' => 'text-center'],
                                 ['label' => 'Emissão Anterior', 'align' => 'text-end'],
                                 ['label' => 'Emissão Exercício', 'align' => 'text-end'],
                                 ['label' => 'Pago Anterior', 'align' => 'text-end'],
@@ -219,7 +218,6 @@
                                             {{ $item->codigo ?? '--' }}</td>
                                         <td class="text-start text-dark text-truncate" style="max-width: 240px;">
                                             {{ $item->descricao ?? '--' }}</td>
-                                        <td class="text-center text-secondary">{{ $item->mes }}</td>
                                         <td class="text-end text-secondary">R$
                                             {{ number_format($item->valor_emissao_anterior ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-dark fw-semibold">R$
@@ -238,7 +236,6 @@
                             <x-tabela-transparencia titulo="" :colunas="[
                                 ['label' => 'Código', 'align' => 'text-start'],
                                 ['label' => 'Descrição', 'align' => 'text-start'],
-                                ['label' => 'Mês', 'align' => 'text-center'],
                                 ['label' => 'Emissão Anterior', 'align' => 'text-end'],
                                 ['label' => 'Emissão Exercício', 'align' => 'text-end'],
                                 ['label' => 'Pago Anterior', 'align' => 'text-end'],
@@ -250,7 +247,6 @@
                                             {{ $item->codigo ?? '--' }}</td>
                                         <td class="text-start text-dark text-truncate" style="max-width: 240px;">
                                             {{ $item->descricao ?? '--' }}</td>
-                                        <td class="text-center text-secondary">{{ $item->mes }}</td>
                                         <td class="text-end text-secondary">R$
                                             {{ number_format($item->valor_emissao_anterior ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-dark fw-semibold">R$
@@ -269,7 +265,6 @@
                             <x-tabela-transparencia titulo="" :colunas="[
                                 ['label' => 'Estrutural', 'align' => 'text-start'],
                                 ['label' => 'Descrição', 'align' => 'text-start'],
-                                ['label' => 'Mês', 'align' => 'text-center'],
                                 ['label' => 'Emissão Anterior', 'align' => 'text-end'],
                                 ['label' => 'Emissão Exercício', 'align' => 'text-end'],
                                 ['label' => 'Pago Anterior', 'align' => 'text-end'],
@@ -281,7 +276,6 @@
                                             {{ $item->estrutural ?? '--' }}</td>
                                         <td class="text-start text-dark text-truncate" style="max-width: 240px;">
                                             {{ $item->descricao ?? '--' }}</td>
-                                        <td class="text-center text-secondary">{{ $item->mes }}</td>
                                         <td class="text-end text-secondary">R$
                                             {{ number_format($item->valor_emissao_anterior ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-dark fw-semibold">R$
@@ -300,7 +294,6 @@
                             <x-tabela-transparencia titulo="" :colunas="[
                                 ['label' => 'Código', 'align' => 'text-start'],
                                 ['label' => 'Descrição', 'align' => 'text-start'],
-                                ['label' => 'Mês', 'align' => 'text-center'],
                                 ['label' => 'Emissão Anterior', 'align' => 'text-end'],
                                 ['label' => 'Emissão Exercício', 'align' => 'text-end'],
                                 ['label' => 'Pago Anterior', 'align' => 'text-end'],
@@ -312,7 +305,6 @@
                                             {{ $item->codigo ?? '--' }}</td>
                                         <td class="text-start text-dark text-truncate" style="max-width: 240px;">
                                             {{ $item->descricao ?? '--' }}</td>
-                                        <td class="text-center text-secondary">{{ $item->mes }}</td>
                                         <td class="text-end text-secondary">R$
                                             {{ number_format($item->valor_emissao_anterior ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-dark fw-semibold">R$
