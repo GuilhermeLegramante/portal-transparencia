@@ -72,6 +72,8 @@ class IndicadoresContabeisController extends Controller
             ->sortByDesc('valor_emissao_exercicio')
             ->values();
 
+        dd($biFuncoes);
+
         return view('gestor.indicadores.index', compact(
             'exercicio',
             'resumoAnual',
