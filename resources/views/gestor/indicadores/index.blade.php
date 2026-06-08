@@ -555,25 +555,24 @@
             const ctx = document.getElementById(canvasId);
             if (!ctx) return;
 
-            // 1. Processamento dos dados
+            // 1. Processamento dos dados (CORREÇÃO AQUI)
             const meses = [...new Set(dados.map(i => i.mes))].sort((a, b) => a - b);
 
-            // Mapeia os valores. Verifica qual campo existe no objeto retornado
-            const getVal = (m, campoAtual, campoAnterior) => {
-                const row = dados.find(i => i.mes == m);
-                return {
-                    atual: parseFloat(row[campoAtual] || 0),
-                    ant: parseFloat(row[campoAnterior] || 0)
-                };
+            // Função que soma todos os elementos para um mês específico
+            const getSomaMes = (mes, campo) => {
+                return dados
+                    .filter(item => item.mes == mes)
+                    .reduce((soma, item) => soma + parseFloat(item[campo] || 0), 0);
             };
 
-            const campoAtual = dados.length > 0 && dados[0].hasOwnProperty('valor_emissao_exercicio') ?
-                'valor_emissao_exercicio' : 'valor_empenhado_exercicio';
-            const campoAnt = dados.length > 0 && dados[0].hasOwnProperty('valor_emissao_anterior') ?
-                'valor_emissao_anterior' : 'valor_empenhado_anterior';
+            // Define os campos corretamente conforme seu banco
+            const campoAtual = 'valor_emissao_exercicio';
+            const campoAnt = 'valor_emissao_anterior';
 
-            const serieAtual = meses.map(m => getVal(m, campoAtual, campoAnt).atual);
-            const serieAnt = meses.map(m => getVal(m, campoAtual, campoAnt).ant);
+            // Agora as séries pegam a soma de TODOS os elementos daquele mês
+            const serieAtual = meses.map(m => getSomaMes(m, campoAtual));
+            const serieAnt = meses.map(m => getSomaMes(m, campoAnt));
+
 
             // 2. Renderização
             new Chart(ctx, {
