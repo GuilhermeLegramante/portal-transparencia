@@ -29,21 +29,21 @@
                 exercício selecionado.
             </div>
         @else
-            {{-- CARDS SUPERIORES: Principais Indicadores de Comprometimento --}}
-            <div class="row g-4 mb-4">
+            {{-- CARDS SUPERIORES: Principais Indicadores de Comprometimento (Versão Compacta e Responsiva) --}}
+            <div class="row g-3 mb-4">
                 {{-- Card Exercício Atual --}}
                 <div class="col-md-6 col-xl-3">
                     <div class="card h-100 border-0 shadow-sm rounded-3 bg-white border-start border-primary border-4">
-                        <div class="card-body p-4">
-                            <span class="text-muted text-uppercase small d-block fw-bold mb-1">Comprometido
+                        <div class="card-body p-3 p-lg-4">
+                            <span class="text-muted text-uppercase small d-block fw-bold mb-1 text-nowrap">Comprometido
                                 ({{ $exercicio }})</span>
-                            <h2 class="fw-bold text-dark mb-2">{{ number_format($pctComprometidoExercicio, 2, ',', '.') }}%
-                            </h2>
+                            <h2 class="fw-bold text-dark mb-2 fs-3">
+                                {{ number_format($pctComprometidoExercicio, 2, ',', '.') }}%</h2>
                             <div class="progress rounded-pill mb-2" style="height: 6px;">
                                 <div class="progress-bar bg-primary" role="progressbar"
                                     style="width: {{ $pctComprometidoExercicio }}%"></div>
                             </div>
-                            <small class="text-muted">Despesa Empenhada / Total Atualizado</small>
+                            <small class="text-muted text-nowrap d-block text-truncate">Despesa Empenhada / Total</small>
                         </div>
                     </div>
                 </div>
@@ -51,43 +51,52 @@
                 {{-- Card Exercício Anterior --}}
                 <div class="col-md-6 col-xl-3">
                     <div class="card h-100 border-0 shadow-sm rounded-3 bg-white border-start border-secondary border-4">
-                        <div class="card-body p-4">
-                            <span class="text-muted text-uppercase small d-block fw-bold mb-1">Comprometido
+                        <div class="card-body p-3 p-lg-4">
+                            <span class="text-muted text-uppercase small d-block fw-bold mb-1 text-nowrap">Comprometido
                                 ({{ $exercicio - 1 }})</span>
-                            <h2 class="fw-bold text-secondary mb-2">
+                            <h2 class="fw-bold text-secondary mb-2 fs-3">
                                 {{ number_format($pctComprometidoAnterior, 2, ',', '.') }}%</h2>
                             <div class="progress rounded-pill mb-2" style="height: 6px;">
                                 <div class="progress-bar bg-secondary" role="progressbar"
                                     style="width: {{ $pctComprometidoAnterior }}%"></div>
                             </div>
-                            <small class="text-muted">Histórico do mesmo período anterior</small>
+                            <small class="text-muted text-nowrap d-block text-truncate">Histórico do período
+                                anterior</small>
                         </div>
                     </div>
                 </div>
 
-                {{-- Total Atualizado Disponível --}}
+                {{-- Total Atualizado Disponível (CORRIGIDO PARA NÃO QUEBRAR) --}}
                 <div class="col-md-6 col-xl-3">
                     <div class="card h-100 border-0 shadow-sm rounded-3 bg-white">
-                        <div class="card-body p-4">
-                            <span class="text-muted text-uppercase small d-block fw-bold mb-1">Orçamento Atualizado</span>
-                            <h3 class="fw-bold text-success mb-1">R$
-                                {{ number_format($resumoAnual->valor_atualizado_exercicio, 2, ',', '.') }}</h3>
-                            <small class="text-muted d-block mt-2">
+                        <div class="card-body p-3 p-lg-4">
+                            <span class="text-muted text-uppercase small d-block fw-bold mb-1 text-nowrap">Orçamento
+                                Atualizado</span>
+                            <h3 class="fw-bold text-success mb-1 text-nowrap text-truncate fs-4 fs-xxl-3"
+                                title="R$ {{ number_format($resumoAnual->valor_atualizado_exercicio, 2, ',', '.') }}"
+                                data-bs-toggle="tooltip">
+                                R$ {{ number_format($resumoAnual->valor_atualizado_exercicio, 2, ',', '.') }}
+                            </h3>
+                            <small class="text-muted d-block text-nowrap text-truncate mt-2">
                                 <i class="fas fa-arrow-up text-success me-1"></i> Fixado + Remanejamentos
                             </small>
                         </div>
                     </div>
                 </div>
 
-                {{-- Total Pago --}}
+                {{-- Total Pago (CORRIGIDO PARA NÃO QUEBRAR) --}}
                 <div class="col-md-6 col-xl-3">
                     <div class="card h-100 border-0 shadow-sm rounded-3 bg-white">
-                        <div class="card-body p-4">
-                            <span class="text-muted text-uppercase small d-block fw-bold mb-1">Total Pago Líquido</span>
-                            <h3 class="fw-bold text-info mb-1">R$
-                                {{ number_format($resumoAnual->valor_pago_exercicio, 2, ',', '.') }}</h3>
-                            <small class="text-muted d-block mt-2">
-                                <i class="fas fa-check-double text-info me-1"></i> Desembolso financeiro real
+                        <div class="card-body p-3 p-lg-4">
+                            <span class="text-muted text-uppercase small d-block fw-bold mb-1 text-nowrap">Total Pago
+                                Líquido</span>
+                            <h3 class="fw-bold text-info mb-1 text-nowrap text-truncate fs-4 fs-xxl-3"
+                                title="R$ {{ number_format($resumoAnual->valor_pago_exercicio, 2, ',', '.') }}"
+                                data-bs-toggle="tooltip">
+                                R$ {{ number_format($resumoAnual->valor_pago_exercicio, 2, ',', '.') }}
+                            </h3>
+                            <small class="text-muted d-block text-nowrap text-truncate mt-2">
+                                <i class="fas fa-check-double text-info me-1"></i> Desembolso real
                             </small>
                         </div>
                     </div>
