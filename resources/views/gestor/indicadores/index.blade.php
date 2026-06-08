@@ -550,41 +550,46 @@
     <script>
         function renderSmartChart(canvasId, dados, titulo) {
             const ctx = document.getElementById(canvasId);
-            if (!ctx || dados.length === 0) return;
+            if (!ctx || !dados || dados.length === 0) {
+                console.warn('Dados vazios ou canvas não encontrado para: ' + canvasId);
+                return;
+            }
 
-            // 1. Detectar nomes das colunas automaticamente do primeiro registro
-            const chaves = Object.keys(dados[0]);
-            const campoAtual = chaves.find(k => k.includes('exercicio') && !k.includes('pago'));
-            const campoAnt = chaves.find(k => k.includes('anterior') && !k.includes('pago'));
+            // DEBUG: Veja no console do navegador (F12) o que está chegando
+            console.log('Dados recebidos para ' + canvasId, dados);
 
-            // 2. Extrair meses únicos e ordenar
+            // Identifica os meses únicos
             const meses = [...new Set(dados.map(i => i.mes))].sort((a, b) => a - b);
 
-            // 3. Função de soma dinâmica
-            const getSomaMes = (mes, campo) => {
-                return dados
-                    .filter(item => item.mes == mes)
-                    .reduce((soma, item) => soma + parseFloat(item[campo] || 0), 0);
-            };
+            // Identifica as chaves numéricas dinamicamente (ignora 'mes', 'codigo', 'descricao')
+            const keys = Object.keys(dados[0]).filter(k => !['mes', 'codigo', 'descricao', 'estrutural'].includes(k));
 
-            const serieAtual = meses.map(m => getSomaMes(m, campoAtual));
-            const serieAnt = meses.map(m => getSomaMes(m, campoAnt));
+            // Assume que a primeira chave encontrada com 'exercicio' é o atual e 'anterior' é o passado
+            const campoAtual = keys.find(k => k.toLowerCase().includes('exercicio'));
+            const campoAnt = keys.find(k => k.toLowerCase().includes('anterior'));
 
-            // 4. Renderização
+            const serieAtual = meses.map(m =>
+                dados.filter(i => i.mes == m).reduce((soma, i) => soma + parseFloat(i[campoAtual] || 0), 0)
+            );
+
+            const serieAnt = meses.map(m =>
+                dados.filter(i => i.mes == m).reduce((soma, i) => soma + parseFloat(i[campoAnt] || 0), 0)
+            );
+
+            // Renderização
             new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: meses.map(m => m + '/{{ $exercicio }}'),
                     datasets: [{
-                            label: '{{ $exercicio }}',
+                            label: 'Exercício Atual',
                             data: serieAtual,
                             borderColor: '#2563eb',
-                            backgroundColor: 'rgba(37, 99, 235, 0.1)',
-                            fill: true,
-                            tension: 0.3
+                            tension: 0.3,
+                            fill: true
                         },
                         {
-                            label: '{{ $exercicio - 1 }}',
+                            label: 'Exercício Anterior',
                             data: serieAnt,
                             borderColor: '#94a3b8',
                             borderDash: [5, 5],
@@ -599,21 +604,12 @@
                         title: {
                             display: true,
                             text: titulo
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const val = context.raw;
-                                    const index = context.dataIndex;
-                                    const ant = context.datasetIndex === 0 ? serieAnt[index] : null;
-                                    let label = context.dataset.label + ': R$ ' + val.toLocaleString('pt-BR');
-                                    if (ant !== null && ant > 0) {
-                                        const diff = val - ant;
-                                        const pct = (diff / ant) * 100;
-                                        label += ` (${diff > 0 ? '▲' : '▼'} ${pct.toFixed(1)}%)`;
-                                    }
-                                    return label;
-                                }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            ticks: {
+                                callback: v => 'R$ ' + v.toLocaleString('pt-BR')
                             }
                         }
                     }
