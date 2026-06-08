@@ -1,6 +1,69 @@
 @extends('layouts.app')
 
 @section('content')
+
+    @php
+        $funcoes = collect($resumoFuncoes);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Maior crescimento
+        |--------------------------------------------------------------------------
+        */
+        $maiorCrescimento = $funcoes->sortByDesc('variacao_gastos')->first();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Maior comprometimento
+        |--------------------------------------------------------------------------
+        */
+        $maisComprometida = $funcoes
+            ->map(function ($item) {
+                $item->percentual_comprometido =
+                    $item->valor_atualizado_exercicio > 0
+                        ? ($item->valor_empenhado_exercicio / $item->valor_atualizado_exercicio) * 100
+                        : 0;
+
+                return $item;
+            })
+            ->sortByDesc('percentual_comprometido')
+            ->first();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Melhor execução financeira
+        |--------------------------------------------------------------------------
+        */
+        $melhorExecucao = $funcoes
+            ->map(function ($item) {
+                $item->indice_execucao =
+                    $item->valor_empenhado_exercicio > 0
+                        ? ($item->valor_pago_exercicio / $item->valor_empenhado_exercicio) * 100
+                        : 0;
+
+                return $item;
+            })
+            ->sortByDesc('indice_execucao')
+            ->first();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Pior execução financeira
+        |--------------------------------------------------------------------------
+        */
+        $piorExecucao = $funcoes
+            ->map(function ($item) {
+                $item->indice_execucao =
+                    $item->valor_empenhado_exercicio > 0
+                        ? ($item->valor_pago_exercicio / $item->valor_empenhado_exercicio) * 100
+                        : 0;
+
+                return $item;
+            })
+            ->sortBy('indice_execucao')
+            ->first();
+
+    @endphp
     <div class="container-fluid px-lg-5 py-4 page-content min-vh-100">
         <x-breadcrumb :items="$breadcrumb" />
 
@@ -28,6 +91,105 @@
                 exercício selecionado.
             </div>
         @else
+            <div class="row g-3 mb-4">
+
+                <div class="col-md-6 col-xl-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+
+                            <small class="text-muted text-uppercase fw-bold">
+                                Maior Crescimento
+                            </small>
+
+                            <h6 class="mt-2 mb-1">
+                                {{ $maiorCrescimento->descricao ?? '--' }}
+                            </h6>
+
+                            <h4 class="text-success fw-bold mb-0">
+                                {{ number_format($maiorCrescimento->variacao_gastos ?? 0, 2, ',', '.') }}%
+                            </h4>
+
+                            <small class="text-muted">
+                                Variação dos gastos
+                            </small>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+
+                            <small class="text-muted text-uppercase fw-bold">
+                                Mais Comprometida
+                            </small>
+
+                            <h6 class="mt-2 mb-1">
+                                {{ $maisComprometida->descricao ?? '--' }}
+                            </h6>
+
+                            <h4 class="text-warning fw-bold mb-0">
+                                {{ number_format($maisComprometida->percentual_comprometido ?? 0, 2, ',', '.') }}%
+                            </h4>
+
+                            <small class="text-muted">
+                                Empenhado / Atualizado
+                            </small>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+
+                            <small class="text-muted text-uppercase fw-bold">
+                                Melhor Execução
+                            </small>
+
+                            <h6 class="mt-2 mb-1">
+                                {{ $melhorExecucao->descricao ?? '--' }}
+                            </h6>
+
+                            <h4 class="text-primary fw-bold mb-0">
+                                {{ number_format($melhorExecucao->indice_execucao ?? 0, 2, ',', '.') }}%
+                            </h4>
+
+                            <small class="text-muted">
+                                Pago / Empenhado
+                            </small>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+
+                            <small class="text-muted text-uppercase fw-bold">
+                                Menor Execução
+                            </small>
+
+                            <h6 class="mt-2 mb-1">
+                                {{ $piorExecucao->descricao ?? '--' }}
+                            </h6>
+
+                            <h4 class="text-danger fw-bold mb-0">
+                                {{ number_format($piorExecucao->indice_execucao ?? 0, 2, ',', '.') }}%
+                            </h4>
+
+                            <small class="text-muted">
+                                Pago / Empenhado
+                            </small>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {{-- CARDS SUPERIORES: Principais Indicadores de Comprometimento --}}
             <div class="row g-3 mb-4">
                 <div class="col-md-6 col-xl-3">
@@ -228,7 +390,8 @@
                     </h5>
 
                     <div class="table-responsive">
-                        <table class="table table-sm align-middle">
+
+                        <table class="table table-hover align-middle">
 
                             <thead>
                                 <tr>
@@ -241,13 +404,7 @@
 
                             <tbody>
 
-                                @foreach (collect($resumoFuncoes)->map(function ($item) {
-                $anterior = floatval($item->valor_emissao_anterior);
-
-                $item->variacao = $anterior > 0 ? (($item->valor_emissao_exercicio - $anterior) / $anterior) * 100 : 0;
-
-                return $item;
-            })->sortByDesc('variacao')->take(10) as $item)
+                                @foreach (collect($resumoFuncoes)->sortByDesc('variacao_gastos')->take(10) as $item)
                                     <tr>
 
                                         <td>
@@ -255,17 +412,17 @@
                                         </td>
 
                                         <td class="text-end">
-                                            R$ {{ number_format($item->valor_emissao_anterior, 2, ',', '.') }}
+                                            R$
+                                            {{ number_format($item->valor_empenhado_anterior, 2, ',', '.') }}
                                         </td>
 
                                         <td class="text-end">
-                                            R$ {{ number_format($item->valor_emissao_exercicio, 2, ',', '.') }}
+                                            R$
+                                            {{ number_format($item->valor_empenhado_exercicio, 2, ',', '.') }}
                                         </td>
 
-                                        <td
-                                            class="text-end fw-bold
-                                {{ $item->variacao >= 0 ? 'text-success' : 'text-danger' }}">
-                                            {{ number_format($item->variacao, 2, ',', '.') }}%
+                                        <td class="text-end fw-bold text-success">
+                                            {{ number_format($item->variacao_gastos, 2, ',', '.') }}%
                                         </td>
 
                                     </tr>
@@ -274,6 +431,7 @@
                             </tbody>
 
                         </table>
+
                     </div>
 
                 </div>
