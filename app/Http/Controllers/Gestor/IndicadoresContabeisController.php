@@ -54,6 +54,75 @@ class IndicadoresContabeisController extends Controller
             'Indicadores Contábeis' => ''
         ];
 
+        // --- CARREGA OS NOVOS DADOS ANALÍTICOS (MENSALIZADOS) ---
+        $unidadesMensal = collect($this->repo->getResumoUnidades($idcliente, $exercicio));
+        $funcoesMensal  = collect($this->repo->getResumoFuncoes($idcliente, $exercicio));
+        $subfuncoesMensal = collect($this->repo->getResumoSubfuncoes($idcliente, $exercicio));
+        $elementosMensal = collect($this->repo->getResumoElementos($idcliente, $exercicio));
+        $recursosMensal  = collect($this->repo->getResumoRecursos($idcliente, $exercicio));
+
+        // --- CONSOLIDAÇÃO DOS DADOS PARA AS ABAS DA VIEW ---
+
+        // 1. Unidades Orçamentárias
+        $resumoUnidades = $unidadesMensal->groupBy('codigo')->map(function ($items) {
+            return (object) [
+                'codigo' => $items->first()->codigo,
+                'descricao' => $items->first()->descricao,
+                'valor_empenhado_anterior' => $items->sum('valor_empenhado_anterior'),
+                'valor_empenhado_exercicio' => $items->sum('valor_empenhado_exercicio'),
+                'valor_pago_anterior' => $items->sum('valor_pago_anterior'),
+                'valor_pago_exercicio' => $items->sum('valor_pago_exercicio'),
+            ];
+        })->values();
+
+        // 2. Funções
+        $resumoFuncoes = $funcoesMensal->groupBy('codigo')->map(function ($items) {
+            return (object) [
+                'codigo' => $items->first()->codigo,
+                'descricao' => $items->first()->descricao,
+                'valor_emissao_anterior' => $items->sum('valor_emissao_anterior'),
+                'valor_emissao_exercicio' => $items->sum('valor_emissao_exercicio'),
+                'valor_pago_anterior' => $items->sum('valor_pago_anterior'),
+                'valor_pago_exercicio' => $items->sum('valor_pago_exercicio'),
+            ];
+        })->values();
+
+        // 3. Subfunções
+        $resumoSubfuncoes = $subfuncoesMensal->groupBy('codigo')->map(function ($items) {
+            return (object) [
+                'codigo' => $items->first()->codigo,
+                'descricao' => $items->first()->descricao,
+                'valor_emissao_anterior' => $items->sum('valor_emissao_anterior'),
+                'valor_emissao_exercicio' => $items->sum('valor_emissao_exercicio'),
+                'valor_pago_anterior' => $items->sum('valor_pago_anterior'),
+                'valor_pago_exercicio' => $items->sum('valor_pago_exercicio'),
+            ];
+        })->values();
+
+        // 4. Elementos de Despesa
+        $resumoElementos = $elementosMensal->groupBy('estrutural')->map(function ($items) {
+            return (object) [
+                'estrutural' => $items->first()->estrutural,
+                'descricao' => $items->first()->descricao,
+                'valor_emissao_anterior' => $items->sum('valor_emissao_anterior'),
+                'valor_emissao_exercicio' => $items->sum('valor_emissao_exercicio'),
+                'valor_pago_anterior' => $items->sum('valor_pago_anterior'),
+                'valor_pago_exercicio' => $items->sum('valor_pago_exercicio'),
+            ];
+        })->values();
+
+        // 5. Recursos Vinculados
+        $resumoRecursos = $recursosMensal->groupBy('codigo')->map(function ($items) {
+            return (object) [
+                'codigo' => $items->first()->codigo,
+                'descricao' => $items->first()->descricao,
+                'valor_emissao_anterior' => $items->sum('valor_emissao_anterior'),
+                'valor_emissao_exercicio' => $items->sum('valor_emissao_exercicio'),
+                'valor_pago_anterior' => $items->sum('valor_pago_anterior'),
+                'valor_pago_exercicio' => $items->sum('valor_pago_exercicio'),
+            ];
+        })->values();
+
         return view('gestor.indicadores.index', compact(
             'exercicio',
             'resumoAnual',
@@ -62,7 +131,12 @@ class IndicadoresContabeisController extends Controller
             'labelsGrafico',
             'empenhadoExercicio',
             'empenhadoAnterior',
-            'breadcrumb'
+            'breadcrumb',
+            'resumoUnidades',
+            'resumoFuncoes',
+            'resumoSubfuncoes',
+            'resumoElementos',
+            'resumoRecursos'
         ));
     }
 }

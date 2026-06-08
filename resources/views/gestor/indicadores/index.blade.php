@@ -1,23 +1,23 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container-fluid px-lg-5 py-4 page-content min-vh-100">
+    <div class="container-fluid px-lg-5 py-4 custom-dashboard-wrapper">
         <x-breadcrumb :items="$breadcrumb" />
 
-        {{-- Cabeçalho da Página com seletor de Exercício --}}
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+        {{-- Cabeçalho da Página --}}
+        <div
+            class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3 page-header-block">
             <div>
-                <h1 class="h3 fw-bold text-dark mb-1">Indicadores Contábeis Estratégicos</h1>
-                <p class="text-muted small mb-0">Acompanhamento executivo de despesas e limites consolidados
-                    do município.
-                </p>
+                <h1 class="h3 fw-bold text-body mb-1">Indicadores Contábeis Estratégicos</h1>
+                <p class="text-body-secondary small mb-0">Acompanhamento executivo de despesas e limites consolidados do
+                    município.</p>
             </div>
-            <div class="bg-white p-2 rounded-3 shadow-sm border" style="min-width: 190px;">
+            <div class="exercise-selector-card p-2 rounded-3 shadow-sm border" style="min-width: 190px;">
                 <form method="GET" action="{{ route('gestor.indicadores.index') }}"
                     class="d-flex align-items-center justify-content-end gap-2 w-100">
-                    <label class="small fw-bold text-secondary text-uppercase mb-0 text-nowrap px-1">Exercício:</label>
+                    <label class="small fw-bold text-uppercase mb-0 text-nowrap px-1 text-body-secondary">Exercício:</label>
                     <input type="number" name="exercicio"
-                        class="form-control border-0 bg-light fw-bold text-primary rounded-3 py-1 px-2 text-center"
+                        class="form-control border-0 fw-bold rounded-3 py-1 px-2 text-center selector-input text-primary"
                         value="{{ $exercicio }}" min="2000" max="{{ date('Y') + 1 }}" style="width: 90px;"
                         onchange="this.form.submit()">
                 </form>
@@ -30,74 +30,77 @@
                 exercício selecionado.
             </div>
         @else
-            {{-- CARDS SUPERIORES: Principais Indicadores de Comprometimento --}}
-            {{-- CARDS SUPERIORES: Principais Indicadores de Comprometimento (Versão Compacta e Responsiva) --}}
+            {{-- CARDS SUPERIORES --}}
             <div class="row g-3 mb-4">
                 {{-- Card Exercício Atual --}}
                 <div class="col-md-6 col-xl-3">
-                    <div class="card h-100 border-0 shadow-sm rounded-3 bg-white border-start border-primary border-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-3 custom-card border-start border-primary border-4">
                         <div class="card-body p-3 p-lg-4">
-                            <span class="text-muted text-uppercase small d-block fw-bold mb-1 text-nowrap">Comprometido
+                            <span
+                                class="text-uppercase small d-block fw-bold mb-1 text-nowrap text-body-secondary">Comprometido
                                 ({{ $exercicio }})</span>
-                            <h2 class="fw-bold text-dark mb-2 fs-3">
+                            <h2 class="fw-bold mb-2 fs-3 text-body">
                                 {{ number_format($pctComprometidoExercicio, 2, ',', '.') }}%</h2>
-                            <div class="progress rounded-pill mb-2" style="height: 6px;">
+                            <div class="progress rounded-pill mb-2 custom-progress-bg" style="height: 6px;">
                                 <div class="progress-bar bg-primary" role="progressbar"
                                     style="width: {{ $pctComprometidoExercicio }}%"></div>
                             </div>
-                            <small class="text-muted text-nowrap d-block text-truncate">Despesa Empenhada / Total</small>
+                            <small class="text-nowrap d-block text-truncate text-body-secondary">Despesa Empenhada /
+                                Total</small>
                         </div>
                     </div>
                 </div>
 
                 {{-- Card Exercício Anterior --}}
                 <div class="col-md-6 col-xl-3">
-                    <div class="card h-100 border-0 shadow-sm rounded-3 bg-white border-start border-secondary border-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-3 custom-card border-start border-secondary border-4">
                         <div class="card-body p-3 p-lg-4">
-                            <span class="text-muted text-uppercase small d-block fw-bold mb-1 text-nowrap">Comprometido
+                            <span
+                                class="text-uppercase small d-block fw-bold mb-1 text-nowrap text-body-secondary">Comprometido
                                 ({{ $exercicio - 1 }})</span>
-                            <h2 class="fw-bold text-secondary mb-2 fs-3">
+                            <h2 class="fw-bold mb-2 fs-3 text-body-secondary">
                                 {{ number_format($pctComprometidoAnterior, 2, ',', '.') }}%</h2>
-                            <div class="progress rounded-pill mb-2" style="height: 6px;">
+                            <div class="progress rounded-pill mb-2 custom-progress-bg" style="height: 6px;">
                                 <div class="progress-bar bg-secondary" role="progressbar"
                                     style="width: {{ $pctComprometidoAnterior }}%"></div>
                             </div>
-                            <small class="text-muted text-nowrap d-block text-truncate">Histórico do período
+                            <small class="text-nowrap d-block text-truncate text-body-secondary">Histórico do período
                                 anterior</small>
                         </div>
                     </div>
                 </div>
 
-                {{-- Total Atualizado Disponível (CORRIGIDO PARA NÃO QUEBRAR) --}}
+                {{-- Total Atualizado Disponível --}}
                 <div class="col-md-6 col-xl-3">
-                    <div class="card h-100 border-0 shadow-sm rounded-3 bg-white">
+                    <div class="card h-100 border-0 shadow-sm rounded-3 custom-card">
                         <div class="card-body p-3 p-lg-4">
-                            <span class="text-muted text-uppercase small d-block fw-bold mb-1 text-nowrap">Orçamento
+                            <span
+                                class="text-uppercase small d-block fw-bold mb-1 text-nowrap text-body-secondary">Orçamento
                                 Atualizado</span>
                             <h3 class="fw-bold text-success mb-1 text-nowrap text-truncate fs-4 fs-xxl-3"
                                 title="R$ {{ number_format($resumoAnual->valor_atualizado_exercicio, 2, ',', '.') }}"
                                 data-bs-toggle="tooltip">
                                 R$ {{ number_format($resumoAnual->valor_atualizado_exercicio, 2, ',', '.') }}
                             </h3>
-                            <small class="text-muted d-block text-nowrap text-truncate mt-2">
+                            <small class="d-block text-nowrap text-truncate mt-2 text-body-secondary">
                                 <i class="fas fa-arrow-up text-success me-1"></i> Fixado + Remanejamentos
                             </small>
                         </div>
                     </div>
                 </div>
 
-                {{-- Total Pago (CORRIGIDO PARA NÃO QUEBRAR) --}}
+                {{-- Total Pago --}}
                 <div class="col-md-6 col-xl-3">
-                    <div class="card h-100 border-0 shadow-sm rounded-3 bg-white">
+                    <div class="card h-100 border-0 shadow-sm rounded-3 custom-card">
                         <div class="card-body p-3 p-lg-4">
-                            <span class="text-muted text-uppercase small d-block fw-bold mb-1 text-nowrap">Total Pago
-                                Líquido</span>
+                            <span class="text-uppercase small d-block fw-bold mb-1 text-nowrap text-body-secondary">Total
+                                Pago Líquido</span>
                             <h3 class="fw-bold text-info mb-1 text-nowrap text-truncate fs-4 fs-xxl-3"
                                 title="R$ {{ number_format($resumoAnual->valor_pago_exercicio, 2, ',', '.') }}"
                                 data-bs-toggle="tooltip">
                                 R$ {{ number_format($resumoAnual->valor_pago_exercicio, 2, ',', '.') }}
                             </h3>
-                            <small class="text-muted d-block text-nowrap text-truncate mt-2">
+                            <small class="d-block text-nowrap text-truncate mt-2 text-body-secondary">
                                 <i class="fas fa-check-double text-info me-1"></i> Desembolso real
                             </small>
                         </div>
@@ -105,109 +108,451 @@
                 </div>
             </div>
 
-            {{-- BLOCO GRÁFICO: Evolução Mensal da Despesa Empenhada --}}
-            <div class="card border-0 shadow-sm rounded-3 mb-4 bg-white">
+            {{-- BLOCO GRÁFICO --}}
+            <div class="card border-0 shadow-sm rounded-3 mb-4 custom-card">
                 <div class="card-body p-4">
-                    <h5 class="fw-bold text-dark mb-3">Evolução de Empenhos Mensais (Histórico Comparativo)</h5>
+                    <h5 class="fw-bold mb-3 text-body">Evolução de Empenhos Mensais (Histórico Comparativo)</h5>
                     <div style="position: relative; height:320px; width:100%">
                         <canvas id="chartEvolucaoDespesas"></canvas>
                     </div>
                 </div>
             </div>
 
-            {{-- BLOCO TABELA: Detalhamento Anualizado Geral --}}
-            <x-tabela-transparencia titulo="Quadro Comparativo Consolidado das Despesas" :colunas="[
-                ['label' => 'Métrica Contábil', 'align' => 'text-start'],
-                ['label' => 'Exercício Anterior (' . ($exercicio - 1) . ')', 'align' => 'text-end'],
-                ['label' => 'Exercício Atual (' . $exercicio . ')', 'align' => 'text-end'],
-                ['label' => 'Variação Absoluta', 'align' => 'text-end'],
-            ]">
-                <tr class="align-middle">
-                    <td class="text-start fw-bold text-dark">Valor Orçado (LOA)</td>
-                    <td class="text-end text-secondary">R$
-                        {{ number_format($resumoAnual->valor_orcado_anterior, 2, ',', '.') }}</td>
-                    <td class="text-end text-dark fw-semibold">R$
-                        {{ number_format($resumoAnual->valor_orcado_exercicio, 2, ',', '.') }}</td>
-                    <td
-                        class="text-end {{ $resumoAnual->valor_orcado_exercicio - $resumoAnual->valor_orcado_anterior >= 0 ? 'text-success' : 'text-danger' }}">
-                        R$
-                        {{ number_format($resumoAnual->valor_orcado_exercicio - $resumoAnual->valor_orcado_anterior, 2, ',', '.') }}
-                    </td>
-                </tr>
-                <tr class="align-middle">
-                    <td class="text-start fw-bold text-dark">Remanejamentos/Créditos Adicionais</td>
-                    <td class="text-end text-secondary">R$
-                        {{ number_format($resumoAnual->valor_remanejado_anterior, 2, ',', '.') }}</td>
-                    <td class="text-end text-dark fw-semibold">R$
-                        {{ number_format($resumoAnual->valor_remanejado_exercicio, 2, ',', '.') }}</td>
-                    <td class="text-end">R$
-                        {{ number_format($resumoAnual->valor_remanejado_exercicio - $resumoAnual->valor_remanejado_anterior, 2, ',', '.') }}
-                    </td>
-                </tr>
-                <tr class="align-middle table-active-row">
-                    <td class="text-start fw-bold text-primary">Valor Total Atualizado</td>
-                    <td class="text-end text-secondary fw-bold">R$
-                        {{ number_format($resumoAnual->valor_atualizado_anterior, 2, ',', '.') }}</td>
-                    <td class="text-end text-primary fw-bold">R$
-                        {{ number_format($resumoAnual->valor_atualizado_exercicio, 2, ',', '.') }}</td>
-                    <td class="text-end fw-bold">R$
-                        {{ number_format($resumoAnual->valor_atualizado_exercicio - $resumoAnual->valor_atualizado_anterior, 2, ',', '.') }}
-                    </td>
-                </tr>
-                <tr class="align-middle">
-                    <td class="text-start fw-bold text-dark">Valor Empenhado Líquido</td>
-                    <td class="text-end text-secondary">R$
-                        {{ number_format($resumoAnual->valor_empenhado_anterior, 2, ',', '.') }}</td>
-                    <td class="text-end text-dark fw-semibold">R$
-                        {{ number_format($resumoAnual->valor_empenhado_exercicio, 2, ',', '.') }}</td>
-                    <td class="text-end">R$
-                        {{ number_format($resumoAnual->valor_empenhado_exercicio - $resumoAnual->valor_empenhado_anterior, 2, ',', '.') }}
-                    </td>
-                </tr>
-                <tr class="align-middle">
-                    <td class="text-start fw-bold text-dark">Valor Pago Líquido</td>
-                    <td class="text-end text-secondary">R$
-                        {{ number_format($resumoAnual->valor_pago_anterior, 2, ',', '.') }}</td>
-                    <td class="text-end text-dark fw-semibold">R$
-                        {{ number_format($resumoAnual->valor_pago_exercicio, 2, ',', '.') }}</td>
-                    <td class="text-end">R$
-                        {{ number_format($resumoAnual->valor_pago_exercicio - $resumoAnual->valor_pago_anterior, 2, ',', '.') }}
-                    </td>
-                </tr>
-            </x-tabela-transparencia>
+            {{-- BLOCO QUADRO CONSOLIDADO --}}
+            <div class="custom-table-container card border-0 shadow-sm rounded-3 p-4 mb-4 custom-card">
+                <x-tabela-transparencia titulo="Quadro Comparativo Consolidado das Despesas" :colunas="[
+                    ['label' => 'Métrica Contábil', 'align' => 'text-start'],
+                    ['label' => 'Exercício Anterior (' . ($exercicio - 1) . ')', 'align' => 'text-end'],
+                    ['label' => 'Exercício Atual (' . $exercicio . ')', 'align' => 'text-end'],
+                    ['label' => 'Variação Absoluta', 'align' => 'text-end'],
+                ]">
+                    <tr class="align-middle">
+                        <td class="text-start fw-bold text-body">Valor Orçado (LOA)</td>
+                        <td class="text-end text-body-secondary">R$
+                            {{ number_format($resumoAnual->valor_orcado_anterior, 2, ',', '.') }}</td>
+                        <td class="text-end text-body fw-semibold">R$
+                            {{ number_format($resumoAnual->valor_orcado_exercicio, 2, ',', '.') }}</td>
+                        <td
+                            class="text-end fw-bold {{ $resumoAnual->valor_orcado_exercicio - $resumoAnual->valor_orcado_anterior >= 0 ? 'text-success' : 'text-danger' }}">
+                            R$
+                            {{ number_format($resumoAnual->valor_orcado_exercicio - $resumoAnual->valor_orcado_anterior, 2, ',', '.') }}
+                        </td>
+                    </tr>
+                    <tr class="align-middle">
+                        <td class="text-start fw-bold text-body">Remanejamentos/Créditos Adicionais</td>
+                        <td class="text-end text-body-secondary">R$
+                            {{ number_format($resumoAnual->valor_remanejado_anterior, 2, ',', '.') }}</td>
+                        <td class="text-end text-body fw-semibold">R$
+                            {{ number_format($resumoAnual->valor_remanejado_exercicio, 2, ',', '.') }}</td>
+                        <td class="text-end fw-bold text-body">
+                            R$
+                            {{ number_format($resumoAnual->valor_remanejado_exercicio - $resumoAnual->valor_remanejado_anterior, 2, ',', '.') }}
+                        </td>
+                    </tr>
+                    <tr class="align-middle table-primary-light-row">
+                        <td class="text-start fw-bold text-primary">Valor Total Atualizado</td>
+                        <td class="text-end text-body-secondary fw-bold">R$
+                            {{ number_format($resumoAnual->valor_atualizado_anterior, 2, ',', '.') }}</td>
+                        <td class="text-end text-primary fw-bold">R$
+                            {{ number_format($resumoAnual->valor_atualizado_exercicio, 2, ',', '.') }}</td>
+                        <td
+                            class="text-end fw-bold {{ $resumoAnual->valor_atualizado_exercicio - $resumoAnual->valor_atualizado_anterior >= 0 ? 'text-success' : 'text-danger' }}">
+                            R$
+                            {{ number_format($resumoAnual->valor_atualizado_exercicio - $resumoAnual->valor_atualizado_anterior, 2, ',', '.') }}
+                        </td>
+                    </tr>
+                    <tr class="align-middle">
+                        <td class="text-start fw-bold text-body">Valor Empenhado Líquido</td>
+                        <td class="text-end text-body-secondary">R$
+                            {{ number_format($resumoAnual->valor_empenhado_anterior, 2, ',', '.') }}</td>
+                        <td class="text-end text-body fw-semibold">R$
+                            {{ number_format($resumoAnual->valor_empenhado_exercicio, 2, ',', '.') }}</td>
+                        <td
+                            class="text-end fw-bold {{ $resumoAnual->valor_empenhado_exercicio - $resumoAnual->valor_empenhado_anterior >= 0 ? 'text-success' : 'text-danger' }}">
+                            R$
+                            {{ number_format($resumoAnual->valor_empenhado_exercicio - $resumoAnual->valor_empenhado_anterior, 2, ',', '.') }}
+                        </td>
+                    </tr>
+                    <tr class="align-middle">
+                        <td class="text-start fw-bold text-body">Valor Pago Líquido</td>
+                        <td class="text-end text-body-secondary">R$
+                            {{ number_format($resumoAnual->valor_pago_anterior, 2, ',', '.') }}</td>
+                        <td class="text-end text-body fw-semibold">R$
+                            {{ number_format($resumoAnual->valor_pago_exercicio, 2, ',', '.') }}</td>
+                        <td
+                            class="text-end fw-bold {{ $resumoAnual->valor_pago_exercicio - $resumoAnual->valor_pago_anterior >= 0 ? 'text-success' : 'text-danger' }}">
+                            R$
+                            {{ number_format($resumoAnual->valor_pago_exercicio - $resumoAnual->valor_pago_anterior, 2, ',', '.') }}
+                        </td>
+                    </tr>
+                </x-tabela-transparencia>
+            </div>
+
+            {{-- NOVOS BLOCOS ANALÍTICOS (ORGANIZADOS POR ABAS) --}}
+            <div class="card border-0 shadow-sm rounded-3 p-4 mb-4 custom-card">
+                <h5 class="fw-bold mb-3 text-body">Detalhamento Analítico das Despesas</h5>
+
+                <ul class="nav nav-tabs custom-nav-tabs border-bottom mb-3" id="analiseTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active fw-bold py-2" id="unidade-tab" data-bs-toggle="tab"
+                            data-bs-target="#unidade-pane" type="button" role="tab">Unidades</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link fw-bold py-2" id="funcao-tab" data-bs-toggle="tab"
+                            data-bs-target="#funcao-pane" type="button" role="tab">Funções</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link fw-bold py-2" id="subfuncao-tab" data-bs-toggle="tab"
+                            data-bs-target="#subfuncao-pane" type="button" role="tab">Subfunções</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link fw-bold py-2" id="elemento-tab" data-bs-toggle="tab"
+                            data-bs-target="#elemento-pane" type="button" role="tab">Elementos</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link fw-bold py-2" id="recurso-tab" data-bs-toggle="tab"
+                            data-bs-target="#recurso-pane" type="button" role="tab">Recursos</button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="analiseTabsContent">
+                    {{-- Tab 1: Unidades Orçamentárias --}}
+                    <div class="tab-pane fade show active" id="unidade-pane" role="tabpanel" tabindex="0">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped align-middle custom-tab-table">
+                                <thead>
+                                    <tr>
+                                        <th>Código / Descrição</th>
+                                        <th class="text-end">Empenhado ({{ $exercicio - 1 }})</th>
+                                        <th class="text-end">Empenhado ({{ $exercicio }})</th>
+                                        <th class="text-end">Pago ({{ $exercicio - 1 }})</th>
+                                        <th class="text-end">Pago ({{ $exercicio }})</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($resumoUnidades as $item)
+                                        <tr>
+                                            <td class="text-start"><span
+                                                    class="badge bg-light text-dark me-2">{{ $item->codigo }}</span> <span
+                                                    class="text-body fw-medium">{{ $item->descricao }}</span></td>
+                                            <td class="text-end text-body-secondary">R$
+                                                {{ number_format($item->valor_empenhado_anterior, 2, ',', '.') }}</td>
+                                            <td class="text-end text-body fw-semibold">R$
+                                                {{ number_format($item->valor_empenhado_exercicio, 2, ',', '.') }}</td>
+                                            <td class="text-end text-body-secondary">R$
+                                                {{ number_format($item->valor_pago_anterior, 2, ',', '.') }}</td>
+                                            <td class="text-end text-body">R$
+                                                {{ number_format($item->valor_pago_exercicio, 2, ',', '.') }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {{-- Tab 2: Funções --}}
+                    <div class="tab-pane fade" id="funcao-pane" role="tabpanel" tabindex="0">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped align-middle custom-tab-table">
+                                <thead>
+                                    <tr>
+                                        <th>Cód / Função</th>
+                                        <th class="text-end">Emitido ({{ $exercicio - 1 }})</th>
+                                        <th class="text-end">Emitido ({{ $exercicio }})</th>
+                                        <th class="text-end">Pago ({{ $exercicio - 1 }})</th>
+                                        <th class="text-end">Pago ({{ $exercicio }})</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($resumoFuncoes as $item)
+                                        <tr>
+                                            <td class="text-start"><span
+                                                    class="badge bg-light text-dark me-2">{{ sprintf('%02d', $item->codigo) }}</span>
+                                                <span class="text-body fw-medium">{{ $item->descricao }}</span>
+                                            </td>
+                                            <td class="text-end text-body-secondary">R$
+                                                {{ number_format($item->valor_emissao_anterior, 2, ',', '.') }}</td>
+                                            <td class="text-end text-body fw-semibold">R$
+                                                {{ number_format($item->valor_emissao_exercicio, 2, ',', '.') }}</td>
+                                            <td class="text-end text-body-secondary">R$
+                                                {{ number_format($item->valor_pago_anterior, 2, ',', '.') }}</td>
+                                            <td class="text-end text-body">R$
+                                                {{ number_format($item->valor_pago_exercicio, 2, ',', '.') }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {{-- Tab 3: Subfunções --}}
+                    <div class="tab-pane fade" id="subfuncao-pane" role="tabpanel" tabindex="0">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped align-middle custom-tab-table">
+                                <thead>
+                                    <tr>
+                                        <th>Cód / Subfunção</th>
+                                        <th class="text-end">Emitido ({{ $exercicio - 1 }})</th>
+                                        <th class="text-end">Emitido ({{ $exercicio }})</th>
+                                        <th class="text-end">Pago ({{ $exercicio - 1 }})</th>
+                                        <th class="text-end">Pago ({{ $exercicio }})</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($resumoSubfuncoes as $item)
+                                        <tr>
+                                            <td class="text-start"><span
+                                                    class="badge bg-light text-dark me-2">{{ sprintf('%03d', $item->codigo) }}</span>
+                                                <span class="text-body fw-medium">{{ $item->descricao }}</span>
+                                            </td>
+                                            <td class="text-end text-body-secondary">R$
+                                                {{ number_format($item->valor_emissao_anterior, 2, ',', '.') }}</td>
+                                            <td class="text-end text-body fw-semibold">R$
+                                                {{ number_format($item->valor_emissao_exercicio, 2, ',', '.') }}</td>
+                                            <td class="text-end text-body-secondary">R$
+                                                {{ number_format($item->valor_pago_anterior, 2, ',', '.') }}</td>
+                                            <td class="text-end text-body">R$
+                                                {{ number_format($item->valor_pago_exercicio, 2, ',', '.') }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {{-- Tab 4: Elementos de Despesa --}}
+                    <div class="tab-pane fade" id="elemento-pane" role="tabpanel" tabindex="0">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped align-middle custom-tab-table">
+                                <thead>
+                                    <tr>
+                                        <th>Estrutural / Elemento</th>
+                                        <th class="text-end">Emitido ({{ $exercicio - 1 }})</th>
+                                        <th class="text-end">Emitido ({{ $exercicio }})</th>
+                                        <th class="text-end">Pago ({{ $exercicio - 1 }})</th>
+                                        <th class="text-end">Pago ({{ $exercicio }})</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($resumoElementos as $item)
+                                        <tr>
+                                            <td class="text-start"><span
+                                                    class="badge bg-secondary-subtle text-secondary-emphasis me-2 small">{{ $item->estrutural }}</span>
+                                                <span class="text-body fw-medium">{{ $item->descricao }}</span>
+                                            </td>
+                                            <td class="text-end text-body-secondary">R$
+                                                {{ number_format($item->valor_emissao_anterior, 2, ',', '.') }}</td>
+                                            <td class="text-end text-body fw-semibold">R$
+                                                {{ number_format($item->valor_emissao_exercicio, 2, ',', '.') }}</td>
+                                            <td class="text-end text-body-secondary">R$
+                                                {{ number_format($item->valor_pago_anterior, 2, ',', '.') }}</td>
+                                            <td class="text-end text-body">R$
+                                                {{ number_format($item->valor_pago_exercicio, 2, ',', '.') }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {{-- Tab 5: Recursos Vinculados --}}
+                    <div class="tab-pane fade" id="recurso-pane" role="tabpanel" tabindex="0">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped align-middle custom-tab-table">
+                                <thead>
+                                    <tr>
+                                        <th>Cód / Fonte de Recurso</th>
+                                        <th class="text-end">Emitido ({{ $exercicio - 1 }})</th>
+                                        <th class="text-end">Emitido ({{ $exercicio }})</th>
+                                        <th class="text-end">Pago ({{ $exercicio - 1 }})</th>
+                                        <th class="text-end">Pago ({{ $exercicio }})</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($resumoRecursos as $item)
+                                        <tr>
+                                            <td class="text-start"><span
+                                                    class="badge bg-info-subtle text-info-emphasis me-2">{{ $item->codigo }}</span>
+                                                <span class="text-body fw-medium">{{ $item->descricao }}</span>
+                                            </td>
+                                            <td class="text-end text-body-secondary">R$
+                                                {{ number_format($item->valor_emissao_anterior, 2, ',', '.') }}</td>
+                                            <td class="text-end text-body fw-semibold">R$
+                                                {{ number_format($item->valor_emissao_exercicio, 2, ',', '.') }}</td>
+                                            <td class="text-end text-body-secondary">R$
+                                                {{ number_format($item->valor_pago_anterior, 2, ',', '.') }}</td>
+                                            <td class="text-end text-body">R$
+                                                {{ number_format($item->valor_pago_exercicio, 2, ',', '.') }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         @endif
     </div>
 
     <style>
-        .page-content {
-            background: var(--bs-body-bg);
+        /* Estilização Estrutural e Temas Integrados */
+        .custom-dashboard-wrapper {
+            min-height: 100vh;
         }
 
-        .bg-light-gray {
+        .exercise-selector-card {
+            background-color: #ffffff;
+            border-color: #dee2e6;
+        }
+
+        .selector-input {
             background-color: #f8f9fa;
         }
 
-        .table-active-row {
-            background-color: rgba(59, 130, 246, 0.03) !important;
+        .custom-card {
+            background-color: #ffffff;
         }
 
-        .bg-light-gray {
-            background-color: #f8f9fa;
+        .custom-progress-bg {
+            background-color: #e9ecef;
         }
 
-        body.dark-mode .bg-light-gray {
+        .table-primary-light-row {
+            background-color: rgba(13, 110, 253, 0.04);
+        }
+
+        /* Abas Estilizadas Conforme o Tema */
+        .custom-nav-tabs .nav-link {
+            color: #64748b;
+            border: none;
+            background: transparent;
+        }
+
+        .custom-nav-tabs .nav-link:hover {
+            color: #0d6efd;
+            border: none;
+        }
+
+        .custom-nav-tabs .nav-link.active {
+            color: #0d6efd;
+            border: none;
+            border-bottom: 3px solid #0d6efd;
+            background: transparent;
+        }
+
+        /* Configurações Globais das Tabelas Analíticas */
+        .custom-tab-table thead th {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #475569;
+            background-color: #f8fafc;
+            font-weight: 700;
+            padding: 12px 16px;
+        }
+
+        .custom-tab-table tbody td {
+            padding: 12px 16px;
+            font-size: 0.925rem;
+        }
+
+        /* Modo Escuro Nativo por Media Query e Chave de Classe */
+        @media (prefers-color-scheme: dark) {
+            .exercise-selector-card {
+                background-color: #1e293b !important;
+                border-color: #334155 !important;
+            }
+
+            .selector-input {
+                background-color: #334155 !important;
+                color: #f8fafc !important;
+            }
+
+            .custom-card {
+                background-color: #1e293b !important;
+            }
+
+            .custom-progress-bg {
+                background-color: #334155 !important;
+            }
+
+            .table-primary-light-row {
+                background-color: rgba(13, 110, 253, 0.15);
+            }
+
+            .custom-nav-tabs .nav-link {
+                color: #94a3b8;
+            }
+
+            .custom-nav-tabs .nav-link.active {
+                color: #38bdf8;
+                border-bottom-color: #38bdf8;
+            }
+
+            .custom-tab-table {
+                --bs-table-striped-bg: rgba(255, 255, 255, 0.02);
+            }
+
+            .custom-tab-table thead th {
+                background-color: #0f172a !important;
+                color: #cbd5e1 !important;
+            }
+        }
+
+        html.dark .exercise-selector-card {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+        }
+
+        html.dark .selector-input {
+            background-color: #334155 !important;
+            color: #f8fafc !important;
+        }
+
+        html.dark .custom-card {
+            background-color: #1e293b !important;
+        }
+
+        html.dark .custom-progress-bg {
+            background-color: #334155 !important;
+        }
+
+        html.dark .table-primary-light-row {
+            background-color: rgba(13, 110, 253, 0.15);
+        }
+
+        html.dark .custom-nav-tabs .nav-link {
+            color: #94a3b8;
+        }
+
+        html.dark .custom-nav-tabs .nav-link.active {
+            color: #38bdf8;
+            border-bottom-color: #38bdf8;
+        }
+
+        html.dark .custom-tab-table {
+            --bs-table-striped-bg: rgba(255, 255, 255, 0.02);
+        }
+
+        html.dark .custom-tab-table thead th {
             background-color: #0f172a !important;
+            color: #cbd5e1 !important;
         }
     </style>
 @endsection
 
-{{-- Código JavaScript isolado e corrigido --}}
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const ctx = document.getElementById('chartEvolucaoDespesas');
             if (ctx) {
+                const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches ||
+                    document.documentElement.classList.contains('dark');
+
+                const textColor = isDarkMode ? '#94a3b8' : '#64748b';
+                const gridColor = isDarkMode ? '#334155' : '#e2e8f0';
+
                 new Chart(ctx, {
                     type: 'line',
                     data: {
@@ -215,7 +560,7 @@
                         datasets: [{
                                 label: 'Empenhado Anterior (' + {!! $exercicio - 1 !!} + ')',
                                 data: {!! json_encode($empenhadoAnterior) !!},
-                                borderColor: '#94a3b8',
+                                borderColor: isDarkMode ? '#64748b' : '#94a3b8',
                                 backgroundColor: 'transparent',
                                 borderWidth: 2,
                                 borderDash: [5, 5],
@@ -224,15 +569,16 @@
                             {
                                 label: 'Empenhado Exercício (' + {!! $exercicio !!} + ')',
                                 data: {!! json_encode($empenhadoExercicio) !!},
-                                borderColor: '#3b82f6',
-                                backgroundColor: 'rgba(59, 130, 246, 0.08)',
+                                borderColor: isDarkMode ? '#38bdf8' : '#0284c7',
+                                backgroundColor: isDarkMode ? 'rgba(56, 189, 248, 0.12)' :
+                                    'rgba(2, 132, 199, 0.06)',
                                 fill: true,
                                 borderWidth: 3,
                                 tension: 0.3,
                                 pointRadius: 4,
-                                pointBackgroundColor: '#3b82f6'
+                                pointBackgroundColor: isDarkMode ? '#38bdf8' : '#0284c7'
                             }
-                        ] // O colchete dos datasets fecha aqui corretamente
+                        ]
                     },
                     options: {
                         responsive: true,
@@ -242,6 +588,7 @@
                                 position: 'top',
                                 labels: {
                                     boxWidth: 15,
+                                    color: textColor,
                                     font: {
                                         weight: 'bold'
                                     }
@@ -249,9 +596,21 @@
                             }
                         },
                         scales: {
+                            x: {
+                                grid: {
+                                    color: gridColor
+                                },
+                                ticks: {
+                                    color: textColor
+                                }
+                            },
                             y: {
                                 beginAtZero: true,
+                                grid: {
+                                    color: gridColor
+                                },
                                 ticks: {
+                                    color: textColor,
                                     callback: function(value) {
                                         return 'R$ ' + value.toLocaleString('pt-BR', {
                                             minimumFractionDigits: 0
@@ -263,6 +622,11 @@
                     }
                 });
             }
+
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            });
         });
     </script>
 @endpush
