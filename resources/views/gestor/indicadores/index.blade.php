@@ -8,8 +8,7 @@
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
             <div>
                 <h1 class="h3 fw-bold text-dark mb-1">Indicadores Contábeis Estratégicos</h1>
-                <p class="text-muted small mb-0">Acompanhamento executivo de despesas e limites consolidados
-                    do município.
+                <p class="text-muted small mb-0">Acompanhamento executivo de despesas e limites consolidados do município.
                 </p>
             </div>
             <div class="bg-white p-2 rounded-3 shadow-sm border" style="min-width: 190px;">
@@ -31,7 +30,6 @@
             </div>
         @else
             {{-- CARDS SUPERIORES: Principais Indicadores de Comprometimento --}}
-            {{-- CARDS SUPERIORES: Principais Indicadores de Comprometimento (Versão Compacta e Responsiva) --}}
             <div class="row g-3 mb-4">
                 {{-- Card Exercício Atual --}}
                 <div class="col-md-6 col-xl-3">
@@ -68,7 +66,7 @@
                     </div>
                 </div>
 
-                {{-- Total Atualizado Disponível (CORRIGIDO PARA NÃO QUEBRAR) --}}
+                {{-- Total Atualizado Disponível --}}
                 <div class="col-md-6 col-xl-3">
                     <div class="card h-100 border-0 shadow-sm rounded-3 bg-white">
                         <div class="card-body p-3 p-lg-4">
@@ -86,7 +84,7 @@
                     </div>
                 </div>
 
-                {{-- Total Pago (CORRIGIDO PARA NÃO QUEBRAR) --}}
+                {{-- Total Pago --}}
                 <div class="col-md-6 col-xl-3">
                     <div class="card h-100 border-0 shadow-sm rounded-3 bg-white">
                         <div class="card-body p-3 p-lg-4">
@@ -111,6 +109,203 @@
                     <h5 class="fw-bold text-dark mb-3">Evolução de Empenhos Mensais (Histórico Comparativo)</h5>
                     <div style="position: relative; height:320px; width:100%">
                         <canvas id="chartEvolucaoDespesas"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            {{-- NOVO BLOCO DE ABAS: Visões Analíticas Detalhadas --}}
+            <div class="card border-0 shadow-sm rounded-3 mb-4 bg-white">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold text-dark mb-3">Detalhamento das Despesas por Categorias</h5>
+
+                    <ul class="nav nav-tabs border-bottom mb-3" id="abasIndicadores" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active fw-bold small text-uppercase py-2.5" id="unidades-tab"
+                                data-bs-toggle="tab" data-bs-target="#unidades-pane" type="button"
+                                role="tab">Unidades</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-bold small text-uppercase py-2.5" id="funcoes-tab"
+                                data-bs-toggle="tab" data-bs-target="#funcoes-pane" type="button"
+                                role="tab">Funções</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-bold small text-uppercase py-2.5" id="subfuncoes-tab"
+                                data-bs-toggle="tab" data-bs-target="#subfuncoes-pane" type="button"
+                                role="tab">Subfunções</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-bold small text-uppercase py-2.5" id="elementos-tab"
+                                data-bs-toggle="tab" data-bs-target="#elementos-pane" type="button"
+                                role="tab">Elementos</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-bold small text-uppercase py-2.5" id="recursos-tab"
+                                data-bs-toggle="tab" data-bs-target="#recursos-pane" type="button"
+                                role="tab">Recursos</button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="abasIndicadoresContent">
+                        {{-- Aba Unidades --}}
+                        <div class="tab-pane fade show active" id="unidades-pane" role="tabpanel" tabindex="0">
+                            <x-tabela-transparencia titulo="" :colunas="[
+                                ['label' => 'Código', 'align' => 'text-start'],
+                                ['label' => 'Descrição', 'align' => 'text-start'],
+                                ['label' => 'Mês', 'align' => 'text-center'],
+                                ['label' => 'Empenhado Anterior', 'align' => 'text-end'],
+                                ['label' => 'Empenhado Exercício', 'align' => 'text-end'],
+                                ['label' => 'Pago Anterior', 'align' => 'text-end'],
+                                ['label' => 'Pago Exercício', 'align' => 'text-end'],
+                            ]">
+                                @foreach ($resumoUnidades as $item)
+                                    <tr class="align-middle">
+                                        <td class="text-start font-monospace small text-dark fw-semibold">
+                                            {{ $item->codigo }}</td>
+                                        <td class="text-start text-dark text-truncate" style="max-width: 240px;">
+                                            {{ $item->descricao }}</td>
+                                        <td class="text-center text-secondary">
+                                            {{ str_pad($item->mes, 2, '0', STR_PAD_LEFT) }}</td>
+                                        <td class="text-end text-secondary">R$
+                                            {{ number_format($item->valor_empenhado_anterior, 2, ',', '.') }}</td>
+                                        <td class="text-end text-dark fw-semibold">R$
+                                            {{ number_format($item->valor_empenhado_exercicio, 2, ',', '.') }}</td>
+                                        <td class="text-end text-secondary">R$
+                                            {{ number_format($item->valor_pago_anterior, 2, ',', '.') }}</td>
+                                        <td class="text-end text-dark">R$
+                                            {{ number_format($item->valor_pago_exercicio, 2, ',', '.') }}</td>
+                                    </tr>
+                                @endforeach
+                            </x-tabela-transparencia>
+                        </div>
+
+                        {{-- Aba Funções --}}
+                        <div class="tab-pane fade" id="funcoes-pane" role="tabpanel" tabindex="0">
+                            <x-tabela-transparencia titulo="" :colunas="[
+                                ['label' => 'Código', 'align' => 'text-start'],
+                                ['label' => 'Descrição', 'align' => 'text-start'],
+                                ['label' => 'Mês', 'align' => 'text-center'],
+                                ['label' => 'Emissão Anterior', 'align' => 'text-end'],
+                                ['label' => 'Emissão Exercício', 'align' => 'text-end'],
+                                ['label' => 'Pago Anterior', 'align' => 'text-end'],
+                                ['label' => 'Pago Exercício', 'align' => 'text-end'],
+                            ]">
+                                @foreach ($resumoFuncoes as $item)
+                                    <tr class="align-middle">
+                                        <td class="text-start font-monospace small text-dark fw-semibold">
+                                            {{ $item->codigo }}</td>
+                                        <td class="text-start text-dark text-truncate" style="max-width: 240px;">
+                                            {{ $item->descricao }}</td>
+                                        <td class="text-center text-secondary">
+                                            {{ str_pad($item->mes, 2, '0', STR_PAD_LEFT) }}</td>
+                                        <td class="text-end text-secondary">R$
+                                            {{ number_format($item->valor_emissao_anterior, 2, ',', '.') }}</td>
+                                        <td class="text-end text-dark fw-semibold">R$
+                                            {{ number_format($item->valor_emissao_exercicio, 2, ',', '.') }}</td>
+                                        <td class="text-end text-secondary">R$
+                                            {{ number_format($item->valor_pago_anterior, 2, ',', '.') }}</td>
+                                        <td class="text-end text-dark">R$
+                                            {{ number_format($item->valor_pago_exercicio, 2, ',', '.') }}</td>
+                                    </tr>
+                                @endforeach
+                            </x-tabela-transparencia>
+                        </div>
+
+                        {{-- Aba Subfunções --}}
+                        <div class="tab-pane fade" id="subfuncoes-pane" role="tabpanel" tabindex="0">
+                            <x-tabela-transparencia titulo="" :colunas="[
+                                ['label' => 'Código', 'align' => 'text-start'],
+                                ['label' => 'Descrição', 'align' => 'text-start'],
+                                ['label' => 'Mês', 'align' => 'text-center'],
+                                ['label' => 'Emissão Anterior', 'align' => 'text-end'],
+                                ['label' => 'Emissão Exercício', 'align' => 'text-end'],
+                                ['label' => 'Pago Anterior', 'align' => 'text-end'],
+                                ['label' => 'Pago Exercício', 'align' => 'text-end'],
+                            ]">
+                                @foreach ($resumoSubfuncoes as $item)
+                                    <tr class="align-middle">
+                                        <td class="text-start font-monospace small text-dark fw-semibold">
+                                            {{ $item->codigo }}</td>
+                                        <td class="text-start text-dark text-truncate" style="max-width: 240px;">
+                                            {{ $item->descricao }}</td>
+                                        <td class="text-center text-secondary">
+                                            {{ str_pad($item->mes, 2, '0', STR_PAD_LEFT) }}</td>
+                                        <td class="text-end text-secondary">R$
+                                            {{ number_format($item->valor_emissao_anterior, 2, ',', '.') }}</td>
+                                        <td class="text-end text-dark fw-semibold">R$
+                                            {{ number_format($item->valor_emissao_exercicio, 2, ',', '.') }}</td>
+                                        <td class="text-end text-secondary">R$
+                                            {{ number_format($item->valor_pago_anterior, 2, ',', '.') }}</td>
+                                        <td class="text-end text-dark">R$
+                                            {{ number_format($item->valor_pago_exercicio, 2, ',', '.') }}</td>
+                                    </tr>
+                                @endforeach
+                            </x-tabela-transparencia>
+                        </div>
+
+                        {{-- Aba Elementos --}}
+                        <div class="tab-pane fade" id="elementos-pane" role="tabpanel" tabindex="0">
+                            <x-tabela-transparencia titulo="" :colunas="[
+                                ['label' => 'Estrutural', 'align' => 'text-start'],
+                                ['label' => 'Descrição', 'align' => 'text-start'],
+                                ['label' => 'Mês', 'align' => 'text-center'],
+                                ['label' => 'Emissão Anterior', 'align' => 'text-end'],
+                                ['label' => 'Emissão Exercício', 'align' => 'text-end'],
+                                ['label' => 'Pago Anterior', 'align' => 'text-end'],
+                                ['label' => 'Pago Exercício', 'align' => 'text-end'],
+                            ]">
+                                @foreach ($resumoElementos as $item)
+                                    <tr class="align-middle">
+                                        <td class="text-start font-monospace small text-dark fw-semibold">
+                                            {{ $item->estrutural }}</td>
+                                        <td class="text-start text-dark text-truncate" style="max-width: 240px;">
+                                            {{ $item->descricao }}</td>
+                                        <td class="text-center text-secondary">
+                                            {{ str_pad($item->mes, 2, '0', STR_PAD_LEFT) }}</td>
+                                        <td class="text-end text-secondary">R$
+                                            {{ number_format($item->valor_emissao_anterior, 2, ',', '.') }}</td>
+                                        <td class="text-end text-dark fw-semibold">R$
+                                            {{ number_format($item->valor_emissao_exercicio, 2, ',', '.') }}</td>
+                                        <td class="text-end text-secondary">R$
+                                            {{ number_format($item->valor_pago_anterior, 2, ',', '.') }}</td>
+                                        <td class="text-end text-dark">R$
+                                            {{ number_format($item->valor_pago_exercicio, 2, ',', '.') }}</td>
+                                    </tr>
+                                @endforeach
+                            </x-tabela-transparencia>
+                        </div>
+
+                        {{-- Aba Recursos --}}
+                        <div class="tab-pane fade" id="recursos-pane" role="tabpanel" tabindex="0">
+                            <x-tabela-transparencia titulo="" :colunas="[
+                                ['label' => 'Código', 'align' => 'text-start'],
+                                ['label' => 'Descrição', 'align' => 'text-start'],
+                                ['label' => 'Mês', 'align' => 'text-center'],
+                                ['label' => 'Emissão Anterior', 'align' => 'text-end'],
+                                ['label' => 'Emissão Exercício', 'align' => 'text-end'],
+                                ['label' => 'Pago Anterior', 'align' => 'text-end'],
+                                ['label' => 'Pago Exercício', 'align' => 'text-end'],
+                            ]">
+                                @foreach ($resumoRecursos as $item)
+                                    <tr class="align-middle">
+                                        <td class="text-start font-monospace small text-dark fw-semibold">
+                                            {{ $item->codigo }}</td>
+                                        <td class="text-start text-dark text-truncate" style="max-width: 240px;">
+                                            {{ $item->descricao }}</td>
+                                        <td class="text-center text-secondary">
+                                            {{ str_pad($item->mes, 2, '0', STR_PAD_LEFT) }}</td>
+                                        <td class="text-end text-secondary">R$
+                                            {{ number_format($item->valor_emissao_anterior, 2, ',', '.') }}</td>
+                                        <td class="text-end text-dark fw-semibold">R$
+                                            {{ number_format($item->valor_emissao_exercicio, 2, ',', '.') }}</td>
+                                        <td class="text-end text-secondary">R$
+                                            {{ number_format($item->valor_pago_anterior, 2, ',', '.') }}</td>
+                                        <td class="text-end text-dark">R$
+                                            {{ number_format($item->valor_pago_exercicio, 2, ',', '.') }}</td>
+                                    </tr>
+                                @endforeach
+                            </x-tabela-transparencia>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -183,10 +378,6 @@
             background: var(--bs-body-bg);
         }
 
-        .bg-light-gray {
-            background-color: #f8f9fa;
-        }
-
         .table-active-row {
             background-color: rgba(59, 130, 246, 0.03) !important;
         }
@@ -198,10 +389,21 @@
         body.dark-mode .bg-light-gray {
             background-color: #0f172a !important;
         }
+
+        /* Estilo sutil para espaçamento vertical das abas */
+        .nav-tabs .nav-link {
+            border: none;
+            color: #6c757d;
+        }
+
+        .nav-tabs .nav-link.active {
+            border: none;
+            border-bottom: 3px solid var(--bs-primary);
+            color: var(--bs-primary) !important;
+        }
     </style>
 @endsection
 
-{{-- Código JavaScript isolado e corrigido --}}
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
@@ -232,7 +434,7 @@
                                 pointRadius: 4,
                                 pointBackgroundColor: '#3b82f6'
                             }
-                        ] // O colchete dos datasets fecha aqui corretamente
+                        ]
                     },
                     options: {
                         responsive: true,
