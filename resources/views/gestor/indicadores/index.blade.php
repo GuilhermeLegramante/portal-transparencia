@@ -139,8 +139,18 @@
                 </div>
             </div>
 
+            @php
+                $graficos = [
+                    'chartUnidades' => $resumoUnidadesMensal,
+                    'chartFuncoes' => $resumoFuncoesMensal,
+                    'chartSubfuncoes' => $resumoSubfuncoesMensal,
+                    'chartElementos' => $resumoElementosMensal,
+                    'chartRecursos' => $resumoRecursosMensal,
+                ];
+            @endphp
+
             <div class="row">
-                @foreach (['chartUnidades', 'chartFuncoes', 'chartSubfuncoes', 'chartElementos', 'chartRecursos'] as $id)
+                @foreach ($graficos as $id => $dados)
                     <div class="col-md-6 mb-4">
                         <div class="card shadow-sm h-100">
                             <div class="card-body" style="height: 350px;">
@@ -590,13 +600,12 @@
             });
         }
 
-        // INICIALIZAÇÃO CORRETA - Passe as variáveis individualmente do Controller
-        document.addEventListener('DOMContentLoaded', () => {
-            renderSmartChart('chartUnidades', {!! json_encode($resumoUnidadesMensal) !!}, 'Unidades');
-            renderSmartChart('chartFuncoes', {!! json_encode($resumoFuncoesMensal) !!}, 'Funções');
-            renderSmartChart('chartSubfuncoes', {!! json_encode($resumoSubfuncoesMensal) !!}, 'Subfunções');
-            renderSmartChart('chartElementos', {!! json_encode($resumoElementosMensal) !!}, 'Elementos');
-            renderSmartChart('chartRecursos', {!! json_encode($resumoRecursosMensal) !!}, 'Recursos');
+        document.addEventListener('DOMContentLoaded', function() {
+            // Agora passamos a variável $dados específica de cada iteração
+            @foreach ($graficos as $id => $dados)
+                renderSmartChart('{{ $id }}', {!! json_encode($dados) !!},
+                    'Evolução: {{ str_replace('chart', '', $id) }}');
+            @endforeach
         });
     </script>
 @endpush
