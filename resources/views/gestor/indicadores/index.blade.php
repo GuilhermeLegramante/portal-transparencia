@@ -113,66 +113,81 @@
                 </div>
             </div>
 
-            {{-- BLOCO TABELA: Detalhamento Anualizado Geral --}}
-            <x-tabela-transparencia titulo="Quadro Comparativo Consolidado das Despesas" :colunas="[
-                ['label' => 'Métrica Contábil', 'align' => 'text-start'],
-                ['label' => 'Exercício Anterior (' . ($exercicio - 1) . ')', 'align' => 'text-end'],
-                ['label' => 'Exercício Atual (' . $exercicio . ')', 'align' => 'text-end'],
-                ['label' => 'Variação Absoluta', 'align' => 'text-end'],
-            ]">
-                <tr class="align-middle">
-                    <td class="text-start fw-bold text-dark">Valor Orçado (LOA)</td>
-                    <td class="text-end text-secondary">R$
-                        {{ number_format($resumoAnual->valor_orcado_anterior, 2, ',', '.') }}</td>
-                    <td class="text-end text-dark fw-semibold">R$
-                        {{ number_format($resumoAnual->valor_orcado_exercicio, 2, ',', '.') }}</td>
-                    <td
-                        class="text-end {{ $resumoAnual->valor_orcado_exercicio - $resumoAnual->valor_orcado_anterior >= 0 ? 'text-success' : 'text-danger' }}">
-                        R$
-                        {{ number_format($resumoAnual->valor_orcado_exercicio - $resumoAnual->valor_orcado_anterior, 2, ',', '.') }}
-                    </td>
-                </tr>
-                <tr class="align-middle">
-                    <td class="text-start fw-bold text-dark">Remanejamentos/Créditos Adicionais</td>
-                    <td class="text-end text-secondary">R$
-                        {{ number_format($resumoAnual->valor_remanejado_anterior, 2, ',', '.') }}</td>
-                    <td class="text-end text-dark fw-semibold">R$
-                        {{ number_format($resumoAnual->valor_remanejado_exercicio, 2, ',', '.') }}</td>
-                    <td class="text-end">R$
-                        {{ number_format($resumoAnual->valor_remanejado_exercicio - $resumoAnual->valor_remanejado_anterior, 2, ',', '.') }}
-                    </td>
-                </tr>
-                <tr class="align-middle table-active-row">
-                    <td class="text-start fw-bold text-primary">Valor Total Atualizado</td>
-                    <td class="text-end text-secondary fw-bold">R$
-                        {{ number_format($resumoAnual->valor_atualizado_anterior, 2, ',', '.') }}</td>
-                    <td class="text-end text-primary fw-bold">R$
-                        {{ number_format($resumoAnual->valor_atualizado_exercicio, 2, ',', '.') }}</td>
-                    <td class="text-end fw-bold">R$
-                        {{ number_format($resumoAnual->valor_atualizado_exercicio - $resumoAnual->valor_atualizado_anterior, 2, ',', '.') }}
-                    </td>
-                </tr>
-                <tr class="align-middle">
-                    <td class="text-start fw-bold text-dark">Valor Empenhado Líquido</td>
-                    <td class="text-end text-secondary">R$
-                        {{ number_format($resumoAnual->valor_empenhado_anterior, 2, ',', '.') }}</td>
-                    <td class="text-end text-dark fw-semibold">R$
-                        {{ number_format($resumoAnual->valor_empenhado_exercicio, 2, ',', '.') }}</td>
-                    <td class="text-end">R$
-                        {{ number_format($resumoAnual->valor_empenhado_exercicio - $resumoAnual->valor_empenhado_anterior, 2, ',', '.') }}
-                    </td>
-                </tr>
-                <tr class="align-middle">
-                    <td class="text-start fw-bold text-dark">Valor Pago Líquido</td>
-                    <td class="text-end text-secondary">R$
-                        {{ number_format($resumoAnual->valor_pago_anterior, 2, ',', '.') }}</td>
-                    <td class="text-end text-dark fw-semibold">R$
-                        {{ number_format($resumoAnual->valor_pago_exercicio, 2, ',', '.') }}</td>
-                    <td class="text-end">R$
-                        {{ number_format($resumoAnual->valor_pago_exercicio - $resumoAnual->valor_pago_anterior, 2, ',', '.') }}
-                    </td>
-                </tr>
-            </x-tabela-transparencia>
+            {{-- BLOCO TABELA: Detalhamento Anualizado Geral (Corrigido) --}}
+            <div class="dark-table-wrapper">
+                <x-tabela-transparencia titulo="Quadro Comparativo Consolidado das Despesas" :colunas="[
+                    ['label' => 'Métrica Contábil', 'align' => 'text-start'],
+                    ['label' => 'Exercício Anterior (' . ($exercicio - 1) . ')', 'align' => 'text-end'],
+                    ['label' => 'Exercício Atual (' . $exercicio . ')', 'align' => 'text-end'],
+                    ['label' => 'Variação Absoluta', 'align' => 'text-end'],
+                ]">
+                    {{-- 1. Valor Orçado --}}
+                    <tr class="align-middle">
+                        <td class="text-start fw-bold text-dark dark-text-white">Valor Orçado (LOA)</td>
+                        <td class="text-end text-secondary dark-text-muted">R$
+                            {{ number_format($resumoAnual->valor_orcado_anterior, 2, ',', '.') }}</td>
+                        <td class="text-end text-dark dark-text-white fw-semibold">R$
+                            {{ number_format($resumoAnual->valor_orcado_exercicio, 2, ',', '.') }}</td>
+                        <td
+                            class="text-end {{ $resumoAnual->valor_orcado_exercicio - $resumoAnual->valor_orcado_anterior >= 0 ? 'text-success' : 'text-danger' }}">
+                            R$
+                            {{ number_format($resumoAnual->valor_orcado_exercicio - $resumoAnual->valor_orcado_anterior, 2, ',', '.') }}
+                        </td>
+                    </tr>
+
+                    {{-- 2. Remanejamentos --}}
+                    <tr class="align-middle">
+                        <td class="text-start fw-bold text-dark dark-text-white">Remanejamentos/Créditos Adicionais</td>
+                        <td class="text-end text-secondary dark-text-muted">R$
+                            {{ number_format($resumoAnual->valor_remanejado_anterior, 2, ',', '.') }}</td>
+                        <td class="text-end text-dark dark-text-white fw-semibold">R$
+                            {{ number_format($resumoAnual->valor_remanejado_exercicio, 2, ',', '.') }}</td>
+                        <td class="text-end dark-text-white">
+                            R$
+                            {{ number_format($resumoAnual->valor_remanejado_exercicio - $resumoAnual->valor_remanejado_anterior, 2, ',', '.') }}
+                        </td>
+                    </tr>
+
+                    {{-- 3. Valor Total Atualizado --}}
+                    <tr class="align-middle table-active-row dark-table-active">
+                        <td class="text-start fw-bold text-primary dark-text-primary">Valor Total Atualizado</td>
+                        <td class="text-end text-secondary dark-text-muted fw-bold">R$
+                            {{ number_format($resumoAnual->valor_atualizado_anterior, 2, ',', '.') }}</td>
+                        <td class="text-end text-primary dark-text-primary fw-bold">R$
+                            {{ number_format($resumoAnual->valor_atualizado_exercicio, 2, ',', '.') }}</td>
+                        <td class="text-end fw-bold dark-text-white">
+                            R$
+                            {{ number_format($resumoAnual->valor_atualizado_exercicio - $resumoAnual->valor_atualizado_anterior, 2, ',', '.') }}
+                        </td>
+                    </tr>
+
+                    {{-- 4. Valor Empenhado Líquido --}}
+                    <tr class="align-middle">
+                        <td class="text-start fw-bold text-dark dark-text-white">Valor Empenhado Líquido</td>
+                        <td class="text-end text-secondary dark-text-muted">R$
+                            {{ number_format($resumoAnual->valor_empenhado_anterior, 2, ',', '.') }}</td>
+                        <td class="text-end text-dark dark-text-white fw-semibold">R$
+                            {{ number_format($resumoAnual->valor_empenhado_exercicio, 2, ',', '.') }}</td>
+                        <td class="text-end dark-text-white">
+                            R$
+                            {{ number_format($resumoAnual->valor_empenhado_exercicio - $resumoAnual->valor_empenhado_anterior, 2, ',', '.') }}
+                        </td>
+                    </tr>
+
+                    {{-- 5. Valor Pago Líquido --}}
+                    <tr class="align-middle">
+                        <td class="text-start fw-bold text-dark dark-text-white">Valor Pago Líquido</td>
+                        <td class="text-end text-secondary dark-text-muted">R$
+                            {{ number_format($resumoAnual->valor_pago_anterior, 2, ',', '.') }}</td>
+                        <td class="text-end text-dark dark-text-white fw-semibold">R$
+                            {{ number_format($resumoAnual->valor_pago_exercicio, 2, ',', '.') }}</td>
+                        <td class="text-end dark-text-white">
+                            R$
+                            {{ number_format($resumoAnual->valor_pago_exercicio - $resumoAnual->valor_pago_anterior, 2, ',', '.') }}
+                        </td>
+                    </tr>
+                </x-tabela-transparencia>
+            </div>
         @endif
     </div>
 
