@@ -167,7 +167,7 @@ class IndicadoresContabeisRepository
                     SUM(IF(empenho.exercicio = ? - 1, movimento.emissao - movimento.anular, 0.00)) AS valor_emissao_anterior, 
                     SUM(IF(empenho.exercicio = ?, movimento.emissao - movimento.anular, 0.00)) AS valor_emissao_exercicio, 
                     SUM(IF(empenho.exercicio = ? - 1, movimento.pagamento, 0.00)) AS valor_pago_anterior, 
-                    SUM(IF(empenho.exercicio = ?, movimiento.pagamento, 0.00)) AS valor_pago_exercicio 
+                    SUM(IF(empenho.exercicio = ?, movimento.pagamento, 0.00)) AS valor_pago_exercicio 
                 FROM ctbempenhomovimento movimento 
                 INNER JOIN ctbempenho empenho 
                     ON movimento.idempenho = empenho.id AND movimento.idcliente = empenho.idcliente 
