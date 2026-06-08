@@ -401,59 +401,72 @@
         }
 
         .exercise-selector-card {
-            background-color: #ffffff;
-            border-color: #dee2e6;
+            background-color: #ffffff !important;
+            border-color: #dee2e6 !important;
         }
 
         .selector-input {
-            background-color: #f8f9fa;
+            background-color: #f8f9fa !important;
+            color: #212529 !important;
         }
 
         .custom-card {
-            background-color: #ffffff;
+            background-color: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
         }
 
         .custom-progress-bg {
-            background-color: #e9ecef;
+            background-color: #e2e8f0 !important;
         }
 
         .table-primary-light-row {
-            background-color: rgba(13, 110, 253, 0.04);
+            background-color: rgba(13, 110, 253, 0.05) !important;
         }
 
         /* Abas Estilizadas Conforme o Tema */
         .custom-nav-tabs .nav-link {
-            color: #64748b;
-            border: none;
-            background: transparent;
+            color: #64748b !important;
+            border: none !important;
+            background: transparent !important;
         }
 
         .custom-nav-tabs .nav-link:hover {
-            color: #0d6efd;
-            border: none;
+            color: #0d6efd !important;
+            border: none !important;
         }
 
         .custom-nav-tabs .nav-link.active {
-            color: #0d6efd;
-            border: none;
-            border-bottom: 3px solid #0d6efd;
-            background: transparent;
+            color: #0d6efd !important;
+            border: none !important;
+            border-bottom: 3px solid #0d6efd !important;
+            background: transparent !important;
         }
 
         /* Configurações Globais das Tabelas Analíticas */
+        .custom-tab-table {
+            background-color: #ffffff !important;
+        }
+
         .custom-tab-table thead th {
             font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: #475569;
-            background-color: #f8fafc;
+            color: #334155 !important;
+            background-color: #f1f5f9 !important;
             font-weight: 700;
             padding: 12px 16px;
+            border-bottom: 2px solid #cbd5e1 !important;
         }
 
         .custom-tab-table tbody td {
             padding: 12px 16px;
             font-size: 0.925rem;
+            color: #334155 !important;
+            border-bottom: 1px solid #e2e8f0 !important;
+        }
+
+        .custom-tab-table tbody tr:nth-of-type(odd) {
+            background-color: #f8fafc !important;
         }
 
         /* Modo Escuro Nativo por Media Query e Chave de Classe */
@@ -470,6 +483,7 @@
 
             .custom-card {
                 background-color: #1e293b !important;
+                border-color: #334155 !important;
             }
 
             .custom-progress-bg {
@@ -477,31 +491,42 @@
             }
 
             .table-primary-light-row {
-                background-color: rgba(13, 110, 253, 0.15);
+                background-color: rgba(13, 110, 253, 0.15) !important;
             }
 
             .custom-nav-tabs .nav-link {
-                color: #94a3b8;
+                color: #94a3b8 !important;
             }
 
             .custom-nav-tabs .nav-link.active {
-                color: #38bdf8;
-                border-bottom-color: #38bdf8;
+                color: #38bdf8 !important;
+                border-bottom-color: #38bdf8 !important;
             }
 
             .custom-tab-table {
-                --bs-table-striped-bg: rgba(255, 255, 255, 0.02);
+                background-color: #1e293b !important;
             }
 
             .custom-tab-table thead th {
                 background-color: #0f172a !important;
                 color: #cbd5e1 !important;
+                border-bottom-color: #475569 !important;
+            }
+
+            .custom-tab-table tbody td {
+                color: #cbd5e1 !important;
+                border-bottom-color: #334155 !important;
+            }
+
+            .custom-tab-table tbody tr:nth-of-type(odd) {
+                background-color: rgba(255, 255, 255, 0.02) !important;
             }
         }
 
         html.dark .exercise-selector-card {
             background-color: #1e293b !important;
             border-color: #334155 !important;
+            color: #f8fafc !important;
         }
 
         html.dark .selector-input {
@@ -511,6 +536,7 @@
 
         html.dark .custom-card {
             background-color: #1e293b !important;
+            border-color: #334155 !important;
         }
 
         html.dark .custom-progress-bg {
@@ -518,25 +544,35 @@
         }
 
         html.dark .table-primary-light-row {
-            background-color: rgba(13, 110, 253, 0.15);
+            background-color: rgba(13, 110, 253, 0.15) !important;
         }
 
         html.dark .custom-nav-tabs .nav-link {
-            color: #94a3b8;
+            color: #94a3b8 !important;
         }
 
         html.dark .custom-nav-tabs .nav-link.active {
-            color: #38bdf8;
-            border-bottom-color: #38bdf8;
+            color: #38bdf8 !important;
+            border-bottom-color: #38bdf8 !important;
         }
 
         html.dark .custom-tab-table {
-            --bs-table-striped-bg: rgba(255, 255, 255, 0.02);
+            background-color: #1e293b !important;
         }
 
         html.dark .custom-tab-table thead th {
             background-color: #0f172a !important;
             color: #cbd5e1 !important;
+            border-bottom-color: #475569 !important;
+        }
+
+        html.dark .custom-tab-table tbody td {
+            color: #cbd5e1 !important;
+            border-bottom-color: #334155 !important;
+        }
+
+        html.dark .custom-tab-table tbody tr:nth-of-type(odd) {
+            background-color: rgba(255, 255, 255, 0.02) !important;
         }
     </style>
 @endsection
