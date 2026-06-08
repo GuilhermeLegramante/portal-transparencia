@@ -341,7 +341,9 @@
                             </h6>
 
                             @php
-                                $maiorFuncao = collect($resumoFuncoes)->sortByDesc('valor_emissao_exercicio')->first();
+                                $maiorFuncao = collect($resumoFuncoes)
+                                    ->sortByDesc('valor_empenhado_exercicio')
+                                    ->first();
                             @endphp
 
                             @if ($maiorFuncao)
@@ -350,7 +352,7 @@
                                 </h5>
 
                                 <div class="text-primary fw-bold">
-                                    R$ {{ number_format($maiorFuncao->valor_emissao_exercicio, 2, ',', '.') }}
+                                    R$ {{ number_format($maiorFuncao->valor_empenhado_exercicio, 2, ',', '.') }}
                                 </div>
                             @endif
 
