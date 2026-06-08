@@ -122,28 +122,18 @@ class IndicadoresContabeisRepository
     */
    public function getResumoUnidades(int $idCliente, int $exercicio): array
    {
-      $sql = "
-            SELECT CONCAT(orgao.codigo, '.', unidade.codigo) AS codigo,
-                   unidade.nome AS descricao,
-                   movimento.mes AS mes,
-                   SUM(IF(empenho.exercicio = :exe - 1, movimento.emissao - movimento.anular, 0.00)) AS valor_empenhado_anterior,
-                   SUM(IF(empenho.exercicio = :exe, movimento.emissao - movimento.anular, 0.00)) AS valor_empenhado_exercicio,
-                   SUM(IF(empenho.exercicio = :exe - 1, movimento.pagamento, 0.00)) AS valor_pago_anterior,
-                   SUM(IF(empenho.exercicio = :exe, movimento.pagamento, 0.00)) AS valor_pago_exercicio
-              FROM ctbempenhomovimento movimento
-                   INNER JOIN ctbempenho empenho
-                      ON movimento.idempenho = empenho.id AND movimento.idcliente = empenho.idcliente
-                   INNER JOIN ctbcontadespesa despesa
-                	  ON empenho.iddespesa = despesa.id AND empenho.idcliente = despesa.idcliente
-                   INNER JOIN ctbunidadeorcamentaria unidade
-                      ON despesa.idunidadeorcamentaria = unidade.id AND despesa.idcliente = unidade.idcliente
-                   INNER JOIN ctborgao orgao
-                      ON unidade.idorgao = orgao.id AND unidade.idcliente = orgao.idcliente
-             WHERE movimento.idcliente = :id
-               AND empenho.exercicio IN (:exe - 1, :exe)
-             GROUP BY CAST(orgao.codigo AS UNSIGNED), CAST(unidade.codigo AS UNSIGNED), mes
-             ORDER BY CAST(orgao.codigo AS UNSIGNED), CAST(unidade.codigo AS UNSIGNED), mes
-        ";
+      $sql = "SELECT CONCAT(orgao.codigo, '.', unidade.codigo) AS codigo, 
+               unidade.nome AS descricao, movimento.mes AS mes, 
+               SUM(IF(empenho.exercicio = :exe - 1, movimento.emissao - movimento.anular, 0.00)) AS valor_empenhado_anterior, 
+               SUM(IF(empenho.exercicio = :exe, movimento.emissao - movimento.anular, 0.00)) AS valor_empenhado_exercicio, 
+               SUM(IF(empenho.exercicio = :exe - 1, movimento.pagamento, 0.00)) AS valor_pago_anterior, 
+               SUM(IF(empenho.exercicio = :exe, movimento.pagamento, 0.00)) AS valor_pago_exercicio FROM ctbempenhomovimento movimento 
+               INNER JOIN ctbempenho empenho ON movimento.idempenho = empenho.id AND movimento.idcliente = empenho.idcliente 
+               INNER JOIN ctbcontadespesa despesa ON empenho.iddespesa = despesa.id AND empenho.idcliente = despesa.idcliente 
+               INNER JOIN ctbunidadeorcamentaria unidade ON despesa.idunidadeorcamentaria = unidade.id AND despesa.idcliente = unidade.idcliente 
+               INNER JOIN ctborgao orgao ON unidade.idorgao = orgao.id AND unidade.idcliente = orgao.idcliente 
+               WHERE movimento.idcliente = :id AND empenho.exercicio IN (:exe - 1, :exe) GROUP BY orgao.codigo, unidade.codigo, unidade.nome, movimento.mes 
+               ORDER BY CAST(orgao.codigo AS UNSIGNED), CAST(unidade.codigo AS UNSIGNED), mes";
 
       return DB::select($sql, ['id' => $idCliente, 'exe' => $exercicio]);
    }
@@ -153,26 +143,16 @@ class IndicadoresContabeisRepository
     */
    public function getResumoFuncoes(int $idCliente, int $exercicio): array
    {
-      $sql = "
-            SELECT funcao.codigo AS codigo,
-                   funcao.nome AS descricao,
-                   movimento.mes AS mes,
-                   SUM(IF(empenho.exercicio = :exe - 1, movimento.emissao - movimento.anular, 0.00)) AS valor_emissao_anterior,
-                   SUM(IF(empenho.exercicio = :exe, movimento.emissao - movimento.anular, 0.00)) AS valor_emissao_exercicio,
-                   SUM(IF(empenho.exercicio = :exe - 1, movimento.pagamento, 0.00)) AS valor_pago_anterior,
-                   SUM(IF(empenho.exercicio = :exe, movimento.pagamento, 0.00)) AS valor_pago_exercicio
-              FROM ctbempenhomovimento movimento
-                   INNER JOIN ctbempenho empenho
-                      ON movimento.idempenho = empenho.id AND movimento.idcliente = empenho.idcliente
-                   INNER JOIN ctbcontadespesa despesa
-                      ON empenho.iddespesa = despesa.id AND empenho.idcliente = despesa.idcliente
-                   INNER JOIN ctbfuncao funcao
-                      ON despesa.idfuncao = funcao.id AND despesa.idcliente = funcao.idcliente
-             WHERE movimiento.idcliente = :id
-               AND empenho.exercicio IN (:exe - 1, :exe)
-             GROUP BY CAST(funcao.codigo AS UNSIGNED), movimento.mes
-             ORDER BY descricao, mes
-        ";
+      $sql = "SELECT funcao.codigo AS codigo, funcao.nome AS descricao, movimento.mes AS mes, 
+               SUM(IF(empenho.exercicio = :exe - 1, movimento.emissao - movimento.anular, 0.00)) AS valor_emissao_anterior, 
+               SUM(IF(empenho.exercicio = :exe, movimento.emissao - movimento.anular, 0.00)) AS valor_emissao_exercicio, 
+               SUM(IF(empenho.exercicio = :exe - 1, movimento.pagamento, 0.00)) AS valor_pago_anterior, 
+               SUM(IF(empenho.exercicio = :exe, movimento.pagamento, 0.00)) AS valor_pago_exercicio FROM ctbempenhomovimento movimento 
+               INNER JOIN ctbempenho empenho ON movimento.idempenho = empenho.id AND movimento.idcliente = empenho.idcliente 
+               INNER JOIN ctbcontadespesa despesa ON empenho.iddespesa = despesa.id AND empenho.idcliente = despesa.idcliente 
+               INNER JOIN ctbfuncao funcao ON despesa.idfuncao = funcao.id AND despesa.idcliente = funcao.idcliente 
+               WHERE movimento.idcliente = :id AND empenho.exercicio IN (:exe - 1, :exe) 
+               GROUP BY funcao.codigo, funcao.nome, movimento.mes ORDER BY descricao, mes";
 
       return DB::select($sql, ['id' => $idCliente, 'exe' => $exercicio]);
    }
@@ -182,26 +162,7 @@ class IndicadoresContabeisRepository
     */
    public function getResumoSubfuncoes(int $idCliente, int $exercicio): array
    {
-      $sql = "
-            SELECT subfuncao.codigo AS codigo,
-                   subfuncao.nome AS descricao,
-                   movimento.mes AS mes,
-                   SUM(IF(empenho.exercicio = :exe - 1, movimento.emissao - movimento.anular, 0.00)) AS valor_emissao_anterior,
-                   SUM(IF(empenho.exercicio = :exe, movimento.emissao - movimento.anular, 0.00)) AS valor_emissao_exercicio,
-                   SUM(IF(empenho.exercicio = :exe - 1, movimento.pagamento, 0.00)) AS valor_pago_anterior,
-                   SUM(IF(empenho.exercicio = :exe, movimento.pagamento, 0.00)) AS valor_pago_exercicio
-              FROM ctbempenhomovimento movimento
-                   INNER JOIN ctbempenho empenho
-                      ON movimento.idempenho = empenho.id AND movimento.idcliente = empenho.idcliente
-                   INNER JOIN ctbcontadespesa despesa
-                      ON empenho.iddespesa = despesa.id AND empenho.idcliente = despesa.idcliente
-                   INNER JOIN ctbsubfuncao subfuncao
-                      ON despesa.idsubfuncao = subfuncao.id AND despesa.idcliente = subfuncao.idcliente
-             WHERE movimiento.idcliente = :id
-               AND empenho.exercicio IN (:exe - 1, :exe)
-             GROUP BY CAST(subfuncao.codigo AS UNSIGNED), movimento.mes
-             ORDER BY descricao, mes
-        ";
+      $sql = "SELECT subfuncao.codigo AS codigo, subfuncao.nome AS descricao, movimento.mes AS mes, SUM(IF(empenho.exercicio = :exe - 1, movimento.emissao - movimento.anular, 0.00)) AS valor_emissao_anterior, SUM(IF(empenho.exercicio = :exe, movimento.emissao - movimento.anular, 0.00)) AS valor_emissao_exercicio, SUM(IF(empenho.exercicio = :exe - 1, movimento.pagamento, 0.00)) AS valor_pago_anterior, SUM(IF(empenho.exercicio = :exe, movimento.pagamento, 0.00)) AS valor_pago_exercicio FROM ctbempenhomovimento movimento INNER JOIN ctbempenho empenho ON movimento.idempenho = empenho.id AND movimento.idcliente = empenho.idcliente INNER JOIN ctbcontadespesa despesa ON empenho.iddespesa = despesa.id AND empenho.idcliente = despesa.idcliente INNER JOIN ctbsubfuncao subfuncao ON despesa.idsubfuncao = subfuncao.id AND despesa.idcliente = subfuncao.idcliente WHERE movimento.idcliente = :id AND empenho.exercicio IN (:exe - 1, :exe) GROUP BY subfuncao.codigo, subfuncao.nome, movimento.mes ORDER BY descricao, mes";
 
       return DB::select($sql, ['id' => $idCliente, 'exe' => $exercicio]);
    }
@@ -211,28 +172,8 @@ class IndicadoresContabeisRepository
     */
    public function getResumoElementos(int $idCliente, int $exercicio): array
    {
-      $sql = "
-            SELECT elemento.estrutural AS estrutural,
-                   elemento.nome AS descricao,
-                   movimento.mes AS mes,
-                   SUM(IF(empenho.exercicio = :exc - 1, movimento.emissao - movimento.anular, 0.00)) AS valor_emissao_anterior,
-                   SUM(IF(empenho.exercicio = :exc, movimiento.emissao - movimento.anular, 0.00)) AS valor_emissao_exercicio,
-                   SUM(IF(empenho.exercicio = :exc - 1, movimento.pagamento, 0.00)) AS valor_pago_anterior,
-                   SUM(IF(empenho.exercicio = :exc, movimento.pagamento, 0.00)) AS valor_pago_exercicio
-              FROM ctbempenhomovimento movimento
-                   INNER JOIN ctbempenho empenho
-                      ON movimento.idempenho = empenho.id AND movimento.idcliente = empenho.idcliente
-                   INNER JOIN ctbcontadespesa despesa
-                      ON empenho.iddespesa = despesa.id AND empenho.idcliente = despesa.idcliente
-                   INNER JOIN ctbelemento elemento
-                      ON despesa.idelemento = elemento.id AND despesa.idcliente = elemento.idcliente
-             WHERE movimento.idcliente = :id
-               AND empenho.exercicio IN (:exc - 1, :exc)
-             GROUP BY elemento.estrutural, movimento.mes
-             ORDER BY estrutural, mes
-        ";
+      $sql = "SELECT elemento.estrutural AS estrutural, elemento.nome AS descricao, movimento.mes AS mes, SUM(IF(empenho.exercicio = :exc - 1, movimento.emissao - movimento.anular, 0.00)) AS valor_emissao_anterior, SUM(IF(empenho.exercicio = :exc, movimento.emissao - movimento.anular, 0.00)) AS valor_emissao_exercicio, SUM(IF(empenho.exercicio = :exc - 1, movimento.pagamento, 0.00)) AS valor_pago_anterior, SUM(IF(empenho.exercicio = :exc, movimento.pagamento, 0.00)) AS valor_pago_exercicio FROM ctbempenhomovimento movimento INNER JOIN ctbempenho empenho ON movimento.idempenho = empenho.id AND movimento.idcliente = empenho.idcliente INNER JOIN ctbcontadespesa despesa ON empenho.iddespesa = despesa.id AND empenho.idcliente = despesa.idcliente INNER JOIN ctbelemento elemento ON despesa.idelemento = elemento.id AND despesa.idcliente = elemento.idcliente WHERE movimento.idcliente = :id AND empenho.exercicio IN (:exc - 1, :exc) GROUP BY elemento.estrutural, elemento.nome, movimento.mes ORDER BY estrutural, mes";
 
-      // Note que este script original do banco mapeia especificamente o bind ':exc'
       return DB::select($sql, ['id' => $idCliente, 'exc' => $exercicio]);
    }
 
@@ -241,24 +182,7 @@ class IndicadoresContabeisRepository
     */
    public function getResumoRecursos(int $idCliente, int $exercicio): array
    {
-      $sql = "
-            SELECT recurso.codigo AS codigo,
-                   recurso.nome AS descricao,
-                   movimento.mes AS mes,
-                   SUM(IF(empenho.exercicio = :exe - 1, movimento.emissao - movimento.anular, 0.00)) AS valor_emissao_anterior,
-                   SUM(IF(empenho.exercicio = :exe, movimento.emissao - movimento.anular, 0.00)) AS valor_emissao_exercicio,
-                   SUM(IF(empenho.exercicio = :exe - 1, movimento.pagamento, 0.00)) AS valor_pago_anterior,
-                   SUM(IF(empenho.exercicio = :exe, movimento.pagamento, 0.00)) AS valor_pago_exercicio
-              FROM ctbempenhomovimento movimento
-                   INNER JOIN ctbempenho empenho
-                      ON movimento.idempenho = empenho.id AND movimento.idcliente = empenho.idcliente
-                   INNER JOIN ctbrecursovinculado recurso
-                      ON empenho.idrecurso = recurso.id AND empenho.idcliente = recurso.idcliente
-             WHERE movimento.idcliente = :id
-               AND empenho.exercicio IN (:exe - 1, :exe)
-             GROUP BY recurso.codigo, movimento.mes
-             ORDER BY codigo, mes
-        ";
+      $sql = "SELECT recurso.codigo AS codigo, recurso.nome AS descricao, movimento.mes AS mes, SUM(IF(empenho.exercicio = :exe - 1, movimento.emissao - movimento.anular, 0.00)) AS valor_emissao_anterior, SUM(IF(empenho.exercicio = :exe, movimento.emissao - movimento.anular, 0.00)) AS valor_emissao_exercicio, SUM(IF(empenho.exercicio = :exe - 1, movimento.pagamento, 0.00)) AS valor_pago_anterior, SUM(IF(empenho.exercicio = :exe, movimento.pagamento, 0.00)) AS valor_pago_exercicio FROM ctbempenhomovimento movimento INNER JOIN ctbempenho empenho ON movimento.idempenho = empenho.id AND movimento.idcliente = empenho.idcliente INNER JOIN ctbrecursovinculado recurso ON empenho.idrecurso = recurso.id AND empenho.idcliente = recurso.idcliente WHERE movimento.idcliente = :id AND empenho.exercicio IN (:exe - 1, :exe) GROUP BY recurso.codigo, recurso.nome, movimento.mes ORDER BY codigo, mes";
 
       return DB::select($sql, ['id' => $idCliente, 'exe' => $exercicio]);
    }
