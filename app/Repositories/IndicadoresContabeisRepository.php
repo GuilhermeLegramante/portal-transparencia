@@ -351,14 +351,14 @@ class IndicadoresContabeisRepository
       return DB::select("
         SELECT 
             query.*,
-            (query.empenhado_exercicio - query.empenhado_anterior) AS diferenca,
-            IFNULL(((1 - (query.empenhado_exercicio / NULLIF(query.empenhado_anterior, 0))) * 100) * -1, 0.00) AS variacao
+            (query.valor_empenhado_exercicio - query.valor_empenhado_anterior) AS diferenca,
+            IFNULL(((1 - (query.valor_empenhado_exercicio / NULLIF(query.valor_empenhado_anterior, 0))) * 100) * -1, 0.00) AS variacao
         FROM (
             SELECT 
                 elemento.estrutural AS estrutural,
                 elemento.nome AS descricao,
-                SUM(IF(empenho.exercicio = :ant1, movimento.emissao - movimento.anular, 0.00)) AS empenhado_anterior,
-                SUM(IF(empenho.exercicio = :exe1, movimento.emissao - movimento.anular, 0.00)) AS empenhado_exercicio,
+                SUM(IF(empenho.exercicio = :ant1, movimento.emissao - movimento.anular, 0.00)) AS valor_empenhado_anterior,
+                SUM(IF(empenho.exercicio = :exe1, movimento.emissao - movimento.anular, 0.00)) AS valor_empenhado_exercicio,
                 SUM(IF(empenho.exercicio = :ant2, movimento.pagamento, 0.00)) AS pagamento_anterior,
                 SUM(IF(empenho.exercicio = :exe2, movimento.pagamento, 0.00)) AS pagamento_exercicio
             FROM ctbempenhomovimento movimento
