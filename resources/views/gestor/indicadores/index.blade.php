@@ -139,11 +139,16 @@
                 </div>
             </div>
 
-            {{-- BLOCO GRÁFICO DE FUNÇÕES --}}
-            <div class="card shadow-sm mt-4">
-                <div class="card-body" style="height: 400px;">
-                    <canvas id="chartEvolucaoFuncoes"></canvas>
-                </div>
+            <div class="row">
+                @foreach (['chartUnidades', 'chartFuncoes', 'chartSubfuncoes', 'chartElementos', 'chartRecursos'] as $id)
+                    <div class="col-md-6 mb-4">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-body" style="height: 350px;">
+                                <canvas id="{{ $id }}"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
 
             {{-- BLOCO DE ABAS DETALHADAS --}}
@@ -417,6 +422,12 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            renderMensalChart('chartUnidades', {!! json_encode($resumoUnidadesMensal) !!}, 'Evolução por Unidade Orçamentária');
+            renderMensalChart('chartFuncoes', {!! json_encode($resumoFuncoesMensal) !!}, 'Evolução por Função');
+            renderMensalChart('chartSubfuncoes', {!! json_encode($resumoSubfuncoesMensal) !!}, 'Evolução por Subfunção');
+            renderMensalChart('chartElementos', {!! json_encode($resumoElementosMensal) !!}, 'Evolução por Elemento de Despesa');
+            renderMensalChart('chartRecursos', {!! json_encode($resumoRecursosMensal) !!}, 'Evolução por Recurso Vinculado');
+
             // 1. CHART EVOLUÇÃO MENSAL
             const ctxEvolucao = document.getElementById('chartEvolucaoDespesas');
             if (ctxEvolucao) {
@@ -534,49 +545,66 @@
                 });
             }
         });
-    </script>
 
-    <script>
-        const dadosMensais = {!! json_encode($resumoFuncoesMensal) !!};
+        /**
+         * Função para gerar gráfico mensal comparativo
+         * canvasId: ID do elemento <canvas>
+         * dados: Array de objetos vindo do PHP
+         * titulo: Título do gráfico
+         */
+        function renderMensalChart(canvasId, dados, titulo) {
+            const ctx = document.getElementById(canvasId);
+            if (!ctx) return;
 
-        // Agrupa dados por mês
-        const meses = [...new Set(dadosMensais.map(i => i.mes))];
+            // Extrai meses únicos
+            const meses = [...new Set(dados.map(i => i.mes))].sort((a, b) => a - b);
 
-        // Soma valores de todas as funções por mês para criar a linha total
-        const totalExercicio = meses.map(m => dadosMensais.filter(i => i.mes == m).reduce((acc, cur) => acc + parseFloat(cur
-            .valor_emissao_exercicio), 0));
-        const totalAnterior = meses.map(m => dadosMensais.filter(i => i.mes == m).reduce((acc, cur) => acc + parseFloat(cur
-            .valor_emissao_anterior), 0));
+            // Soma valores por mês (agrupamento global)
+            const atualData = meses.map(m => dados.filter(i => i.mes == m).reduce((acc, cur) => acc + parseFloat(cur
+                .valor_emissao_exercicio || cur.valor_empenhado_exercicio), 0));
+            const anteriorData = meses.map(m => dados.filter(i => i.mes == m).reduce((acc, cur) => acc + parseFloat(cur
+                .valor_emissao_anterior || cur.valor_empenhado_anterior), 0));
 
-        new Chart(document.getElementById('chartEvolucaoFuncoes'), {
-            type: 'line',
-            data: {
-                labels: meses.map(m => m + '/{{ $exercicio }}'),
-                datasets: [{
-                        label: 'Exercício Atual',
-                        data: totalExercicio,
-                        borderColor: '#3b82f6',
-                        tension: 0.3
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: meses.map(m => m + '/{{ $exercicio }}'),
+                    datasets: [{
+                            label: '{{ $exercicio }}',
+                            data: atualData,
+                            borderColor: '#2563eb',
+                            backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: '{{ $exercicio - 1 }}',
+                            data: anteriorData,
+                            borderColor: '#94a3b8',
+                            borderDash: [5, 5],
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: titulo
+                        }
                     },
-                    {
-                        label: 'Exercício Anterior',
-                        data: totalAnterior,
-                        borderColor: '#94a3b8',
-                        borderDash: [5, 5],
-                        tension: 0.3
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Evolução Mensal das Despesas - Funções'
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: v => 'R$ ' + v.toLocaleString()
+                            }
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     </script>
 @endpush
