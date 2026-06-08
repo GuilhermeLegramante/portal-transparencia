@@ -7,9 +7,9 @@
         {{-- Cabeçalho da Página com seletor de Exercício --}}
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
             <div>
-                <h1 class="h3 fw-bold text-dark mb-1">Indicadores Contábeis Estratégicos</h1>
-                <p class="text-muted small mb-0">Acompanhamento executivo de despesas e limites consolidados do município.
-                </p>
+                <h1 class="h3 fw-bold text-body mb-1">Indicadores Contábeis Estratégicos</h1>
+                <p class="text-body-secondary small mb-0">Acompanhamento executivo de despesas e limites consolidados do
+                    município.</p>
             </div>
             <div class="bg-white p-2 rounded-3 shadow-sm border" style="min-width: 190px;">
                 <form method="GET" action="{{ route('gestor.indicadores.index') }}"
