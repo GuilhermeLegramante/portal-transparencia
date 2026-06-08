@@ -545,7 +545,9 @@
                 });
             }
         });
+    </script>
 
+    <script>
         /**
          * Função para gerar gráfico mensal comparativo
          * canvasId: ID do elemento <canvas>
