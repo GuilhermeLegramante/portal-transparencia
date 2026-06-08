@@ -67,6 +67,7 @@ class IndicadoresContabeisController extends Controller
         $resumoUnidades = $unidadesMensal->groupBy('codigo')->map(function ($items) {
             return (object) [
                 'codigo' => $items->first()->codigo,
+                'mes' => $items->first()->mes,
                 'descricao' => $items->first()->descricao,
                 'valor_empenhado_anterior' => $items->sum('valor_empenhado_anterior'),
                 'valor_empenhado_exercicio' => $items->sum('valor_empenhado_exercicio'),
@@ -79,6 +80,7 @@ class IndicadoresContabeisController extends Controller
         $resumoFuncoes = $funcoesMensal->groupBy('codigo')->map(function ($items) {
             return (object) [
                 'codigo' => $items->first()->codigo,
+                'mes' => $items->first()->mes,
                 'descricao' => $items->first()->descricao,
                 'valor_emissao_anterior' => $items->sum('valor_emissao_anterior'),
                 'valor_emissao_exercicio' => $items->sum('valor_emissao_exercicio'),
@@ -91,6 +93,7 @@ class IndicadoresContabeisController extends Controller
         $resumoSubfuncoes = $subfuncoesMensal->groupBy('codigo')->map(function ($items) {
             return (object) [
                 'codigo' => $items->first()->codigo,
+                'mes' => $items->first()->mes,
                 'descricao' => $items->first()->descricao,
                 'valor_emissao_anterior' => $items->sum('valor_emissao_anterior'),
                 'valor_emissao_exercicio' => $items->sum('valor_emissao_exercicio'),
@@ -103,6 +106,7 @@ class IndicadoresContabeisController extends Controller
         $resumoElementos = $elementosMensal->groupBy('estrutural')->map(function ($items) {
             return (object) [
                 'estrutural' => $items->first()->estrutural,
+                'mes' => $items->first()->mes,
                 'descricao' => $items->first()->descricao,
                 'valor_emissao_anterior' => $items->sum('valor_emissao_anterior'),
                 'valor_emissao_exercicio' => $items->sum('valor_emissao_exercicio'),
@@ -115,6 +119,7 @@ class IndicadoresContabeisController extends Controller
         $resumoRecursos = $recursosMensal->groupBy('codigo')->map(function ($items) {
             return (object) [
                 'codigo' => $items->first()->codigo,
+                'mes' => $items->first()->mes,
                 'descricao' => $items->first()->descricao,
                 'valor_emissao_anterior' => $items->sum('valor_emissao_anterior'),
                 'valor_emissao_exercicio' => $items->sum('valor_emissao_exercicio'),
