@@ -488,8 +488,8 @@
                 new Chart(ctxUnidades, {
                     type: 'bar',
                     data: {
-                        labels: dadosUnidades.map(i => i.descricao.substring(0, 30) +
-                        '...'), // Limita a 30 caracteres para não estourar o layout
+                        labels: dadosUnidades.map(i => i.descricao.length > 30 ? i.descricao.substring(0,
+                            30) + '...' : i.descricao),
                         datasets: [{
                             label: 'Total Empenhado (R$)',
                             data: dadosUnidades.map(i => i.valor_empenhado_exercicio),
@@ -501,18 +501,19 @@
                         indexAxis: 'y',
                         responsive: true,
                         maintainAspectRatio: false,
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            callbacks: {
-                                title: function(context) {
-                                    // Pega o índice do dado e busca no array original o nome completo
-                                    const index = context[0].dataIndex;
-                                    return dadosUnidades[index].descricao;
+                        plugins: { // O objeto plugins engloba legend e tooltip
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    title: function(context) {
+                                        const index = context[0].dataIndex;
+                                        return dadosUnidades[index].descricao;
+                                    }
                                 }
                             }
-                        }
+                        },
                         scales: {
                             x: {
                                 ticks: {
