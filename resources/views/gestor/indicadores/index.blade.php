@@ -422,12 +422,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            renderSmartChart('chartUnidades', {!! json_encode($resumoUnidadesMensal) !!}, 'Evolução: Unidades Orçamentárias');
-            renderSmartChart('chartFuncoes', {!! json_encode($resumoFuncoesMensal) !!}, 'Evolução: Funções');
-            renderSmartChart('chartSubfuncoes', {!! json_encode($resumoSubfuncoesMensal) !!}, 'Evolução: Subfunções');
-            renderSmartChart('chartElementos', {!! json_encode($resumoElementosMensal) !!}, 'Evolução: Elementos de Despesa');
-            renderSmartChart('chartRecursos', {!! json_encode($resumoRecursosMensal) !!}, 'Evolução: Recursos Vinculados');
-
             // 1. CHART EVOLUÇÃO MENSAL
             const ctxEvolucao = document.getElementById('chartEvolucaoDespesas');
             if (ctxEvolucao) {
@@ -550,33 +544,24 @@
     <script>
         function renderSmartChart(canvasId, dados, titulo) {
             const ctx = document.getElementById(canvasId);
-            if (!ctx || !dados || dados.length === 0) {
-                console.warn('Dados vazios ou canvas não encontrado para: ' + canvasId);
-                return;
-            }
+            if (!ctx || !dados || dados.length === 0) return;
 
-            // DEBUG: Veja no console do navegador (F12) o que está chegando
-            console.log('Dados recebidos para ' + canvasId, dados);
+            // 1. Identificar chaves dinamicamente (para evitar nomes fixos de colunas)
+            const sample = dados[0];
+            // Procura colunas que contenham 'exercicio' ou 'anterior'
+            const keys = Object.keys(sample);
+            const campoAtual = keys.find(k => k.includes('exercicio') && !k.includes('pago') && !k.includes('remanejo'));
+            const campoAnt = keys.find(k => k.includes('anterior') && !k.includes('pago') && !k.includes('remanejo'));
 
-            // Identifica os meses únicos
+            // 2. Agrupamento seguro
             const meses = [...new Set(dados.map(i => i.mes))].sort((a, b) => a - b);
 
-            // Identifica as chaves numéricas dinamicamente (ignora 'mes', 'codigo', 'descricao')
-            const keys = Object.keys(dados[0]).filter(k => !['mes', 'codigo', 'descricao', 'estrutural'].includes(k));
+            const serieAtual = meses.map(m => dados.filter(i => i.mes == m).reduce((s, i) => s + parseFloat(i[campoAtual] ||
+                0), 0));
+            const serieAnt = meses.map(m => dados.filter(i => i.mes == m).reduce((s, i) => s + parseFloat(i[campoAnt] || 0),
+                0));
 
-            // Assume que a primeira chave encontrada com 'exercicio' é o atual e 'anterior' é o passado
-            const campoAtual = keys.find(k => k.toLowerCase().includes('exercicio'));
-            const campoAnt = keys.find(k => k.toLowerCase().includes('anterior'));
-
-            const serieAtual = meses.map(m =>
-                dados.filter(i => i.mes == m).reduce((soma, i) => soma + parseFloat(i[campoAtual] || 0), 0)
-            );
-
-            const serieAnt = meses.map(m =>
-                dados.filter(i => i.mes == m).reduce((soma, i) => soma + parseFloat(i[campoAnt] || 0), 0)
-            );
-
-            // Renderização
+            // 3. Renderização Isolada
             new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -585,8 +570,9 @@
                             label: 'Exercício Atual',
                             data: serieAtual,
                             borderColor: '#2563eb',
-                            tension: 0.3,
-                            fill: true
+                            backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                            fill: true,
+                            tension: 0.3
                         },
                         {
                             label: 'Exercício Anterior',
@@ -599,22 +585,18 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: titulo
-                        }
-                    },
-                    scales: {
-                        y: {
-                            ticks: {
-                                callback: v => 'R$ ' + v.toLocaleString('pt-BR')
-                            }
-                        }
-                    }
+                    maintainAspectRatio: false
                 }
             });
         }
+
+        // INICIALIZAÇÃO CORRETA - Passe as variáveis individualmente do Controller
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSmartChart('chartUnidades', {!! json_encode($resumoUnidadesMensal) !!}, 'Unidades');
+            renderSmartChart('chartFuncoes', {!! json_encode($resumoFuncoesMensal) !!}, 'Funções');
+            renderSmartChart('chartSubfuncoes', {!! json_encode($resumoSubfuncoesMensal) !!}, 'Subfunções');
+            renderSmartChart('chartElementos', {!! json_encode($resumoElementosMensal) !!}, 'Elementos');
+            renderSmartChart('chartRecursos', {!! json_encode($resumoRecursosMensal) !!}, 'Recursos');
+        });
     </script>
 @endpush
