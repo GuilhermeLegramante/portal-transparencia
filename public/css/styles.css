@@ -718,3 +718,16 @@ body.dark-mode .cookie-banner p {
 #btn-accept-cookies:hover {
     transform: scale(1.05);
 }
+
+/* Fundo das páginas no modo escuro */
+body.dark-mode main,
+body.dark-mode #conteudo,
+body.dark-mode .container-fluid,
+body.dark-mode .container {
+    background-color: transparent !important;
+}
+
+/* Área principal das páginas */
+body.dark-mode .bg-light-gray {
+    background-color: #0f172a !important;
+}
