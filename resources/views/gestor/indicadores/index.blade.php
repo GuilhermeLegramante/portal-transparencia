@@ -548,33 +548,29 @@
     </script>
 
     <script>
-        /**
-         * Função que gera um gráfico de linha comparativo inteligente
-         */
         function renderSmartChart(canvasId, dados, titulo) {
             const ctx = document.getElementById(canvasId);
-            if (!ctx) return;
+            if (!ctx || dados.length === 0) return;
 
-            // 1. Processamento dos dados (CORREÇÃO AQUI)
+            // 1. Detectar nomes das colunas automaticamente do primeiro registro
+            const chaves = Object.keys(dados[0]);
+            const campoAtual = chaves.find(k => k.includes('exercicio') && !k.includes('pago'));
+            const campoAnt = chaves.find(k => k.includes('anterior') && !k.includes('pago'));
+
+            // 2. Extrair meses únicos e ordenar
             const meses = [...new Set(dados.map(i => i.mes))].sort((a, b) => a - b);
 
-            // Função que soma todos os elementos para um mês específico
+            // 3. Função de soma dinâmica
             const getSomaMes = (mes, campo) => {
                 return dados
                     .filter(item => item.mes == mes)
                     .reduce((soma, item) => soma + parseFloat(item[campo] || 0), 0);
             };
 
-            // Define os campos corretamente conforme seu banco
-            const campoAtual = 'valor_emissao_exercicio';
-            const campoAnt = 'valor_emissao_anterior';
-
-            // Agora as séries pegam a soma de TODOS os elementos daquele mês
             const serieAtual = meses.map(m => getSomaMes(m, campoAtual));
             const serieAnt = meses.map(m => getSomaMes(m, campoAnt));
 
-
-            // 2. Renderização
+            // 4. Renderização
             new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -602,10 +598,7 @@
                     plugins: {
                         title: {
                             display: true,
-                            text: titulo,
-                            font: {
-                                size: 16
-                            }
+                            text: titulo
                         },
                         tooltip: {
                             callbacks: {
@@ -614,20 +607,13 @@
                                     const index = context.dataIndex;
                                     const ant = context.datasetIndex === 0 ? serieAnt[index] : null;
                                     let label = context.dataset.label + ': R$ ' + val.toLocaleString('pt-BR');
-                                    if (ant && ant > 0) {
+                                    if (ant !== null && ant > 0) {
                                         const diff = val - ant;
                                         const pct = (diff / ant) * 100;
                                         label += ` (${diff > 0 ? '▲' : '▼'} ${pct.toFixed(1)}%)`;
                                     }
                                     return label;
                                 }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            ticks: {
-                                callback: v => 'R$ ' + v.toLocaleString()
                             }
                         }
                     }
