@@ -11,12 +11,13 @@
                 <p class="text-muted small mb-0">Acompanhamento executivo de despesas e limites consolidados do município.
                 </p>
             </div>
-            <div class="bg-white p-2 rounded-3 shadow-sm border">
-                <form method="GET" action="{{ route('gestor.indicadores.index') }}" class="d-flex align-items-center gap-2">
-                    <label class="small fw-bold text-secondary text-uppercase mb-0 x-nowrap px-2">Exercício:</label>
+            <div class="bg-white p-2 rounded-3 shadow-sm border" style="min-width: 190px;">
+                <form method="GET" action="{{ route('gestor.indicadores.index') }}"
+                    class="d-flex align-items-center justify-content-end gap-2 w-100">
+                    <label class="small fw-bold text-secondary text-uppercase mb-0 text-nowrap px-1">Exercício:</label>
                     <input type="number" name="exercicio"
-                        class="form-control border-0 bg-light fw-bold text-primary rounded-3 py-1"
-                        value="{{ $exercicio }}" min="2000" max="{{ date('Y') + 1 }}" style="width: 100px;"
+                        class="form-control border-0 bg-light fw-bold text-primary rounded-3 py-1 px-2 text-center"
+                        value="{{ $exercicio }}" min="2000" max="{{ date('Y') + 1 }}" style="width: 90px;"
                         onchange="this.form.submit()">
                 </form>
             </div>
@@ -166,72 +167,6 @@
         @endif
     </div>
 
-    {{-- Scripts para renderização do Chart.js --}}
-    @push('scripts')
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const ctx = document.getElementById('chartEvolucaoDespesas');
-                if (ctx) {
-                    new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: {!! json_encode($labelsGrafico) !!},
-                            datasets: [{
-                                    label: 'Empenhado Anterior (' + {!! $exercicio - 1 !!} + ')',
-                                    data: {!! json_encode($empenhadoAnterior) !!},
-                                    borderColor: '#94a3b8',
-                                    backgroundColor: 'transparent',
-                                    borderWidth: 2,
-                                    borderDash: [5, 5],
-                                    tension: 0.3
-                                },
-                                {
-                                    label: 'Empenhado Exercício (' + {!! $exercicio !!} + ')',
-                                    data: {!! json_encode($empenhadoExercicio) !!},
-                                    borderColor: '#3b82f6',
-                                    backgroundColor: 'rgba(59, 130, 246, 0.08)',
-                                    fill: true,
-                                    borderWidth: 3,
-                                    tension: 0.3,
-                                    pointRadius: 4,
-                                    pointBackgroundColor: '#3b82f6'
-                                }
-                            ]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: {
-                                    position: 'top',
-                                    labels: {
-                                        boxWidth: 15,
-                                        font: {
-                                            weight: 'bold'
-                                        }
-                                    }
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        callback: function(value) {
-                                            return 'R$ ' + value.toLocaleString('pt-BR', {
-                                                minimumFractionDigits: 0
-                                            });
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    ]);
-                }
-            });
-        </script>
-    @endpush
-
     <style>
         .bg-light-gray {
             background-color: #f8f9fa;
@@ -242,3 +177,69 @@
         }
     </style>
 @endsection
+
+{{-- Código JavaScript isolado e corrigido --}}
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('chartEvolucaoDespesas');
+            if (ctx) {
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: {!! json_encode($labelsGrafico) !!},
+                        datasets: [{
+                                label: 'Empenhado Anterior (' + {!! $exercicio - 1 !!} + ')',
+                                data: {!! json_encode($empenhadoAnterior) !!},
+                                borderColor: '#94a3b8',
+                                backgroundColor: 'transparent',
+                                borderWidth: 2,
+                                borderDash: [5, 5],
+                                tension: 0.3
+                            },
+                            {
+                                label: 'Empenhado Exercício (' + {!! $exercicio !!} + ')',
+                                data: {!! json_encode($empenhadoExercicio) !!},
+                                borderColor: '#3b82f6',
+                                backgroundColor: 'rgba(59, 130, 246, 0.08)',
+                                fill: true,
+                                borderWidth: 3,
+                                tension: 0.3,
+                                pointRadius: 4,
+                                pointBackgroundColor: '#3b82f6'
+                            }
+                        ] // O colchete dos datasets fecha aqui corretamente
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    boxWidth: 15,
+                                    font: {
+                                        weight: 'bold'
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return 'R$ ' + value.toLocaleString('pt-BR', {
+                                            minimumFractionDigits: 0
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+@endpush
