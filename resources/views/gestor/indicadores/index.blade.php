@@ -7,10 +7,8 @@
         {{-- Cabeçalho da Página com seletor de Exercício --}}
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
             <div>
-                <h1 class="h3 fw-bold text-dark mb-1">Indicadores Contábeis Estratégicos</h1>
-                <p class="text-muted small mb-0">Acompanhamento executivo de despesas e limites consolidados
-                    do município.
-                </p>
+                <h1 class="h3 fw-bold text-dark mb-1">Painel Estratégico de BI Contábil</h1>
+                <p class="text-muted small mb-0">Visão analítica de inteligência para tomada de decisão imediata.</p>
             </div>
             <div class="bg-white p-2 rounded-3 shadow-sm border" style="min-width: 190px;">
                 <form method="GET" action="{{ route('gestor.indicadores.index') }}"
@@ -32,7 +30,6 @@
         @else
             {{-- CARDS SUPERIORES: Principais Indicadores de Comprometimento --}}
             <div class="row g-3 mb-4">
-                {{-- Card Exercício Atual --}}
                 <div class="col-md-6 col-xl-3">
                     <div class="card h-100 border-0 shadow-sm rounded-3 bg-white border-start border-primary border-4">
                         <div class="card-body p-3 p-lg-4">
@@ -49,7 +46,6 @@
                     </div>
                 </div>
 
-                {{-- Card Exercício Anterior --}}
                 <div class="col-md-6 col-xl-3">
                     <div class="card h-100 border-0 shadow-sm rounded-3 bg-white border-start border-secondary border-4">
                         <div class="card-body p-3 p-lg-4">
@@ -67,7 +63,6 @@
                     </div>
                 </div>
 
-                {{-- Total Atualizado Disponível --}}
                 <div class="col-md-6 col-xl-3">
                     <div class="card h-100 border-0 shadow-sm rounded-3 bg-white">
                         <div class="card-body p-3 p-lg-4">
@@ -85,7 +80,6 @@
                     </div>
                 </div>
 
-                {{-- Total Pago --}}
                 <div class="col-md-6 col-xl-3">
                     <div class="card h-100 border-0 shadow-sm rounded-3 bg-white">
                         <div class="card-body p-3 p-lg-4">
@@ -104,17 +98,48 @@
                 </div>
             </div>
 
-            {{-- BLOCO GRÁFICO: Evolução Mensal da Despesa Empenhada --}}
+            {{-- SEÇÃO DE INTAKES & GRÁFICOS DE BI --}}
+            <div class="row g-4 mb-4">
+                {{-- Donut Chart: Distribuição de Despesas por Função --}}
+                <div class="col-lg-5">
+                    <div class="card border-0 shadow-sm rounded-3 h-100 bg-white">
+                        <div class="card-body p-4 d-flex flex-column">
+                            <h5 class="fw-bold text-dark mb-1">Composição por Função</h5>
+                            <p class="text-muted small mb-3">Onde os recursos estão concentrados neste exercício.</p>
+                            <div class="my-auto d-flex justify-content-center align-items-center"
+                                style="position: relative; height:240px;">
+                                <canvas id="chartBIFuncoes"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Horizontal Bar Chart: Maiores Gastadores (Top 5 Unidades) --}}
+                <div class="col-lg-7">
+                    <div class="card border-0 shadow-sm rounded-3 h-100 bg-white">
+                        <div class="card-body p-4 d-flex flex-column">
+                            <h5 class="fw-bold text-dark mb-1">Top 5 Unidades Mais Demandantes</h5>
+                            <p class="text-muted small mb-3">Secretarias ou fundos com maior volume de empenhos acumulados.
+                            </p>
+                            <div class="my-auto" style="position: relative; height:240px; width:100%">
+                                <canvas id="chartBIUnidades"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- BLOCO GRÁFICO EVOLUTIVO --}}
             <div class="card border-0 shadow-sm rounded-3 mb-4 bg-white">
                 <div class="card-body p-4">
                     <h5 class="fw-bold text-dark mb-3">Evolução de Empenhos Mensais (Histórico Comparativo)</h5>
-                    <div style="position: relative; height:320px; width:100%">
+                    <div style="position: relative; height:300px; width:100%">
                         <canvas id="chartEvolucaoDespesas"></canvas>
                     </div>
                 </div>
             </div>
 
-            {{-- NOVO BLOCO DE ABAS: Visões Analíticas Detalhadas --}}
+            {{-- BLOCO DE ABAS DETALHADAS --}}
             <div class="card border-0 shadow-sm rounded-3 mb-4 bg-white">
                 <div class="card-body p-4">
                     <h5 class="fw-bold text-dark mb-3">Detalhamento das Despesas por Categorias</h5>
@@ -148,7 +173,7 @@
                     </ul>
 
                     <div class="tab-content" id="abasIndicadoresContent">
-                        {{-- Aba Unidades --}}
+                        {{-- Unidades --}}
                         <div class="tab-pane fade show active" id="unidades-pane" role="tabpanel" tabindex="0">
                             <x-tabela-transparencia titulo="" :colunas="[
                                 ['label' => 'Código', 'align' => 'text-start'],
@@ -165,8 +190,7 @@
                                             {{ $item->codigo ?? '--' }}</td>
                                         <td class="text-start text-dark text-truncate" style="max-width: 240px;">
                                             {{ $item->descricao ?? '--' }}</td>
-                                        <td class="text-center text-secondary">
-                                            {{ isset($item->mes) ? str_pad($item->mes, 2, '0', STR_PAD_LEFT) : '--' }}</td>
+                                        <td class="text-center text-secondary">{{ $item->mes }}</td>
                                         <td class="text-end text-secondary">R$
                                             {{ number_format($item->valor_empenhado_anterior ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-dark fw-semibold">R$
@@ -180,7 +204,7 @@
                             </x-tabela-transparencia>
                         </div>
 
-                        {{-- Aba Funções --}}
+                        {{-- Funções --}}
                         <div class="tab-pane fade" id="funcoes-pane" role="tabpanel" tabindex="0">
                             <x-tabela-transparencia titulo="" :colunas="[
                                 ['label' => 'Código', 'align' => 'text-start'],
@@ -197,8 +221,7 @@
                                             {{ $item->codigo ?? '--' }}</td>
                                         <td class="text-start text-dark text-truncate" style="max-width: 240px;">
                                             {{ $item->descricao ?? '--' }}</td>
-                                        <td class="text-center text-secondary">
-                                            {{ isset($item->mes) ? str_pad($item->mes, 2, '0', STR_PAD_LEFT) : '--' }}</td>
+                                        <td class="text-center text-secondary">{{ $item->mes }}</td>
                                         <td class="text-end text-secondary">R$
                                             {{ number_format($item->valor_emissao_anterior ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-dark fw-semibold">R$
@@ -212,7 +235,7 @@
                             </x-tabela-transparencia>
                         </div>
 
-                        {{-- Aba Subfunções --}}
+                        {{-- Subfunções --}}
                         <div class="tab-pane fade" id="subfuncoes-pane" role="tabpanel" tabindex="0">
                             <x-tabela-transparencia titulo="" :colunas="[
                                 ['label' => 'Código', 'align' => 'text-start'],
@@ -229,8 +252,7 @@
                                             {{ $item->codigo ?? '--' }}</td>
                                         <td class="text-start text-dark text-truncate" style="max-width: 240px;">
                                             {{ $item->descricao ?? '--' }}</td>
-                                        <td class="text-center text-secondary">
-                                            {{ isset($item->mes) ? str_pad($item->mes, 2, '0', STR_PAD_LEFT) : '--' }}</td>
+                                        <td class="text-center text-secondary">{{ $item->mes }}</td>
                                         <td class="text-end text-secondary">R$
                                             {{ number_format($item->valor_emissao_anterior ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-dark fw-semibold">R$
@@ -244,7 +266,7 @@
                             </x-tabela-transparencia>
                         </div>
 
-                        {{-- Aba Elementos --}}
+                        {{-- Elementos --}}
                         <div class="tab-pane fade" id="elementos-pane" role="tabpanel" tabindex="0">
                             <x-tabela-transparencia titulo="" :colunas="[
                                 ['label' => 'Estrutural', 'align' => 'text-start'],
@@ -261,8 +283,7 @@
                                             {{ $item->estrutural ?? '--' }}</td>
                                         <td class="text-start text-dark text-truncate" style="max-width: 240px;">
                                             {{ $item->descricao ?? '--' }}</td>
-                                        <td class="text-center text-secondary">
-                                            {{ isset($item->mes) ? str_pad($item->mes, 2, '0', STR_PAD_LEFT) : '--' }}</td>
+                                        <td class="text-center text-secondary">{{ $item->mes }}</td>
                                         <td class="text-end text-secondary">R$
                                             {{ number_format($item->valor_emissao_anterior ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-dark fw-semibold">R$
@@ -276,7 +297,7 @@
                             </x-tabela-transparencia>
                         </div>
 
-                        {{-- Aba Recursos --}}
+                        {{-- Recursos --}}
                         <div class="tab-pane fade" id="recursos-pane" role="tabpanel" tabindex="0">
                             <x-tabela-transparencia titulo="" :colunas="[
                                 ['label' => 'Código', 'align' => 'text-start'],
@@ -293,8 +314,7 @@
                                             {{ $item->codigo ?? '--' }}</td>
                                         <td class="text-start text-dark text-truncate" style="max-width: 240px;">
                                             {{ $item->descricao ?? '--' }}</td>
-                                        <td class="text-center text-secondary">
-                                            {{ isset($item->mes) ? str_pad($item->mes, 2, '0', STR_PAD_LEFT) : '--' }}</td>
+                                        <td class="text-center text-secondary">{{ $item->mes }}</td>
                                         <td class="text-end text-secondary">R$
                                             {{ number_format($item->valor_emissao_anterior ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-dark fw-semibold">R$
@@ -311,7 +331,7 @@
                 </div>
             </div>
 
-            {{-- BLOCO TABELA: Detalhamento Anualizado Geral --}}
+            {{-- QUADRO CONSOLIDADO --}}
             <x-tabela-transparencia titulo="Quadro Comparativo Consolidado das Despesas" :colunas="[
                 ['label' => 'Métrica Contábil', 'align' => 'text-start'],
                 ['label' => 'Exercício Anterior (' . ($exercicio - 1) . ')', 'align' => 'text-end'],
@@ -379,19 +399,10 @@
             background: var(--bs-body-bg);
         }
 
-        .bg-light-gray {
-            background-color: #f8f9fa;
-        }
-
         .table-active-row {
             background-color: rgba(59, 130, 246, 0.03) !important;
         }
 
-        body.dark-mode .bg-light-gray {
-            background-color: #0f172a !important;
-        }
-
-        /* Estilo sutil para espaçamento vertical das abas */
         .nav-tabs .nav-link {
             border: none;
             color: #6c757d;
@@ -405,14 +416,14 @@
     </style>
 @endsection
 
-{{-- Código JavaScript isolado e corrigido --}}
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const ctx = document.getElementById('chartEvolucaoDespesas');
-            if (ctx) {
-                new Chart(ctx, {
+            // 1. CHART EVOLUÇÃO MENSAL
+            const ctxEvolucao = document.getElementById('chartEvolucaoDespesas');
+            if (ctxEvolucao) {
+                new Chart(ctxEvolucao, {
                     type: 'line',
                     data: {
                         labels: {!! json_encode($labelsGrafico) !!},
@@ -436,31 +447,80 @@
                                 pointRadius: 4,
                                 pointBackgroundColor: '#3b82f6'
                             }
-                        ] // O colchete dos datasets fecha aqui corretamente
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: value => 'R$ ' + value.toLocaleString('pt-BR')
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 2. CHART BI: ROSCA COMPOSIÇÃO DE FUNÇÕES
+            const ctxFuncoes = document.getElementById('chartBIFuncoes');
+            if (ctxFuncoes) {
+                const dadosFuncoes = {!! json_encode($biFuncoes) !!};
+                new Chart(ctxFuncoes, {
+                    type: 'doughnut',
+                    data: {
+                        labels: dadosFuncoes.map(i => i.descricao),
+                        datasets: [{
+                            data: dadosFuncoes.map(i => i.valor_emissao_exercicio),
+                            backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6',
+                                '#ec4899', '#64748b'
+                            ]
+                        }]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
                             legend: {
-                                position: 'top',
-                                labels: {
-                                    boxWidth: 15,
-                                    font: {
-                                        weight: 'bold'
-                                    }
-                                }
+                                display: false
+                            }
+                        } // Oculto para não quebrar o layout, o hover mostra o dado
+                    }
+                });
+            }
+
+            // 3. CHART BI: BARRA HORIZONTAL TOP UNIDADES
+            const ctxUnidades = document.getElementById('chartBIUnidades');
+            if (ctxUnidades) {
+                const dadosUnidades = {!! json_encode($topUnidades) !!};
+                new Chart(ctxUnidades, {
+                    type: 'bar',
+                    data: {
+                        labels: dadosUnidades.map(i => i.descricao.substring(0, 25) + '...'),
+                        datasets: [{
+                            label: 'Total Empenhado (R$)',
+                            data: dadosUnidades.map(i => i.valor_empenhado_exercicio),
+                            backgroundColor: '#3b82f6',
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
                             }
                         },
                         scales: {
-                            y: {
-                                beginAtZero: true,
+                            x: {
                                 ticks: {
-                                    callback: function(value) {
-                                        return 'R$ ' + value.toLocaleString('pt-BR', {
-                                            minimumFractionDigits: 0
-                                        });
-                                    }
+                                    callback: value => 'R$ ' + value.toLocaleString('pt-BR', {
+                                        notation: 'compact'
+                                    })
                                 }
                             }
                         }

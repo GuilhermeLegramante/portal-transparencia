@@ -64,7 +64,7 @@ class IndicadoresContabeisController extends Controller
 
         // --- CONSOLIDAÇÃO DOS DADOS PARA AS ABAS DA VIEW ---
 
-        // 1. Unidades Orçamentárias
+        // 1. Unidades Orçamentárias (Ordenadas para o TOP 5 do BI)
         $resumoUnidades = $unidadesMensal->groupBy('codigo')->map(function ($items) use ($nomesMeses) {
             $primeiro = $items->first();
             $mesNum = isset($primeiro->mes) ? (int)$primeiro->mes : null;
@@ -79,7 +79,14 @@ class IndicadoresContabeisController extends Controller
             ];
         })->values();
 
-        // 2. Funções
+        // Dados para o Gráfico de BI: Top 5 Unidades que mais empenharam no ano
+        $topUnidades = collect($resumoUnidades)
+            ->sortByDesc('valor_empenhado_exercicio')
+            ->take(5)
+            ->values();
+
+
+        // 2. Funções (Ordenadas para a Rosca do BI)
         $resumoFuncoes = $funcoesMensal->groupBy('codigo')->map(function ($items) use ($nomesMeses) {
             $primeiro = $items->first();
             $mesNum = isset($primeiro->mes) ? (int)$primeiro->mes : null;
@@ -93,6 +100,11 @@ class IndicadoresContabeisController extends Controller
                 'valor_pago_exercicio' => $items->sum('valor_pago_exercicio'),
             ];
         })->values();
+
+        // Dados para o Gráfico de BI: Maiores Funções (Composição do Orçamento)
+        $biFuncoes = collect($resumoFuncoes)
+            ->sortByDesc('valor_emissao_exercicio')
+            ->values();
 
         // 3. Subfunções
         $resumoSubfuncoes = $subfuncoesMensal->groupBy('codigo')->map(function ($items) use ($nomesMeses) {
@@ -152,7 +164,9 @@ class IndicadoresContabeisController extends Controller
             'resumoFuncoes',
             'resumoSubfuncoes',
             'resumoElementos',
-            'resumoRecursos'
+            'resumoRecursos',
+            'topUnidades', // <-- NOVO
+            'biFuncoes'    // <-- NOVO
         ));
     }
 }
