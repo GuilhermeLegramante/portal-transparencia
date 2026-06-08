@@ -422,11 +422,11 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            renderMensalChart('chartUnidades', {!! json_encode($resumoUnidadesMensal) !!}, 'Evolução por Unidade Orçamentária');
-            renderMensalChart('chartFuncoes', {!! json_encode($resumoFuncoesMensal) !!}, 'Evolução por Função');
-            renderMensalChart('chartSubfuncoes', {!! json_encode($resumoSubfuncoesMensal) !!}, 'Evolução por Subfunção');
-            renderMensalChart('chartElementos', {!! json_encode($resumoElementosMensal) !!}, 'Evolução por Elemento de Despesa');
-            renderMensalChart('chartRecursos', {!! json_encode($resumoRecursosMensal) !!}, 'Evolução por Recurso Vinculado');
+            renderSmartChart('chartUnidades', {!! json_encode($resumoUnidadesMensal) !!}, 'Evolução: Unidades Orçamentárias');
+            renderSmartChart('chartFuncoes', {!! json_encode($resumoFuncoesMensal) !!}, 'Evolução: Funções');
+            renderSmartChart('chartSubfuncoes', {!! json_encode($resumoSubfuncoesMensal) !!}, 'Evolução: Subfunções');
+            renderSmartChart('chartElementos', {!! json_encode($resumoElementosMensal) !!}, 'Evolução: Elementos de Despesa');
+            renderSmartChart('chartRecursos', {!! json_encode($resumoRecursosMensal) !!}, 'Evolução: Recursos Vinculados');
 
             // 1. CHART EVOLUÇÃO MENSAL
             const ctxEvolucao = document.getElementById('chartEvolucaoDespesas');
@@ -549,42 +549,51 @@
 
     <script>
         /**
-         * Função para gerar gráfico mensal comparativo
-         * canvasId: ID do elemento <canvas>
-         * dados: Array de objetos vindo do PHP
-         * titulo: Título do gráfico
+         * Função que gera um gráfico de linha comparativo inteligente
          */
-        function renderMensalChart(canvasId, dados, titulo) {
+        function renderSmartChart(canvasId, dados, titulo) {
             const ctx = document.getElementById(canvasId);
             if (!ctx) return;
 
-            // Extrai meses únicos
+            // 1. Processamento dos dados
             const meses = [...new Set(dados.map(i => i.mes))].sort((a, b) => a - b);
 
-            // Soma valores por mês (agrupamento global)
-            const atualData = meses.map(m => dados.filter(i => i.mes == m).reduce((acc, cur) => acc + parseFloat(cur
-                .valor_emissao_exercicio || cur.valor_empenhado_exercicio), 0));
-            const anteriorData = meses.map(m => dados.filter(i => i.mes == m).reduce((acc, cur) => acc + parseFloat(cur
-                .valor_emissao_anterior || cur.valor_empenhado_anterior), 0));
+            // Mapeia os valores. Verifica qual campo existe no objeto retornado
+            const getVal = (m, campoAtual, campoAnterior) => {
+                const row = dados.find(i => i.mes == m);
+                return {
+                    atual: parseFloat(row[campoAtual] || 0),
+                    ant: parseFloat(row[campoAnterior] || 0)
+                };
+            };
 
+            const campoAtual = dados.length > 0 && dados[0].hasOwnProperty('valor_emissao_exercicio') ?
+                'valor_emissao_exercicio' : 'valor_empenhado_exercicio';
+            const campoAnt = dados.length > 0 && dados[0].hasOwnProperty('valor_emissao_anterior') ?
+                'valor_emissao_anterior' : 'valor_empenhado_anterior';
+
+            const serieAtual = meses.map(m => getVal(m, campoAtual, campoAnt).atual);
+            const serieAnt = meses.map(m => getVal(m, campoAtual, campoAnt).ant);
+
+            // 2. Renderização
             new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: meses.map(m => m + '/{{ $exercicio }}'),
                     datasets: [{
                             label: '{{ $exercicio }}',
-                            data: atualData,
+                            data: serieAtual,
                             borderColor: '#2563eb',
                             backgroundColor: 'rgba(37, 99, 235, 0.1)',
                             fill: true,
-                            tension: 0.4
+                            tension: 0.3
                         },
                         {
                             label: '{{ $exercicio - 1 }}',
-                            data: anteriorData,
+                            data: serieAnt,
                             borderColor: '#94a3b8',
                             borderDash: [5, 5],
-                            tension: 0.4
+                            tension: 0.3
                         }
                     ]
                 },
@@ -594,12 +603,30 @@
                     plugins: {
                         title: {
                             display: true,
-                            text: titulo
+                            text: titulo,
+                            font: {
+                                size: 16
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const val = context.raw;
+                                    const index = context.dataIndex;
+                                    const ant = context.datasetIndex === 0 ? serieAnt[index] : null;
+                                    let label = context.dataset.label + ': R$ ' + val.toLocaleString('pt-BR');
+                                    if (ant && ant > 0) {
+                                        const diff = val - ant;
+                                        const pct = (diff / ant) * 100;
+                                        label += ` (${diff > 0 ? '▲' : '▼'} ${pct.toFixed(1)}%)`;
+                                    }
+                                    return label;
+                                }
+                            }
                         }
                     },
                     scales: {
                         y: {
-                            beginAtZero: true,
                             ticks: {
                                 callback: v => 'R$ ' + v.toLocaleString()
                             }
