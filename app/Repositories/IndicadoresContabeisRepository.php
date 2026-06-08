@@ -412,8 +412,8 @@ class IndicadoresContabeisRepository
                 (SELECT IFNULL(SUM(mov.emissao - mov.anular), 0.00) FROM ctbempenhomovimento mov JOIN ctbempenho emp ON emp.id = mov.idempenho WHERE emp.iddespesa = despesa.id AND emp.exercicio = :ant2) AS valor_empenhado_anterior,
                 (SELECT IFNULL(SUM(mov.pagamento), 0.00) FROM ctbempenhomovimento mov JOIN ctbempenho emp ON emp.id = mov.idempenho WHERE emp.iddespesa = despesa.id AND emp.exercicio = :exe3) AS valor_pago_exercicio,
                 (SELECT IFNULL(SUM(mov.pagamento), 0.00) FROM ctbempenhomovimento mov JOIN ctbempenho emp ON emp.id = mov.idempenho WHERE emp.iddespesa = despesa.id AND emp.exercicio = :ant3) AS valor_pago_anterior,
-                (SELECT IFNULL(SUM(IF(rem.operacao = 'S', rem.total, -rem.total)), 0.00) FROM ctbcontadespesaextra rem WHERE rem.iddespesa = despesa.id AND rem.exercicio = :exe4) AS valor_remanejo_exercicio,
-                (SELECT IFNULL(SUM(IF(rem.operacao = 'S', rem.total, -rem.total)), 0.00) FROM ctbcontadespesaextra rem WHERE rem.iddespesa = despesa.id AND rem.exercicio = :ant4) AS valor_remanejo_anterior
+                (SELECT IFNULL(SUM(IF(rem.operacao = 'S', rem.total, -rem.total)), 0.00) FROM ctbcontadespesaextra rem WHERE rem.iddespesa = despesa.id AND despesa.exercicio = :exe4) AS valor_remanejo_exercicio,
+                (SELECT IFNULL(SUM(IF(rem.operacao = 'S', rem.total, -rem.total)), 0.00) FROM ctbcontadespesaextra rem WHERE rem.iddespesa = despesa.id AND despesa.exercicio = :ant4) AS valor_remanejo_anterior
             FROM ctbcontadespesa despesa
             INNER JOIN ctbsubfuncao subfuncao ON subfuncao.id = despesa.idsubfuncao
             WHERE despesa.idcliente = :id
