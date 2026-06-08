@@ -553,6 +553,7 @@
 
     <script>
         function renderSmartChart(canvasId, dados, titulo) {
+
             const ctx = document.getElementById(canvasId);
             if (!ctx || !dados || dados.length === 0) return;
 
@@ -570,6 +571,10 @@
                 0), 0));
             const serieAnt = meses.map(m => dados.filter(i => i.mes == m).reduce((s, i) => s + parseFloat(i[campoAnt] || 0),
                 0));
+
+            console.log(canvasId);
+            console.log(serieAtual);
+            console.log(serieAnt);
 
             // 3. Renderização Isolada
             new Chart(ctx, {
