@@ -120,7 +120,7 @@ class IndicadoresContabeisRepository
    /**
     * Obtém o resumo de despesas mensalizado por Unidade Orçamentária
     */
-   public function getResumoUnidades(int $idCliente, int $exercicio): array
+   public function getResumoUnidadesMensal(int $idCliente, int $exercicio): array
    {
       $sql = "SELECT 
                     CONCAT(orgao.codigo, '.', unidade.codigo) AS codigo, 
@@ -158,7 +158,7 @@ class IndicadoresContabeisRepository
    /**
     * Obtém o resumo de despesas mensalizado por Função
     */
-   public function getResumoFuncoes(int $idCliente, int $exercicio): array
+   public function getResumoFuncoesMensal(int $idCliente, int $exercicio): array
    {
       $sql = "SELECT 
                     funcao.codigo AS codigo, 
@@ -186,7 +186,7 @@ class IndicadoresContabeisRepository
    /**
     * Obtém o resumo de despesas mensalizado por Subfunção
     */
-   public function getResumoSubfuncoes(int $idCliente, int $exercicio): array
+   public function getResumoSubfuncoesMensal(int $idCliente, int $exercicio): array
    {
       $sql = "SELECT 
                     subfuncao.codigo AS codigo, 
@@ -214,7 +214,7 @@ class IndicadoresContabeisRepository
    /**
     * Obtém o resumo de despesas mensalizado por Elemento de Despesa
     */
-   public function getResumoElementos(int $idCliente, int $exercicio): array
+   public function getResumoElementosMensal(int $idCliente, int $exercicio): array
    {
       $sql = "SELECT 
                     elemento.estrutural AS estrutural, 
@@ -242,7 +242,7 @@ class IndicadoresContabeisRepository
    /**
     * Obtém o resumo de despesas mensalizado por Recurso Vinculado
     */
-   public function getResumoRecursos(int $idCliente, int $exercicio): array
+   public function getResumoRecursosMensal(int $idCliente, int $exercicio): array
    {
       $sql = "SELECT 
                     recurso.codigo AS codigo, 

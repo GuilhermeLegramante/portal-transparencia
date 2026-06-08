@@ -139,6 +139,13 @@
                 </div>
             </div>
 
+            {{-- BLOCO GRÁFICO DE FUNÇÕES --}}
+            <div class="card shadow-sm mt-4">
+                <div class="card-body" style="height: 400px;">
+                    <canvas id="chartEvolucaoFuncoes"></canvas>
+                </div>
+            </div>
+
             {{-- BLOCO DE ABAS DETALHADAS --}}
             <div class="card border-0 shadow-sm rounded-3 mb-4 bg-white">
                 <div class="card-body p-4">
@@ -526,6 +533,48 @@
                     }
                 });
             }
+
+            const dadosMensais = {!! json_encode($resumoFuncoesMensal) !!};
+
+            // Agrupa dados por mês
+            const meses = [...new Set(dadosMensais.map(i => i.mes))];
+
+            // Soma valores de todas as funções por mês para criar a linha total
+            const totalExercicio = meses.map(m => dadosMensais.filter(i => i.mes == m).reduce((acc, cur) => acc +
+                parseFloat(cur.valor_emissao_exercicio), 0));
+            const totalAnterior = meses.map(m => dadosMensais.filter(i => i.mes == m).reduce((acc, cur) => acc +
+                parseFloat(cur.valor_emissao_anterior), 0));
+
+            new Chart(document.getElementById('chartEvolucaoFuncoes'), {
+                type: 'line',
+                data: {
+                    labels: meses.map(m => m + '/{{ $exercicio }}'),
+                    datasets: [{
+                            label: 'Exercício Atual',
+                            data: totalExercicio,
+                            borderColor: '#3b82f6',
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Exercício Anterior',
+                            data: totalAnterior,
+                            borderColor: '#94a3b8',
+                            borderDash: [5, 5],
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Evolução Mensal das Despesas - Funções'
+                        }
+                    }
+                }
+            });
         });
     </script>
 @endpush

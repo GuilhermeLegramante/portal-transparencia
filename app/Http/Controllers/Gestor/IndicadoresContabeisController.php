@@ -61,6 +61,13 @@ class IndicadoresContabeisController extends Controller
         $resumoRecursos = $this->repo->getResumoPorRecurso($idcliente, $exercicio);
         $resumoFuncoes = $this->repo->getResumoPorFuncao($idcliente, $exercicio);
 
+        // Buscando todos os novos resumos mensalizados
+        $resumoUnidadesMensal = $this->repo->getResumoUnidadesMensal($idcliente, $exercicio);
+        $resumoFuncoesMensal = $this->repo->getResumoFuncoesMensal($idcliente, $exercicio);
+        $resumoSubfuncoesMensal = $this->repo->getResumoSubfuncoesMensal($idcliente, $exercicio);
+        $resumoElementosMensal = $this->repo->getResumoElementosMensal($idcliente, $exercicio);
+        $resumoRecursosMensal = $this->repo->getResumoRecursosMensal($idcliente, $exercicio);
+
         // Dados para o Gráfico de BI: Top 5 Unidades que mais empenharam no ano
         $topUnidades = collect($resumoUnidades)
             ->sortByDesc('valor_empenhado_exercicio')
@@ -88,6 +95,11 @@ class IndicadoresContabeisController extends Controller
             'resumoRecursos',
             'topUnidades',
             'biFuncoes',
+            'resumoUnidadesMensal',
+            'resumoFuncoesMensal',  
+            'resumoSubfuncoesMensal',
+            'resumoElementosMensal',
+            'resumoRecursosMensal'
         ));
     }
 }
