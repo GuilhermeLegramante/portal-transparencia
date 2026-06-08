@@ -72,6 +72,66 @@ class IndicadoresContabeisController extends Controller
             ->sortByDesc('valor_atualizado_exercicio')
             ->values();
 
+        $funcoes = collect($resumoFuncoes);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Maior crescimento
+        |--------------------------------------------------------------------------
+        */
+        $maiorCrescimento = $funcoes->sortByDesc('variacao_gastos')->first();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Maior comprometimento
+        |--------------------------------------------------------------------------
+        */
+        $maisComprometida = $funcoes
+            ->map(function ($item) {
+                $item->percentual_comprometido =
+                    $item->valor_atualizado_exercicio > 0
+                    ? ($item->valor_empenhado_exercicio / $item->valor_atualizado_exercicio) * 100
+                    : 0;
+
+                return $item;
+            })
+            ->sortByDesc('percentual_comprometido')
+            ->first();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Melhor execução financeira
+        |--------------------------------------------------------------------------
+        */
+        $melhorExecucao = $funcoes
+            ->map(function ($item) {
+                $item->indice_execucao =
+                    $item->valor_empenhado_exercicio > 0
+                    ? ($item->valor_pago_exercicio / $item->valor_empenhado_exercicio) * 100
+                    : 0;
+
+                return $item;
+            })
+            ->sortByDesc('indice_execucao')
+            ->first();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Pior execução financeira
+        |--------------------------------------------------------------------------
+        */
+        $piorExecucao = $funcoes
+            ->map(function ($item) {
+                $item->indice_execucao =
+                    $item->valor_empenhado_exercicio > 0
+                    ? ($item->valor_pago_exercicio / $item->valor_empenhado_exercicio) * 100
+                    : 0;
+
+                return $item;
+            })
+            ->sortBy('indice_execucao')
+            ->first();
+
         return view('gestor.indicadores.index', compact(
             'exercicio',
             'resumoAnual',
@@ -87,7 +147,11 @@ class IndicadoresContabeisController extends Controller
             'resumoElementos',
             'resumoRecursos',
             'topUnidades',
-            'biFuncoes'
+            'biFuncoes',
+            'maiorCrescimento',
+            'maisComprometida',
+            'melhorExecucao',
+            'piorExecucao'
         ));
     }
 }
