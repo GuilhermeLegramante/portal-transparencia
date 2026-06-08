@@ -198,6 +198,104 @@
                 </div>
             </div>
 
+            <div class="row g-4 mb-4">
+
+                {{-- ALERTAS --}}
+                <div class="col-lg-4">
+
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+
+                            <h5 class="fw-bold mb-3">
+                                Alertas Executivos
+                            </h5>
+
+                            @if ($pctComprometidoExercicio > 90)
+                                <div class="alert alert-danger py-2 mb-2">
+                                    <strong>Atenção:</strong>
+                                    orçamento comprometido acima de 90%.
+                                </div>
+                            @elseif($pctComprometidoExercicio > 80)
+                                <div class="alert alert-warning py-2 mb-2">
+                                    Orçamento comprometido acima de 80%.
+                                </div>
+                            @else
+                                <div class="alert alert-success py-2 mb-2">
+                                    Comprometimento dentro da normalidade.
+                                </div>
+                            @endif
+
+                            @if ($pctComprometidoExercicio > $pctComprometidoAnterior)
+                                <div class="alert alert-info py-2 mb-0">
+                                    Comprometimento superior ao exercício anterior.
+                                </div>
+                            @endif
+
+                        </div>
+                    </div>
+
+                </div>
+
+                {{-- MAIOR CRESCIMENTO --}}
+                <div class="col-lg-4">
+
+                    @php
+                        $maiorCrescimento = collect($resumoFuncoes)->sortByDesc('variacao_gastos')->first();
+                    @endphp
+
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+
+                            <h5 class="fw-bold mb-3 text-success">
+                                Maior Crescimento
+                            </h5>
+
+                            @if ($maiorCrescimento)
+                                <div class="fw-bold">
+                                    {{ $maiorCrescimento->descricao }}
+                                </div>
+
+                                <div class="display-6 text-success">
+                                    {{ number_format($maiorCrescimento->variacao_gastos, 2, ',', '.') }}%
+                                </div>
+                            @endif
+
+                        </div>
+                    </div>
+
+                </div>
+
+                {{-- MAIOR REDUÇÃO --}}
+                <div class="col-lg-4">
+
+                    @php
+                        $maiorReducao = collect($resumoFuncoes)->sortBy('variacao_gastos')->first();
+                    @endphp
+
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+
+                            <h5 class="fw-bold mb-3 text-danger">
+                                Maior Redução
+                            </h5>
+
+                            @if ($maiorReducao)
+                                <div class="fw-bold">
+                                    {{ $maiorReducao->descricao }}
+                                </div>
+
+                                <div class="display-6 text-danger">
+                                    {{ number_format($maiorReducao->variacao_gastos, 2, ',', '.') }}%
+                                </div>
+                            @endif
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
             {{-- SEÇÃO DE INTAKES & GRÁFICOS DE BI --}}
             <div class="row g-4 mb-4">
                 {{-- Donut Chart: Distribuição de Despesas por Função --}}
@@ -237,6 +335,215 @@
                         <canvas id="chartEvolucaoDespesas"></canvas>
                     </div>
                 </div>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-3 mb-4">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold mb-3">
+                        Top 10 Funções por Volume Empenhado
+                    </h5>
+
+                    @php
+                        $totalEmpenhado = collect($resumoFuncoes)->sum('valor_empenhado_exercicio');
+                    @endphp
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover">
+
+                            <thead>
+                                <tr>
+                                    <th>Função</th>
+                                    <th class="text-end">Empenhado</th>
+                                    <th class="text-end">Participação</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                @foreach (collect($resumoFuncoes)->sortByDesc('valor_empenhado_exercicio')->take(10) as $item)
+                                    <tr>
+
+                                        <td>
+                                            {{ $item->descricao }}
+                                        </td>
+
+                                        <td class="text-end">
+                                            R$
+                                            {{ number_format($item->valor_empenhado_exercicio, 2, ',', '.') }}
+                                        </td>
+
+                                        <td class="text-end fw-bold">
+
+                                            {{ number_format(($item->valor_empenhado_exercicio / max($totalEmpenhado, 1)) * 100, 2, ',', '.') }}%
+
+                                        </td>
+
+                                    </tr>
+                                @endforeach
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="row g-4 mb-4">
+
+                <div class="col-lg-6">
+
+                    <div class="card border-0 shadow-sm h-100">
+
+                        <div class="card-body">
+
+                            <h5 class="fw-bold text-success">
+                                Top 5 Crescimentos
+                            </h5>
+
+                            <table class="table">
+
+                                <thead>
+                                    <tr>
+                                        <th>Função</th>
+                                        <th class="text-end">%</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    @foreach (collect($resumoFuncoes)->sortByDesc('variacao_gastos')->take(5) as $item)
+                                        <tr>
+
+                                            <td>{{ $item->descricao }}</td>
+
+                                            <td class="text-end text-success fw-bold">
+                                                {{ number_format($item->variacao_gastos, 2, ',', '.') }}%
+                                            </td>
+
+                                        </tr>
+                                    @endforeach
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-6">
+
+                    <div class="card border-0 shadow-sm h-100">
+
+                        <div class="card-body">
+
+                            <h5 class="fw-bold text-danger">
+                                Top 5 Reduções
+                            </h5>
+
+                            <table class="table">
+
+                                <thead>
+                                    <tr>
+                                        <th>Função</th>
+                                        <th class="text-end">%</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    @foreach (collect($resumoFuncoes)->sortBy('variacao_gastos')->take(5) as $item)
+                                        <tr>
+
+                                            <td>{{ $item->descricao }}</td>
+
+                                            <td class="text-end text-danger fw-bold">
+                                                {{ number_format($item->variacao_gastos, 2, ',', '.') }}%
+                                            </td>
+
+                                        </tr>
+                                    @endforeach
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-3 mb-4">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold mb-3">
+                        Eficiência de Execução das Unidades
+                    </h5>
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover">
+
+                            <thead>
+                                <tr>
+                                    <th>Unidade</th>
+                                    <th class="text-end">Empenhado</th>
+                                    <th class="text-end">Pago</th>
+                                    <th class="text-end">Execução</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                @foreach (collect($resumoUnidades)->sortByDesc('valor_empenhado_exercicio')->take(10) as $item)
+                                    @php
+                                        $execucao =
+                                            $item->valor_empenhado_exercicio > 0
+                                                ? ($item->valor_pago_exercicio / $item->valor_empenhado_exercicio) * 100
+                                                : 0;
+                                    @endphp
+
+                                    <tr>
+
+                                        <td>{{ $item->descricao }}</td>
+
+                                        <td class="text-end">
+                                            R$
+                                            {{ number_format($item->valor_empenhado_exercicio, 2, ',', '.') }}
+                                        </td>
+
+                                        <td class="text-end">
+                                            R$
+                                            {{ number_format($item->valor_pago_exercicio, 2, ',', '.') }}
+                                        </td>
+
+                                        <td class="text-end fw-bold">
+                                            {{ number_format($execucao, 2, ',', '.') }}%
+                                        </td>
+
+                                    </tr>
+                                @endforeach
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
             </div>
 
 
@@ -430,7 +737,8 @@
                                         <td class="text-end text-secondary">R$
                                             {{ number_format($item->valor_empenhado_anterior ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-dark fw-semibold">R$
-                                            {{ number_format($item->valor_empenhado_exercicio ?? 0, 2, ',', '.') }}</td>
+                                            {{ number_format($item->valor_empenhado_exercicio ?? 0, 2, ',', '.') }}
+                                        </td>
                                         <td class="text-end text-secondary">R$
                                             {{ number_format($item->valor_pago_anterior ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-dark">R$
@@ -517,7 +825,8 @@
                                         <td class="text-end text-secondary">R$
                                             {{ number_format($item->valor_empenhado_anterior ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-dark fw-semibold">R$
-                                            {{ number_format($item->valor_empenhado_exercicio ?? 0, 2, ',', '.') }}</td>
+                                            {{ number_format($item->valor_empenhado_exercicio ?? 0, 2, ',', '.') }}
+                                        </td>
                                         <td class="text-end text-secondary">R$
                                             {{ number_format($item->pagamento_anterior ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-dark">R$
