@@ -139,26 +139,144 @@
                 </div>
             </div>
 
-            @php
-                $graficos = [
-                    'chartUnidades' => $resumoUnidadesMensal,
-                    'chartFuncoes' => $resumoFuncoesMensal,
-                    'chartSubfuncoes' => $resumoSubfuncoesMensal,
-                    'chartElementos' => $resumoElementosMensal,
-                    'chartRecursos' => $resumoRecursosMensal,
-                ];
-            @endphp
 
-            <div class="row">
-                @foreach ($graficos as $id => $dados)
-                    <div class="col-md-6 mb-4">
-                        <div class="card shadow-sm h-100">
-                            <div class="card-body" style="height: 350px;">
-                                <canvas id="{{ $id }}"></canvas>
-                            </div>
+            <div class="row g-4 mb-4">
+
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <h6 class="text-success fw-bold">
+                                <i class="fas fa-arrow-trend-up me-2"></i>
+                                Maior Unidade Executora
+                            </h6>
+
+                            @php
+                                $maiorUnidade = collect($resumoUnidades)
+                                    ->sortByDesc('valor_empenhado_exercicio')
+                                    ->first();
+                            @endphp
+
+                            @if ($maiorUnidade)
+                                <h5 class="mt-3 mb-1">
+                                    {{ $maiorUnidade->descricao }}
+                                </h5>
+
+                                <div class="text-success fw-bold">
+                                    R$ {{ number_format($maiorUnidade->valor_empenhado_exercicio, 2, ',', '.') }}
+                                </div>
+                            @endif
                         </div>
                     </div>
-                @endforeach
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+
+                            <h6 class="text-primary fw-bold">
+                                <i class="fas fa-landmark me-2"></i>
+                                Função com Maior Volume
+                            </h6>
+
+                            @php
+                                $maiorFuncao = collect($resumoFuncoes)->sortByDesc('valor_emissao_exercicio')->first();
+                            @endphp
+
+                            @if ($maiorFuncao)
+                                <h5 class="mt-3 mb-1">
+                                    {{ $maiorFuncao->descricao }}
+                                </h5>
+
+                                <div class="text-primary fw-bold">
+                                    R$ {{ number_format($maiorFuncao->valor_emissao_exercicio, 2, ',', '.') }}
+                                </div>
+                            @endif
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+
+                            <h6 class="text-warning fw-bold">
+                                <i class="fas fa-percent me-2"></i>
+                                Grau de Comprometimento
+                            </h6>
+
+                            <h4 class="fw-bold mt-3">
+                                {{ number_format($pctComprometidoExercicio, 2, ',', '.') }}%
+                            </h4>
+
+                            <small class="text-muted">
+                                Dotação já comprometida no exercício atual
+                            </small>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="card border-0 shadow-sm rounded-3 mb-4 bg-white">
+                <div class="card-body p-4">
+
+                    <h5 class="fw-bold mb-3">
+                        Ranking de Crescimento por Função
+                    </h5>
+
+                    <div class="table-responsive">
+                        <table class="table table-sm align-middle">
+
+                            <thead>
+                                <tr>
+                                    <th>Função</th>
+                                    <th class="text-end">Anterior</th>
+                                    <th class="text-end">Atual</th>
+                                    <th class="text-end">Variação</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                @foreach (collect($resumoFuncoes)->map(function ($item) {
+                $anterior = floatval($item->valor_emissao_anterior);
+
+                $item->variacao = $anterior > 0 ? (($item->valor_emissao_exercicio - $anterior) / $anterior) * 100 : 0;
+
+                return $item;
+            })->sortByDesc('variacao')->take(10) as $item)
+                                    <tr>
+
+                                        <td>
+                                            {{ $item->descricao }}
+                                        </td>
+
+                                        <td class="text-end">
+                                            R$ {{ number_format($item->valor_emissao_anterior, 2, ',', '.') }}
+                                        </td>
+
+                                        <td class="text-end">
+                                            R$ {{ number_format($item->valor_emissao_exercicio, 2, ',', '.') }}
+                                        </td>
+
+                                        <td
+                                            class="text-end fw-bold
+                                {{ $item->variacao >= 0 ? 'text-success' : 'text-danger' }}">
+                                            {{ number_format($item->variacao, 2, ',', '.') }}%
+                                        </td>
+
+                                    </tr>
+                                @endforeach
+
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                </div>
             </div>
 
             {{-- BLOCO DE ABAS DETALHADAS --}}
@@ -548,132 +666,6 @@
                     }
                 });
             }
-        });
-    </script>
-
-    <script>
-        window.charts ??= {};
-
-        function renderSmartChart(canvasId, dados, titulo) {
-
-            const canvas = document.getElementById(canvasId);
-
-            if (!canvas || !dados || dados.length === 0) {
-                console.warn('Sem dados:', canvasId);
-                return;
-            }
-
-            const keys = Object.keys(dados[0]);
-
-            // Procura os campos corretos
-            const campoAtual = keys.find(k =>
-                k.endsWith('_exercicio') &&
-                !k.includes('pago') &&
-                !k.includes('remanejo')
-            );
-
-            const campoAnterior = keys.find(k =>
-                k.endsWith('_anterior') &&
-                !k.includes('pago') &&
-                !k.includes('remanejo')
-            );
-
-            if (!campoAtual || !campoAnterior) {
-                console.error(
-                    `Campos não encontrados para ${canvasId}`,
-                    keys
-                );
-                return;
-            }
-
-            // Meses fixos para todos os gráficos
-            const meses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-
-            const serieAtual = meses.map(m => {
-                return dados
-                    .filter(i => Number(i.mes) === m)
-                    .reduce((total, item) => {
-                        return total + parseFloat(item[campoAtual] || 0);
-                    }, 0);
-            });
-
-            const serieAnterior = meses.map(m => {
-                return dados
-                    .filter(i => Number(i.mes) === m)
-                    .reduce((total, item) => {
-                        return total + parseFloat(item[campoAnterior] || 0);
-                    }, 0);
-            });
-
-            console.log('==========================');
-            console.log(canvasId);
-            console.log('Campo Atual:', campoAtual);
-            console.log('Campo Anterior:', campoAnterior);
-            console.log('Atual:', serieAtual);
-            console.log('Anterior:', serieAnterior);
-
-            // Remove gráfico antigo
-            if (window.charts[canvasId]) {
-                window.charts[canvasId].destroy();
-            }
-
-            window.charts[canvasId] = new Chart(canvas, {
-                type: 'line',
-                data: {
-                    labels: [
-                        'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
-                        'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'
-                    ],
-                    datasets: [{
-                            label: 'Exercício Atual',
-                            data: serieAtual,
-                            borderColor: '#2563eb',
-                            backgroundColor: 'rgba(37,99,235,0.10)',
-                            fill: true,
-                            tension: 0.3,
-                        },
-                        {
-                            label: 'Exercício Anterior',
-                            data: serieAnterior,
-                            borderColor: '#94a3b8',
-                            borderDash: [5, 5],
-                            fill: false,
-                            tension: 0.3,
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false
-                    },
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: titulo
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-
-            @foreach ($graficos as $id => $dados)
-                renderSmartChart(
-                    '{{ $id }}',
-                    @json($dados),
-                    '{{ str_replace('chart', '', $id) }}'
-                );
-            @endforeach
-
         });
     </script>
 @endpush
