@@ -30,7 +30,7 @@
                 exercício selecionado.
             </div>
         @else
-            {{-- CARDS SUPERIORES: Principais Indicadores de Comprometimento --}}
+            {{-- CARDS SUPERIORES: Principais Indicadores de Comprometimento (Compactos e Responsivos) --}}
             <div class="row g-3 mb-4">
                 {{-- Card Exercício Atual --}}
                 <div class="col-md-6 col-xl-3">
@@ -72,7 +72,7 @@
                     </div>
                 </div>
 
-                {{-- Total Atualizado Disponível --}}
+                {{-- Total Atualizado Disponível (Corrigido para não quebrar) --}}
                 <div class="col-md-6 col-xl-3">
                     <div class="card h-100 border-0 shadow-sm rounded-3 bg-white dark-bg-card">
                         <div class="card-body p-3 p-lg-4">
@@ -91,7 +91,7 @@
                     </div>
                 </div>
 
-                {{-- Total Pago --}}
+                {{-- Total Pago (Corrigido para não quebrar) --}}
                 <div class="col-md-6 col-xl-3">
                     <div class="card h-100 border-0 shadow-sm rounded-3 bg-white dark-bg-card">
                         <div class="card-body p-3 p-lg-4">
@@ -114,7 +114,7 @@
             {{-- BLOCO GRÁFICO: Evolução Mensal da Despesa Empenhada --}}
             <div class="card border-0 shadow-sm rounded-3 mb-4 bg-white dark-bg-card">
                 <div class="card-body p-4">
-                    <h5 class="fw-bold text-dark dark-text-white mb-3">Evolução de Empenhos Mensais (Histórico Compartativo)
+                    <h5 class="fw-bold text-dark dark-text-white mb-3">Evolução de Empenhos Mensais (Histórico Comparativo)
                     </h5>
                     <div style="position: relative; height:320px; width:100%">
                         <canvas id="chartEvolucaoDespesas"></canvas>
@@ -122,7 +122,7 @@
                 </div>
             </div>
 
-            {{-- BLOCO TABELA: Detalhamento Anualizado Geral (100% Corrigido para Modo Claro e Escuro) --}}
+            {{-- BLOCO TABELA: Detalhamento Anualizado Geral --}}
             <div class="dark-table-wrapper">
                 <x-tabela-transparencia titulo="Quadro Comparativo Consolidado das Despesas" :colunas="[
                     ['label' => 'Métrica Contábil', 'align' => 'text-start'],
@@ -138,7 +138,7 @@
                         <td class="text-end text-dark dark-text-white fw-semibold">R$
                             {{ number_format($resumoAnual->valor_orcado_exercicio, 2, ',', '.') }}</td>
                         <td
-                            class="text-end {{ $resumoAnual->valor_orcado_exercicio - $resumoAnual->valor_orcado_anterior >= 0 ? 'text-success' : 'text-danger' }}">
+                            class="text-end fw-bold {{ $resumoAnual->valor_orcado_exercicio - $resumoAnual->valor_orcado_anterior >= 0 ? 'text-success' : 'text-danger' }}">
                             R$
                             {{ number_format($resumoAnual->valor_orcado_exercicio - $resumoAnual->valor_orcado_anterior, 2, ',', '.') }}
                         </td>
@@ -151,7 +151,7 @@
                             {{ number_format($resumoAnual->valor_remanejado_anterior, 2, ',', '.') }}</td>
                         <td class="text-end text-dark dark-text-white fw-semibold">R$
                             {{ number_format($resumoAnual->valor_remanejado_exercicio, 2, ',', '.') }}</td>
-                        <td class="text-end dark-text-white">
+                        <td class="text-end fw-bold dark-text-white">
                             R$
                             {{ number_format($resumoAnual->valor_remanejado_exercicio - $resumoAnual->valor_remanejado_anterior, 2, ',', '.') }}
                         </td>
@@ -179,7 +179,7 @@
                         <td class="text-end text-dark dark-text-white fw-semibold">R$
                             {{ number_format($resumoAnual->valor_empenhado_exercicio, 2, ',', '.') }}</td>
                         <td
-                            class="text-end {{ $resumoAnual->valor_empenhado_exercicio - $resumoAnual->valor_empenhado_anterior >= 0 ? 'text-success' : 'text-danger' }}">
+                            class="text-end fw-bold {{ $resumoAnual->valor_empenhado_exercicio - $resumoAnual->valor_empenhado_anterior >= 0 ? 'text-success' : 'text-danger' }}">
                             R$
                             {{ number_format($resumoAnual->valor_empenhado_exercicio - $resumoAnual->valor_empenhado_anterior, 2, ',', '.') }}
                         </td>
@@ -193,7 +193,7 @@
                         <td class="text-end text-dark dark-text-white fw-semibold">R$
                             {{ number_format($resumoAnual->valor_pago_exercicio, 2, ',', '.') }}</td>
                         <td
-                            class="text-end {{ $resumoAnual->valor_pago_exercicio - $resumoAnual->valor_pago_anterior >= 0 ? 'text-success' : 'text-danger' }}">
+                            class="text-end fw-bold {{ $resumoAnual->valor_pago_exercicio - $resumoAnual->valor_pago_anterior >= 0 ? 'text-success' : 'text-danger' }}">
                             R$
                             {{ number_format($resumoAnual->valor_pago_exercicio - $resumoAnual->valor_pago_anterior, 2, ',', '.') }}
                         </td>
@@ -212,7 +212,7 @@
             background-color: rgba(59, 130, 246, 0.03) !important;
         }
 
-        /* Regras customizadas para injeção de Modo Escuro Dinâmico */
+        /* MODO ESCURO 1: Usuários que usam o tema do sistema operacional escuro */
         @media (prefers-color-scheme: dark) {
 
             body,
@@ -255,7 +255,6 @@
                 background-color: rgba(96, 165, 251, 0.1) !important;
             }
 
-            /* Ajuste de contraste para textos de tabelas injetadas */
             .dark-table-wrapper table {
                 color: #f3f4f6 !important;
             }
@@ -266,9 +265,10 @@
             }
         }
 
-        /* Caso seu sistema use uma classe nativa no HTML (<html class="dark">) para o Dark Mode */
+        /* MODO ESCURO 2: Sistemas que injetam a classe <html class="dark"> ativa via JS */
         html.dark .dark-mode-container {
             background-color: #111827 !important;
+            color: #f3f4f6;
         }
 
         html.dark .dark-bg-card {
@@ -308,6 +308,11 @@
         html.dark .dark-table-wrapper table {
             color: #f3f4f6 !important;
         }
+
+        html.dark .dark-table-wrapper thead th {
+            background-color: #374151 !important;
+            color: #ffffff !important;
+        }
     </style>
 @endsection
 
@@ -317,10 +322,11 @@
         document.addEventListener('DOMContentLoaded', function() {
             const ctx = document.getElementById('chartEvolucaoDespesas');
             if (ctx) {
-                // Detecta se a interface está em modo escuro para adaptar as cores das fontes e grids do gráfico
-                const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches || document
-                    .documentElement.classList.contains('dark');
+                // Identifica se a interface está em Modo Escuro
+                const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches ||
+                    document.documentElement.classList.contains('dark');
 
+                // Define as cores do gráfico baseando-se no tema atual
                 const textColor = isDarkMode ? '#9ca3af' : '#4b5563';
                 const gridColor = isDarkMode ? '#374151' : '#e5e7eb';
 
@@ -394,7 +400,7 @@
                 });
             }
 
-            // Inicializa Tooltips do Bootstrap se houverem
+            // Inicializa Tooltips do Bootstrap
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
             var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl)
