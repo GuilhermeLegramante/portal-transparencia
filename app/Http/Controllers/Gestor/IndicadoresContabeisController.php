@@ -68,6 +68,8 @@ class IndicadoresContabeisController extends Controller
         $resumoElementosMensal = $this->repo->getResumoElementosMensal($idcliente, $exercicio);
         $resumoRecursosMensal = $this->repo->getResumoRecursosMensal($idcliente, $exercicio);
 
+        dd($resumoUnidadesMensal[0], $resumoFuncoesMensal[0]);
+        
         // Dados para o Gráfico de BI: Top 5 Unidades que mais empenharam no ano
         $topUnidades = collect($resumoUnidades)
             ->sortByDesc('valor_empenhado_exercicio')
@@ -96,7 +98,7 @@ class IndicadoresContabeisController extends Controller
             'topUnidades',
             'biFuncoes',
             'resumoUnidadesMensal',
-            'resumoFuncoesMensal',  
+            'resumoFuncoesMensal',
             'resumoSubfuncoesMensal',
             'resumoElementosMensal',
             'resumoRecursosMensal'
