@@ -189,6 +189,14 @@
         .table-active-row {
             background-color: rgba(59, 130, 246, 0.03) !important;
         }
+
+        .bg-light-gray {
+            background-color: #f8f9fa;
+        }
+
+        body.dark-mode .bg-light-gray {
+            background-color: #0f172a !important;
+        }
     </style>
 @endsection
 
