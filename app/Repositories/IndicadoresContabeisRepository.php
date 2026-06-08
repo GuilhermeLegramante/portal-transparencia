@@ -406,21 +406,8 @@ class IndicadoresContabeisRepository
             SELECT 
                 subfuncao.codigo AS codigo,
                 subfuncao.nome AS descricao,
-                (SELECT SUM(loa.total)
-                     FROM ctbcontadespesaloa loa
-                    WHERE loa.iddespesa = despesa.id
-                      AND loa.idcliente = despesa.idcliente
-                      AND despesa.exercicio = :exe
-                    GROUP BY loa.iddespesa, loa.idcliente), 0.00)
-                  AS valor_orcado_exercicio,
-                (SELECT IFNULL(
-                  (SELECT SUM(loa.total)
-                     FROM ctbcontadespesaloa loa
-                    WHERE loa.iddespesa = despesa.id
-                      AND loa.idcliente = despesa.idcliente
-                      AND despesa.exercicio = :exe - 1
-                    GROUP BY loa.iddespesa, loa.idcliente), 0.00)
-                  AS valor_orcado_anterior,
+                (SELECT IFNULL(SUM(loa.total), 0.00) FROM ctbcontadespesaloa loa WHERE loa.iddespesa = despesa.id AND loa.idcliente = despesa.idcliente AND despesa.exercicio = :exe1) AS valor_orcado_exercicio,
+                (SELECT IFNULL(SUM(loa.total), 0.00) FROM ctbcontadespesaloa loa WHERE loa.iddespesa = despesa.id AND loa.idcliente = despesa.idcliente AND despesa.exercicio = :ant1) AS valor_orcado_anterior,
                 (SELECT IFNULL(SUM(mov.emissao - mov.anular), 0.00) FROM ctbempenhomovimento mov JOIN ctbempenho emp ON emp.id = mov.idempenho WHERE emp.iddespesa = despesa.id AND emp.exercicio = :exe2) AS valor_empenhado_exercicio,
                 (SELECT IFNULL(SUM(mov.emissao - mov.anular), 0.00) FROM ctbempenhomovimento mov JOIN ctbempenho emp ON emp.id = mov.idempenho WHERE emp.iddespesa = despesa.id AND emp.exercicio = :ant2) AS valor_empenhado_anterior,
                 (SELECT IFNULL(SUM(mov.pagamento), 0.00) FROM ctbempenhomovimento mov JOIN ctbempenho emp ON emp.id = mov.idempenho WHERE emp.iddespesa = despesa.id AND emp.exercicio = :exe3) AS valor_pago_exercicio,
