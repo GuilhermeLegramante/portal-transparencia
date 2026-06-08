@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\File;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Gestor\IndicadoresContabeisController;
 
 // Rotas de Autenticação Customizadas
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -343,3 +344,9 @@ Route::get('storage/{path}', function ($path) {
 
     return $response;
 })->where('path', '.*'); // Aceita barras '/' na URL capturada
+
+Route::middleware(['auth'])->prefix('gestor')->name('gestor.')->group(function () {
+    // Painel Principal de Indicadores Contábeis
+    Route::get('indicadores-contabeis', [IndicadoresContabeisController::class, 'index'])
+        ->name('indicadores.index');
+});

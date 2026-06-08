@@ -481,26 +481,47 @@
             {{-- NOVO ELEMENTO: Área de Login / Controle de Sessão à Direita --}}
             <div class="d-flex align-items-center mt-3 mt-lg-0">
                 @auth
-                    {{-- Usuário Autenticado --}}
+                    {{-- Usuário Autenticado - Dropdown Centralizado Unificado --}}
                     <div class="dropdown">
                         <button
                             class="btn btn-outline-secondary dropdown-toggle rounded-3 px-3 d-flex align-items-center gap-2"
                             type="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-user-circle fa-lg"></i>
+                            <i class="fas fa-user-circle fa-lg text-secondary"></i>
                             <span class="small fw-bold">{{ Auth::user()->name ?? 'Painel' }}</span>
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" aria-labelledby="userMenu">
+
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 p-2 rounded-3"
+                            aria-labelledby="userMenu" style="min-width: 210px;">
+                            {{-- Seção Administrativa Geral --}}
+                            <div class="dropdown-header text-uppercase text-muted small fw-bold px-3 pt-1 pb-1"
+                                style="font-size: 0.7rem;">Administração</div>
                             <li>
-                                <a class="dropdown-item d-flex align-items-center"
+                                <a class="dropdown-item d-flex align-items-center rounded-2 py-2"
                                     href="{{ route('publicacoes.create') }}">
                                     <i class="fas fa-file-upload me-2 text-success opacity-75"></i> Nova Publicação
                                 </a>
                             </li>
+
+                            {{-- Seção Executiva / Gestão (Nova) --}}
                             <li>
-                                <hr class="dropdown-divider">
+                                <hr class="dropdown-divider my-2">
+                            </li>
+                            <div class="dropdown-header text-uppercase text-muted small fw-bold px-3 pb-1"
+                                style="font-size: 0.7rem;">Painel do Gestor</div>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center rounded-2 py-2 {{ request()->routeIs('gestor.indicadores.*') ? 'active fw-bold' : '' }}"
+                                    href="{{ route('gestor.indicadores.index') }}">
+                                    <i class="fas fa-chart-bar me-2 text-primary opacity-75"></i> Indicadores Contábeis
+                                </a>
+                            </li>
+
+                            {{-- Ação de Logout --}}
+                            <li>
+                                <hr class="dropdown-divider my-2">
                             </li>
                             <li>
-                                <a class="dropdown-item text-danger d-flex align-items-center" href="#"
+                                <a class="dropdown-item text-danger d-flex align-items-center rounded-2 py-2"
+                                    href="#"
                                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                     <i class="fas fa-sign-out-alt me-2 opacity-75"></i> Sair do Painel
                                 </a>
@@ -514,12 +535,13 @@
                     {{-- Usuário Visitante (Link de Acesso Administrativo) --}}
                     <a href="{{ route('login') }}"
                         class="btn btn-primary rounded-3 px-3 py-1.5 fw-bold shadow-sm d-inline-flex align-items-center gap-1.5 text-nowrap"
-                        style="font-size: 0.825rem; height: 36px;">
+                        style="font-size: 0.825rem; height: 36px; line-height: 1;">
                         <i class="fas fa-lock" style="font-size: 0.75rem;"></i>
-                        <span>&nbsp; Acesso Restrito</span>
+                        <span>Acesso Restrito</span>
                     </a>
                 @endauth
             </div>
         </div>
+    </div>
     </div>
 </nav>
