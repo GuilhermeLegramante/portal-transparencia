@@ -8,7 +8,8 @@
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
             <div>
                 <h1 class="h3 fw-bold text-dark mb-1">Indicadores Contábeis Estratégicos</h1>
-                <p class="text-muted small mb-0">Acompanhamento executivo de despesas e limites consolidados do município.
+                <p class="text-muted small mb-0">Acompanhamento executivo de despesas e limites consolidados
+                    do município.
                 </p>
             </div>
             <div class="bg-white p-2 rounded-3 shadow-sm border" style="min-width: 190px;">
@@ -161,19 +162,19 @@
                                 @foreach ($resumoUnidades as $item)
                                     <tr class="align-middle">
                                         <td class="text-start font-monospace small text-dark fw-semibold">
-                                            {{ $item->codigo }}</td>
+                                            {{ $item->codigo ?? '--' }}</td>
                                         <td class="text-start text-dark text-truncate" style="max-width: 240px;">
-                                            {{ $item->descricao }}</td>
+                                            {{ $item->descricao ?? '--' }}</td>
                                         <td class="text-center text-secondary">
-                                            {{ str_pad($item->mes, 2, '0', STR_PAD_LEFT) }}</td>
+                                            {{ isset($item->mes) ? str_pad($item->mes, 2, '0', STR_PAD_LEFT) : '--' }}</td>
                                         <td class="text-end text-secondary">R$
-                                            {{ number_format($item->valor_empenhado_anterior, 2, ',', '.') }}</td>
+                                            {{ number_format($item->valor_empenhado_anterior ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-dark fw-semibold">R$
-                                            {{ number_format($item->valor_empenhado_exercicio, 2, ',', '.') }}</td>
+                                            {{ number_format($item->valor_empenhado_exercicio ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-secondary">R$
-                                            {{ number_format($item->valor_pago_anterior, 2, ',', '.') }}</td>
+                                            {{ number_format($item->valor_pago_anterior ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-dark">R$
-                                            {{ number_format($item->valor_pago_exercicio, 2, ',', '.') }}</td>
+                                            {{ number_format($item->valor_pago_exercicio ?? 0, 2, ',', '.') }}</td>
                                     </tr>
                                 @endforeach
                             </x-tabela-transparencia>
@@ -193,19 +194,19 @@
                                 @foreach ($resumoFuncoes as $item)
                                     <tr class="align-middle">
                                         <td class="text-start font-monospace small text-dark fw-semibold">
-                                            {{ $item->codigo }}</td>
+                                            {{ $item->codigo ?? '--' }}</td>
                                         <td class="text-start text-dark text-truncate" style="max-width: 240px;">
-                                            {{ $item->descricao }}</td>
+                                            {{ $item->descricao ?? '--' }}</td>
                                         <td class="text-center text-secondary">
-                                            {{ str_pad($item->mes, 2, '0', STR_PAD_LEFT) }}</td>
+                                            {{ isset($item->mes) ? str_pad($item->mes, 2, '0', STR_PAD_LEFT) : '--' }}</td>
                                         <td class="text-end text-secondary">R$
-                                            {{ number_format($item->valor_emissao_anterior, 2, ',', '.') }}</td>
+                                            {{ number_format($item->valor_emissao_anterior ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-dark fw-semibold">R$
-                                            {{ number_format($item->valor_emissao_exercicio, 2, ',', '.') }}</td>
+                                            {{ number_format($item->valor_emissao_exercicio ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-secondary">R$
-                                            {{ number_format($item->valor_pago_anterior, 2, ',', '.') }}</td>
+                                            {{ number_format($item->valor_pago_anterior ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-dark">R$
-                                            {{ number_format($item->valor_pago_exercicio, 2, ',', '.') }}</td>
+                                            {{ number_format($item->valor_pago_exercicio ?? 0, 2, ',', '.') }}</td>
                                     </tr>
                                 @endforeach
                             </x-tabela-transparencia>
@@ -225,19 +226,19 @@
                                 @foreach ($resumoSubfuncoes as $item)
                                     <tr class="align-middle">
                                         <td class="text-start font-monospace small text-dark fw-semibold">
-                                            {{ $item->codigo }}</td>
+                                            {{ $item->codigo ?? '--' }}</td>
                                         <td class="text-start text-dark text-truncate" style="max-width: 240px;">
-                                            {{ $item->descricao }}</td>
+                                            {{ $item->descricao ?? '--' }}</td>
                                         <td class="text-center text-secondary">
-                                            {{ str_pad($item->mes, 2, '0', STR_PAD_LEFT) }}</td>
+                                            {{ isset($item->mes) ? str_pad($item->mes, 2, '0', STR_PAD_LEFT) : '--' }}</td>
                                         <td class="text-end text-secondary">R$
-                                            {{ number_format($item->valor_emissao_anterior, 2, ',', '.') }}</td>
+                                            {{ number_format($item->valor_emissao_anterior ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-dark fw-semibold">R$
-                                            {{ number_format($item->valor_emissao_exercicio, 2, ',', '.') }}</td>
+                                            {{ number_format($item->valor_emissao_exercicio ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-secondary">R$
-                                            {{ number_format($item->valor_pago_anterior, 2, ',', '.') }}</td>
+                                            {{ number_format($item->valor_pago_anterior ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-dark">R$
-                                            {{ number_format($item->valor_pago_exercicio, 2, ',', '.') }}</td>
+                                            {{ number_format($item->valor_pago_exercicio ?? 0, 2, ',', '.') }}</td>
                                     </tr>
                                 @endforeach
                             </x-tabela-transparencia>
@@ -257,19 +258,19 @@
                                 @foreach ($resumoElementos as $item)
                                     <tr class="align-middle">
                                         <td class="text-start font-monospace small text-dark fw-semibold">
-                                            {{ $item->estrutural }}</td>
+                                            {{ $item->estrutural ?? '--' }}</td>
                                         <td class="text-start text-dark text-truncate" style="max-width: 240px;">
-                                            {{ $item->descricao }}</td>
+                                            {{ $item->descricao ?? '--' }}</td>
                                         <td class="text-center text-secondary">
-                                            {{ str_pad($item->mes, 2, '0', STR_PAD_LEFT) }}</td>
+                                            {{ isset($item->mes) ? str_pad($item->mes, 2, '0', STR_PAD_LEFT) : '--' }}</td>
                                         <td class="text-end text-secondary">R$
-                                            {{ number_format($item->valor_emissao_anterior, 2, ',', '.') }}</td>
+                                            {{ number_format($item->valor_emissao_anterior ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-dark fw-semibold">R$
-                                            {{ number_format($item->valor_emissao_exercicio, 2, ',', '.') }}</td>
+                                            {{ number_format($item->valor_emissao_exercicio ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-secondary">R$
-                                            {{ number_format($item->valor_pago_anterior, 2, ',', '.') }}</td>
+                                            {{ number_format($item->valor_pago_anterior ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-dark">R$
-                                            {{ number_format($item->valor_pago_exercicio, 2, ',', '.') }}</td>
+                                            {{ number_format($item->valor_pago_exercicio ?? 0, 2, ',', '.') }}</td>
                                     </tr>
                                 @endforeach
                             </x-tabela-transparencia>
@@ -289,19 +290,19 @@
                                 @foreach ($resumoRecursos as $item)
                                     <tr class="align-middle">
                                         <td class="text-start font-monospace small text-dark fw-semibold">
-                                            {{ $item->codigo }}</td>
+                                            {{ $item->codigo ?? '--' }}</td>
                                         <td class="text-start text-dark text-truncate" style="max-width: 240px;">
-                                            {{ $item->descricao }}</td>
+                                            {{ $item->descricao ?? '--' }}</td>
                                         <td class="text-center text-secondary">
-                                            {{ str_pad($item->mes, 2, '0', STR_PAD_LEFT) }}</td>
+                                            {{ isset($item->mes) ? str_pad($item->mes, 2, '0', STR_PAD_LEFT) : '--' }}</td>
                                         <td class="text-end text-secondary">R$
-                                            {{ number_format($item->valor_emissao_anterior, 2, ',', '.') }}</td>
+                                            {{ number_format($item->valor_emissao_anterior ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-dark fw-semibold">R$
-                                            {{ number_format($item->valor_emissao_exercicio, 2, ',', '.') }}</td>
+                                            {{ number_format($item->valor_emissao_exercicio ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-secondary">R$
-                                            {{ number_format($item->valor_pago_anterior, 2, ',', '.') }}</td>
+                                            {{ number_format($item->valor_pago_anterior ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-dark">R$
-                                            {{ number_format($item->valor_pago_exercicio, 2, ',', '.') }}</td>
+                                            {{ number_format($item->valor_pago_exercicio ?? 0, 2, ',', '.') }}</td>
                                     </tr>
                                 @endforeach
                             </x-tabela-transparencia>
@@ -378,12 +379,12 @@
             background: var(--bs-body-bg);
         }
 
-        .table-active-row {
-            background-color: rgba(59, 130, 246, 0.03) !important;
-        }
-
         .bg-light-gray {
             background-color: #f8f9fa;
+        }
+
+        .table-active-row {
+            background-color: rgba(59, 130, 246, 0.03) !important;
         }
 
         body.dark-mode .bg-light-gray {
@@ -404,6 +405,7 @@
     </style>
 @endsection
 
+{{-- Código JavaScript isolado e corrigido --}}
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
@@ -434,7 +436,7 @@
                                 pointRadius: 4,
                                 pointBackgroundColor: '#3b82f6'
                             }
-                        ]
+                        ] // O colchete dos datasets fecha aqui corretamente
                     },
                     options: {
                         responsive: true,
