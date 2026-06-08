@@ -463,7 +463,7 @@
                     data: {
                         labels: dadosFuncoes.map(i => i.descricao),
                         datasets: [{
-                            data: dadosFuncoes.map(i => i.valor_emissao_exercicio),
+                            data: dadosFuncoes.map(i => i.valor_atualizado_exercicio),
                             backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6',
                                 '#ec4899', '#64748b'
                             ]

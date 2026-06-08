@@ -69,10 +69,8 @@ class IndicadoresContabeisController extends Controller
 
         // Dados para o Gráfico de BI: Maiores Funções (Composição do Orçamento)
         $biFuncoes = collect($resumoFuncoes)
-            ->sortByDesc('valor_emissao_exercicio')
+            ->sortByDesc('valor_atualizado_exercicio')
             ->values();
-
-        dd($biFuncoes);
 
         return view('gestor.indicadores.index', compact(
             'exercicio',
