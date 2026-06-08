@@ -1,23 +1,22 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container-fluid px-lg-5 py-4 custom-dashboard-wrapper">
+    <div class="container-fluid px-lg-5 py-4 bg-light-gray min-vh-100">
         <x-breadcrumb :items="$breadcrumb" />
 
-        {{-- Cabeçalho da Página --}}
-        <div
-            class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3 page-header-block">
+        {{-- Cabeçalho da Página com seletor de Exercício --}}
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
             <div>
-                <h1 class="h3 fw-bold mb-1 text-heading">Indicadores Contábeis Estratégicos</h1>
-                <p class="small mb-0 text-muted">Acompanhamento executivo de despesas e limites consolidados do município.
+                <h1 class="h3 fw-bold text-dark mb-1">Indicadores Contábeis Estratégicos</h1>
+                <p class="text-muted small mb-0">Acompanhamento executivo de despesas e limites consolidados do município.
                 </p>
             </div>
-            <div class="exercise-selector-card p-2 rounded-3 shadow-sm border" style="min-width: 190px;">
+            <div class="bg-white p-2 rounded-3 shadow-sm border" style="min-width: 190px;">
                 <form method="GET" action="{{ route('gestor.indicadores.index') }}"
                     class="d-flex align-items-center justify-content-end gap-2 w-100">
-                    <label class="small fw-bold text-uppercase mb-0 text-nowrap px-1 text-secondary">Exercício:</label>
+                    <label class="small fw-bold text-secondary text-uppercase mb-0 text-nowrap px-1">Exercício:</label>
                     <input type="number" name="exercicio"
-                        class="form-control border-0 fw-bold rounded-3 py-1 px-2 text-center selector-input text-primary"
+                        class="form-control border-0 bg-light fw-bold text-primary rounded-3 py-1 px-2 text-center"
                         value="{{ $exercicio }}" min="2000" max="{{ date('Y') + 1 }}" style="width: 90px;"
                         onchange="this.form.submit()">
                 </form>
@@ -30,73 +29,65 @@
                 exercício selecionado.
             </div>
         @else
-            {{-- CARDS SUPERIORES --}}
+            {{-- CARDS SUPERIORES: Principais Indicadores de Comprometimento --}}
+           {{-- CARDS SUPERIORES: Principais Indicadores de Comprometimento (Versão Compacta e Responsiva) --}}
             <div class="row g-3 mb-4">
                 {{-- Card Exercício Atual --}}
                 <div class="col-md-6 col-xl-3">
-                    <div class="card h-100 border-0 shadow-sm rounded-3 custom-card border-start border-primary border-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-3 bg-white border-start border-primary border-4">
                         <div class="card-body p-3 p-lg-4">
-                            <span class="text-uppercase small d-block fw-bold mb-1 text-nowrap text-muted">Comprometido
-                                ({{ $exercicio }})</span>
-                            <h2 class="fw-bold mb-2 fs-3 text-heading">
-                                {{ number_format($pctComprometidoExercicio, 2, ',', '.') }}%</h2>
-                            <div class="progress rounded-pill mb-2 custom-progress-bg" style="height: 6px;">
-                                <div class="progress-bar bg-primary" role="progressbar"
-                                    style="width: {{ $pctComprometidoExercicio }}%"></div>
+                            <span class="text-muted text-uppercase small d-block fw-bold mb-1 text-nowrap">Comprometido ({{ $exercicio }})</span>
+                            <h2 class="fw-bold text-dark mb-2 fs-3">{{ number_format($pctComprometidoExercicio, 2, ',', '.') }}%</h2>
+                            <div class="progress rounded-pill mb-2" style="height: 6px;">
+                                <div class="progress-bar bg-primary" role="progressbar" style="width: {{ $pctComprometidoExercicio }}%"></div>
                             </div>
-                            <small class="text-nowrap d-block text-truncate text-muted">Despesa Empenhada / Total</small>
+                            <small class="text-muted text-nowrap d-block text-truncate">Despesa Empenhada / Total</small>
                         </div>
                     </div>
                 </div>
 
                 {{-- Card Exercício Anterior --}}
                 <div class="col-md-6 col-xl-3">
-                    <div class="card h-100 border-0 shadow-sm rounded-3 custom-card border-start border-secondary border-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-3 bg-white border-start border-secondary border-4">
                         <div class="card-body p-3 p-lg-4">
-                            <span class="text-uppercase small d-block fw-bold mb-1 text-nowrap text-muted">Comprometido
-                                ({{ $exercicio - 1 }})</span>
-                            <h2 class="fw-bold mb-2 fs-3 text-secondary">
-                                {{ number_format($pctComprometidoAnterior, 2, ',', '.') }}%</h2>
-                            <div class="progress rounded-pill mb-2 custom-progress-bg" style="height: 6px;">
-                                <div class="progress-bar bg-secondary" role="progressbar"
-                                    style="width: {{ $pctComprometidoAnterior }}%"></div>
+                            <span class="text-muted text-uppercase small d-block fw-bold mb-1 text-nowrap">Comprometido ({{ $exercicio - 1 }})</span>
+                            <h2 class="fw-bold text-secondary mb-2 fs-3">{{ number_format($pctComprometidoAnterior, 2, ',', '.') }}%</h2>
+                            <div class="progress rounded-pill mb-2" style="height: 6px;">
+                                <div class="progress-bar bg-secondary" role="progressbar" style="width: {{ $pctComprometidoAnterior }}%"></div>
                             </div>
-                            <small class="text-nowrap d-block text-truncate text-muted">Histórico do período
-                                anterior</small>
+                            <small class="text-muted text-nowrap d-block text-truncate">Histórico do período anterior</small>
                         </div>
                     </div>
                 </div>
 
-                {{-- Total Atualizado Disponível --}}
+                {{-- Total Atualizado Disponível (CORRIGIDO PARA NÃO QUEBRAR) --}}
                 <div class="col-md-6 col-xl-3">
-                    <div class="card h-100 border-0 shadow-sm rounded-3 custom-card">
+                    <div class="card h-100 border-0 shadow-sm rounded-3 bg-white">
                         <div class="card-body p-3 p-lg-4">
-                            <span class="text-uppercase small d-block fw-bold mb-1 text-nowrap text-muted">Orçamento
-                                Atualizado</span>
-                            <h3 class="fw-bold text-success mb-1 text-nowrap text-truncate fs-4 fs-xxl-3"
-                                title="R$ {{ number_format($resumoAnual->valor_atualizado_exercicio, 2, ',', '.') }}"
+                            <span class="text-muted text-uppercase small d-block fw-bold mb-1 text-nowrap">Orçamento Atualizado</span>
+                            <h3 class="fw-bold text-success mb-1 text-nowrap text-truncate fs-4 fs-xxl-3" 
+                                title="R$ {{ number_format($resumoAnual->valor_atualizado_exercicio, 2, ',', '.') }}" 
                                 data-bs-toggle="tooltip">
                                 R$ {{ number_format($resumoAnual->valor_atualizado_exercicio, 2, ',', '.') }}
                             </h3>
-                            <small class="d-block text-nowrap text-truncate mt-2 text-muted">
+                            <small class="text-muted d-block text-nowrap text-truncate mt-2">
                                 <i class="fas fa-arrow-up text-success me-1"></i> Fixado + Remanejamentos
                             </small>
                         </div>
                     </div>
                 </div>
 
-                {{-- Total Pago --}}
+                {{-- Total Pago (CORRIGIDO PARA NÃO QUEBRAR) --}}
                 <div class="col-md-6 col-xl-3">
-                    <div class="card h-100 border-0 shadow-sm rounded-3 custom-card">
+                    <div class="card h-100 border-0 shadow-sm rounded-3 bg-white">
                         <div class="card-body p-3 p-lg-4">
-                            <span class="text-uppercase small d-block fw-bold mb-1 text-nowrap text-muted">Total Pago
-                                Líquido</span>
+                            <span class="text-muted text-uppercase small d-block fw-bold mb-1 text-nowrap">Total Pago Líquido</span>
                             <h3 class="fw-bold text-info mb-1 text-nowrap text-truncate fs-4 fs-xxl-3"
-                                title="R$ {{ number_format($resumoAnual->valor_pago_exercicio, 2, ',', '.') }}"
+                                title="R$ {{ number_format($resumoAnual->valor_pago_exercicio, 2, ',', '.') }}" 
                                 data-bs-toggle="tooltip">
                                 R$ {{ number_format($resumoAnual->valor_pago_exercicio, 2, ',', '.') }}
                             </h3>
-                            <small class="d-block text-nowrap text-truncate mt-2 text-muted">
+                            <small class="text-muted d-block text-nowrap text-truncate mt-2">
                                 <i class="fas fa-check-double text-info me-1"></i> Desembolso real
                             </small>
                         </div>
@@ -104,204 +95,97 @@
                 </div>
             </div>
 
-            {{-- BLOCO GRÁFICO --}}
-            <div class="card border-0 shadow-sm rounded-3 mb-4 custom-card">
+            {{-- BLOCO GRÁFICO: Evolução Mensal da Despesa Empenhada --}}
+            <div class="card border-0 shadow-sm rounded-3 mb-4 bg-white">
                 <div class="card-body p-4">
-                    <h5 class="fw-bold mb-3 text-heading">Evolução de Empenhos Mensais (Histórico Comparativo)</h5>
+                    <h5 class="fw-bold text-dark mb-3">Evolução de Empenhos Mensais (Histórico Comparativo)</h5>
                     <div style="position: relative; height:320px; width:100%">
                         <canvas id="chartEvolucaoDespesas"></canvas>
                     </div>
                 </div>
             </div>
 
-            {{-- BLOCO TABELA --}}
-            <div class="custom-table-container card border-0 shadow-sm rounded-3 p-3 custom-card">
-                <x-tabela-transparencia titulo="Quadro Comparativo Consolidado das Despesas" :colunas="[
-                    ['label' => 'Métrica Contábil', 'align' => 'text-start'],
-                    ['label' => 'Exercício Anterior (' . ($exercicio - 1) . ')', 'align' => 'text-end'],
-                    ['label' => 'Exercício Atual (' . $exercicio . ')', 'align' => 'text-end'],
-                    ['label' => 'Variação Absoluta', 'align' => 'text-end'],
-                ]">
-                    {{-- 1. Valor Orçado --}}
-                    <tr class="align-middle">
-                        <td class="text-start fw-bold text-heading">Valor Orçado (LOA)</td>
-                        <td class="text-end text-muted">R$
-                            {{ number_format($resumoAnual->valor_orcado_anterior, 2, ',', '.') }}</td>
-                        <td class="text-end text-body fw-semibold">R$
-                            {{ number_format($resumoAnual->valor_orcado_exercicio, 2, ',', '.') }}</td>
-                        <td
-                            class="text-end fw-bold {{ $resumoAnual->valor_orcado_exercicio - $resumoAnual->valor_orcado_anterior >= 0 ? 'text-success' : 'text-danger' }}">
-                            R$
-                            {{ number_format($resumoAnual->valor_orcado_exercicio - $resumoAnual->valor_orcado_anterior, 2, ',', '.') }}
-                        </td>
-                    </tr>
-
-                    {{-- 2. Remanejamentos --}}
-                    <tr class="align-middle">
-                        <td class="text-start fw-bold text-heading">Remanejamentos/Créditos Adicionais</td>
-                        <td class="text-end text-muted">R$
-                            {{ number_format($resumoAnual->valor_remanejado_anterior, 2, ',', '.') }}</td>
-                        <td class="text-end text-body fw-semibold">R$
-                            {{ number_format($resumoAnual->valor_remanejado_exercicio, 2, ',', '.') }}</td>
-                        <td class="text-end fw-bold text-body">
-                            R$
-                            {{ number_format($resumoAnual->valor_remanejado_exercicio - $resumoAnual->valor_remanejado_anterior, 2, ',', '.') }}
-                        </td>
-                    </tr>
-
-                    {{-- 3. Valor Total Atualizado --}}
-                    <tr class="align-middle table-primary-light-row">
-                        <td class="text-start fw-bold text-primary">Valor Total Atualizado</td>
-                        <td class="text-end text-muted fw-bold">R$
-                            {{ number_format($resumoAnual->valor_atualizado_anterior, 2, ',', '.') }}</td>
-                        <td class="text-end text-primary fw-bold">R$
-                            {{ number_format($resumoAnual->valor_atualizado_exercicio, 2, ',', '.') }}</td>
-                        <td
-                            class="text-end fw-bold {{ $resumoAnual->valor_atualizado_exercicio - $resumoAnual->valor_atualizado_anterior >= 0 ? 'text-success' : 'text-danger' }}">
-                            R$
-                            {{ number_format($resumoAnual->valor_atualizado_exercicio - $resumoAnual->valor_atualizado_anterior, 2, ',', '.') }}
-                        </td>
-                    </tr>
-
-                    {{-- 4. Valor Empenhado Líquido --}}
-                    <tr class="align-middle">
-                        <td class="text-start fw-bold text-heading">Valor Empenhado Líquido</td>
-                        <td class="text-end text-muted">R$
-                            {{ number_format($resumoAnual->valor_empenhado_anterior, 2, ',', '.') }}</td>
-                        <td class="text-end text-body fw-semibold">R$
-                            {{ number_format($resumoAnual->valor_empenhado_exercicio, 2, ',', '.') }}</td>
-                        <td
-                            class="text-end fw-bold {{ $resumoAnual->valor_empenhado_exercicio - $resumoAnual->valor_empenhado_anterior >= 0 ? 'text-success' : 'text-danger' }}">
-                            R$
-                            {{ number_format($resumoAnual->valor_empenhado_exercicio - $resumoAnual->valor_empenhado_anterior, 2, ',', '.') }}
-                        </td>
-                    </tr>
-
-                    {{-- 5. Valor Pago Líquido --}}
-                    <tr class="align-middle">
-                        <td class="text-start fw-bold text-heading">Valor Pago Líquido</td>
-                        <td class="text-end text-muted">R$
-                            {{ number_format($resumoAnual->valor_pago_anterior, 2, ',', '.') }}</td>
-                        <td class="text-end text-body fw-semibold">R$
-                            {{ number_format($resumoAnual->valor_pago_exercicio, 2, ',', '.') }}</td>
-                        <td
-                            class="text-end fw-bold {{ $resumoAnual->valor_pago_exercicio - $resumoAnual->valor_pago_anterior >= 0 ? 'text-success' : 'text-danger' }}">
-                            R$
-                            {{ number_format($resumoAnual->valor_pago_exercicio - $resumoAnual->valor_pago_anterior, 2, ',', '.') }}
-                        </td>
-                    </tr>
-                </x-tabela-transparencia>
-            </div>
+            {{-- BLOCO TABELA: Detalhamento Anualizado Geral --}}
+            <x-tabela-transparencia titulo="Quadro Comparativo Consolidado das Despesas" :colunas="[
+                ['label' => 'Métrica Contábil', 'align' => 'text-start'],
+                ['label' => 'Exercício Anterior (' . ($exercicio - 1) . ')', 'align' => 'text-end'],
+                ['label' => 'Exercício Atual (' . $exercicio . ')', 'align' => 'text-end'],
+                ['label' => 'Variação Absoluta', 'align' => 'text-end'],
+            ]">
+                <tr class="align-middle">
+                    <td class="text-start fw-bold text-dark">Valor Orçado (LOA)</td>
+                    <td class="text-end text-secondary">R$
+                        {{ number_format($resumoAnual->valor_orcado_anterior, 2, ',', '.') }}</td>
+                    <td class="text-end text-dark fw-semibold">R$
+                        {{ number_format($resumoAnual->valor_orcado_exercicio, 2, ',', '.') }}</td>
+                    <td
+                        class="text-end {{ $resumoAnual->valor_orcado_exercicio - $resumoAnual->valor_orcado_anterior >= 0 ? 'text-success' : 'text-danger' }}">
+                        R$
+                        {{ number_format($resumoAnual->valor_orcado_exercicio - $resumoAnual->valor_orcado_anterior, 2, ',', '.') }}
+                    </td>
+                </tr>
+                <tr class="align-middle">
+                    <td class="text-start fw-bold text-dark">Remanejamentos/Créditos Adicionais</td>
+                    <td class="text-end text-secondary">R$
+                        {{ number_format($resumoAnual->valor_remanejado_anterior, 2, ',', '.') }}</td>
+                    <td class="text-end text-dark fw-semibold">R$
+                        {{ number_format($resumoAnual->valor_remanejado_exercicio, 2, ',', '.') }}</td>
+                    <td class="text-end">R$
+                        {{ number_format($resumoAnual->valor_remanejado_exercicio - $resumoAnual->valor_remanejado_anterior, 2, ',', '.') }}
+                    </td>
+                </tr>
+                <tr class="align-middle table-active-row">
+                    <td class="text-start fw-bold text-primary">Valor Total Atualizado</td>
+                    <td class="text-end text-secondary fw-bold">R$
+                        {{ number_format($resumoAnual->valor_atualizado_anterior, 2, ',', '.') }}</td>
+                    <td class="text-end text-primary fw-bold">R$
+                        {{ number_format($resumoAnual->valor_atualizado_exercicio, 2, ',', '.') }}</td>
+                    <td class="text-end fw-bold">R$
+                        {{ number_format($resumoAnual->valor_atualizado_exercicio - $resumoAnual->valor_atualizado_anterior, 2, ',', '.') }}
+                    </td>
+                </tr>
+                <tr class="align-middle">
+                    <td class="text-start fw-bold text-dark">Valor Empenhado Líquido</td>
+                    <td class="text-end text-secondary">R$
+                        {{ number_format($resumoAnual->valor_empenhado_anterior, 2, ',', '.') }}</td>
+                    <td class="text-end text-dark fw-semibold">R$
+                        {{ number_format($resumoAnual->valor_empenhado_exercicio, 2, ',', '.') }}</td>
+                    <td class="text-end">R$
+                        {{ number_format($resumoAnual->valor_empenhado_exercicio - $resumoAnual->valor_empenhado_anterior, 2, ',', '.') }}
+                    </td>
+                </tr>
+                <tr class="align-middle">
+                    <td class="text-start fw-bold text-dark">Valor Pago Líquido</td>
+                    <td class="text-end text-secondary">R$
+                        {{ number_format($resumoAnual->valor_pago_anterior, 2, ',', '.') }}</td>
+                    <td class="text-end text-dark fw-semibold">R$
+                        {{ number_format($resumoAnual->valor_pago_exercicio, 2, ',', '.') }}</td>
+                    <td class="text-end">R$
+                        {{ number_format($resumoAnual->valor_pago_exercicio - $resumoAnual->valor_pago_anterior, 2, ',', '.') }}
+                    </td>
+                </tr>
+            </x-tabela-transparencia>
         @endif
     </div>
 
     <style>
-        /* ==========================================================================
-               ESTILIZAÇÃO ESTRUTURAL (Independente de Tema - Deixa as classes cuidarem da cor)
-               ========================================================================== */
-        .custom-dashboard-wrapper {
-            min-height: 100vh;
-        }
-
-        /* Tema Claro Nível Componente */
-        .exercise-selector-card {
-            background-color: #ffffff;
-            border-color: #dee2e6;
-        }
-
-        .selector-input {
+        .bg-light-gray {
             background-color: #f8f9fa;
         }
 
-        .custom-card {
-            background-color: #ffffff;
-        }
-
-        .custom-progress-bg {
-            background-color: #e9ecef;
-        }
-
-        .table-primary-light-row {
-            background-color: rgba(13, 110, 253, 0.05);
-        }
-
-        /* Cores de Texto Semânticas Próprias para Modo Claro */
-        .text-heading {
-            color: #1a202c;
-        }
-
-        /* ==========================================================================
-               MODO ESCURO - Sobrescreve apenas as superfícies necessárias (.dark ou mídia query)
-               ========================================================================== */
-        @media (prefers-color-scheme: dark) {
-            .exercise-selector-card {
-                background-color: #1e293b !important;
-                border-color: #334155 !important;
-            }
-
-            .selector-input {
-                background-color: #334155 !important;
-                color: #f8fafc !important;
-            }
-
-            .custom-card {
-                background-color: #1e293b !important;
-            }
-
-            .custom-progress-bg {
-                background-color: #334155 !important;
-            }
-
-            .table-primary-light-row {
-                background-color: rgba(13, 110, 253, 0.15);
-            }
-
-            .text-heading {
-                color: #f8fafc !important;
-            }
-        }
-
-        /* Mantém o suporte caso seu app chaveie adicionando a classe "dark" na tag HTML */
-        html.dark .exercise-selector-card {
-            background-color: #1e293b !important;
-            border-color: #334155 !important;
-        }
-
-        html.dark .selector-input {
-            background-color: #334155 !important;
-            color: #f8fafc !important;
-        }
-
-        html.dark .custom-card {
-            background-color: #1e293b !important;
-        }
-
-        html.dark .custom-progress-bg {
-            background-color: #334155 !important;
-        }
-
-        html.dark .table-primary-light-row {
-            background-color: rgba(13, 110, 253, 0.15);
-        }
-
-        html.dark .text-heading {
-            color: #f8fafc !important;
+        .table-active-row {
+            background-color: rgba(59, 130, 246, 0.03) !important;
         }
     </style>
 @endsection
 
+{{-- Código JavaScript isolado e corrigido --}}
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const ctx = document.getElementById('chartEvolucaoDespesas');
             if (ctx) {
-                const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches ||
-                    document.documentElement.classList.contains('dark');
-
-                const textColor = isDarkMode ? '#94a3b8' : '#64748b';
-                const gridColor = isDarkMode ? '#334155' : '#e2e8f0';
-
                 new Chart(ctx, {
                     type: 'line',
                     data: {
@@ -309,7 +193,7 @@
                         datasets: [{
                                 label: 'Empenhado Anterior (' + {!! $exercicio - 1 !!} + ')',
                                 data: {!! json_encode($empenhadoAnterior) !!},
-                                borderColor: isDarkMode ? '#64748b' : '#94a3b8',
+                                borderColor: '#94a3b8',
                                 backgroundColor: 'transparent',
                                 borderWidth: 2,
                                 borderDash: [5, 5],
@@ -318,16 +202,15 @@
                             {
                                 label: 'Empenhado Exercício (' + {!! $exercicio !!} + ')',
                                 data: {!! json_encode($empenhadoExercicio) !!},
-                                borderColor: isDarkMode ? '#38bdf8' : '#0284c7',
-                                backgroundColor: isDarkMode ? 'rgba(56, 189, 248, 0.12)' :
-                                    'rgba(2, 132, 199, 0.06)',
+                                borderColor: '#3b82f6',
+                                backgroundColor: 'rgba(59, 130, 246, 0.08)',
                                 fill: true,
                                 borderWidth: 3,
                                 tension: 0.3,
                                 pointRadius: 4,
-                                pointBackgroundColor: isDarkMode ? '#38bdf8' : '#0284c7'
+                                pointBackgroundColor: '#3b82f6'
                             }
-                        ]
+                        ] // O colchete dos datasets fecha aqui corretamente
                     },
                     options: {
                         responsive: true,
@@ -337,7 +220,6 @@
                                 position: 'top',
                                 labels: {
                                     boxWidth: 15,
-                                    color: textColor,
                                     font: {
                                         weight: 'bold'
                                     }
@@ -345,21 +227,9 @@
                             }
                         },
                         scales: {
-                            x: {
-                                grid: {
-                                    color: gridColor
-                                },
-                                ticks: {
-                                    color: textColor
-                                }
-                            },
                             y: {
                                 beginAtZero: true,
-                                grid: {
-                                    color: gridColor
-                                },
                                 ticks: {
-                                    color: textColor,
                                     callback: function(value) {
                                         return 'R$ ' + value.toLocaleString('pt-BR', {
                                             minimumFractionDigits: 0
@@ -371,11 +241,6 @@
                     }
                 });
             }
-
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-            var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl)
-            });
         });
     </script>
 @endpush
