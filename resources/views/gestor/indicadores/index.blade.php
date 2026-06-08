@@ -277,8 +277,8 @@
                             <x-tabela-transparencia titulo="" :colunas="[
                                 ['label' => 'Estrutural', 'align' => 'text-start'],
                                 ['label' => 'Descrição', 'align' => 'text-start'],
-                                ['label' => 'Emissão Anterior', 'align' => 'text-end'],
-                                ['label' => 'Emissão Exercício', 'align' => 'text-end'],
+                                ['label' => 'Empenhado Anterior', 'align' => 'text-end'],
+                                ['label' => 'Empenhado Exercício', 'align' => 'text-end'],
                                 ['label' => 'Pago Anterior', 'align' => 'text-end'],
                                 ['label' => 'Pago Exercício', 'align' => 'text-end'],
                             ]">
@@ -289,13 +289,13 @@
                                         <td class="text-start text-dark text-truncate" style="max-width: 240px;">
                                             {{ $item->descricao ?? '--' }}</td>
                                         <td class="text-end text-secondary">R$
-                                            {{ number_format($item->valor_emissao_anterior ?? 0, 2, ',', '.') }}</td>
+                                            {{ number_format($item->valor_empenhado_anterior ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-dark fw-semibold">R$
-                                            {{ number_format($item->valor_emissao_exercicio ?? 0, 2, ',', '.') }}</td>
+                                            {{ number_format($item->valor_empenhado_exercicio ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-secondary">R$
-                                            {{ number_format($item->valor_pago_anterior ?? 0, 2, ',', '.') }}</td>
+                                            {{ number_format($item->pagamento_anterior ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-dark">R$
-                                            {{ number_format($item->valor_pago_exercicio ?? 0, 2, ',', '.') }}</td>
+                                            {{ number_format($item->pagamento_exercicio ?? 0, 2, ',', '.') }}</td>
                                     </tr>
                                 @endforeach
                             </x-tabela-transparencia>
