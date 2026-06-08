@@ -37,14 +37,15 @@ class IndicadoresContabeisController extends Controller
             }
         }
 
-        // Mapeamento de meses para nomenclatura legível no gráfico
+        // Mapeamento de meses para nomenclatura legível
         $nomesMeses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
         $labelsGrafico = [];
         $empenhadoExercicio = [];
         $empenhadoAnterior = [];
 
         foreach ($dadosMensais as $reg) {
-            $labelsGrafico[] = $nomesMeses[$reg->mes - 1] ?? "Mês " . $reg->mes;
+            $mesNum = isset($reg->mes) ? (int)$reg->mes : 1;
+            $labelsGrafico[] = $nomesMeses[$mesNum - 1] ?? "Mês " . $mesNum;
             $empenhadoExercicio[] = (float) $reg->valor_empenhado_exercicio;
             $empenhadoAnterior[] = (float) $reg->valor_empenhado_anterior;
         }
@@ -64,11 +65,13 @@ class IndicadoresContabeisController extends Controller
         // --- CONSOLIDAÇÃO DOS DADOS PARA AS ABAS DA VIEW ---
 
         // 1. Unidades Orçamentárias
-        $resumoUnidades = $unidadesMensal->groupBy('codigo')->map(function ($items) {
+        $resumoUnidades = $unidadesMensal->groupBy('codigo')->map(function ($items) use ($nomesMeses) {
+            $primeiro = $items->first();
+            $mesNum = isset($primeiro->mes) ? (int)$primeiro->mes : null;
             return (object) [
-                'codigo' => $items->first()->codigo,
-                'mes' => $items->first()->mes,
-                'descricao' => $items->first()->descricao,
+                'codigo' => $primeiro->codigo ?? '--',
+                'mes' => $mesNum ? ($nomesMeses[$mesNum - 1] ?? str_pad($mesNum, 2, '0', STR_PAD_LEFT)) : '--',
+                'descricao' => $primeiro->descricao ?? '--',
                 'valor_empenhado_anterior' => $items->sum('valor_empenhado_anterior'),
                 'valor_empenhado_exercicio' => $items->sum('valor_empenhado_exercicio'),
                 'valor_pago_anterior' => $items->sum('valor_pago_anterior'),
@@ -77,11 +80,13 @@ class IndicadoresContabeisController extends Controller
         })->values();
 
         // 2. Funções
-        $resumoFuncoes = $funcoesMensal->groupBy('codigo')->map(function ($items) {
+        $resumoFuncoes = $funcoesMensal->groupBy('codigo')->map(function ($items) use ($nomesMeses) {
+            $primeiro = $items->first();
+            $mesNum = isset($primeiro->mes) ? (int)$primeiro->mes : null;
             return (object) [
-                'codigo' => $items->first()->codigo,
-                'mes' => $items->first()->mes,
-                'descricao' => $items->first()->descricao,
+                'codigo' => $primeiro->codigo ?? '--',
+                'mes' => $mesNum ? ($nomesMeses[$mesNum - 1] ?? str_pad($mesNum, 2, '0', STR_PAD_LEFT)) : '--',
+                'descricao' => $primeiro->descricao ?? '--',
                 'valor_emissao_anterior' => $items->sum('valor_emissao_anterior'),
                 'valor_emissao_exercicio' => $items->sum('valor_emissao_exercicio'),
                 'valor_pago_anterior' => $items->sum('valor_pago_anterior'),
@@ -90,11 +95,13 @@ class IndicadoresContabeisController extends Controller
         })->values();
 
         // 3. Subfunções
-        $resumoSubfuncoes = $subfuncoesMensal->groupBy('codigo')->map(function ($items) {
+        $resumoSubfuncoes = $subfuncoesMensal->groupBy('codigo')->map(function ($items) use ($nomesMeses) {
+            $primeiro = $items->first();
+            $mesNum = isset($primeiro->mes) ? (int)$primeiro->mes : null;
             return (object) [
-                'codigo' => $items->first()->codigo,
-                'mes' => $items->first()->mes,
-                'descricao' => $items->first()->descricao,
+                'codigo' => $primeiro->codigo ?? '--',
+                'mes' => $mesNum ? ($nomesMeses[$mesNum - 1] ?? str_pad($mesNum, 2, '0', STR_PAD_LEFT)) : '--',
+                'descricao' => $primeiro->descricao ?? '--',
                 'valor_emissao_anterior' => $items->sum('valor_emissao_anterior'),
                 'valor_emissao_exercicio' => $items->sum('valor_emissao_exercicio'),
                 'valor_pago_anterior' => $items->sum('valor_pago_anterior'),
@@ -103,11 +110,13 @@ class IndicadoresContabeisController extends Controller
         })->values();
 
         // 4. Elementos de Despesa
-        $resumoElementos = $elementosMensal->groupBy('estrutural')->map(function ($items) {
+        $resumoElementos = $elementosMensal->groupBy('estrutural')->map(function ($items) use ($nomesMeses) {
+            $primeiro = $items->first();
+            $mesNum = isset($primeiro->mes) ? (int)$primeiro->mes : null;
             return (object) [
-                'estrutural' => $items->first()->estrutural,
-                'mes' => $items->first()->mes,
-                'descricao' => $items->first()->descricao,
+                'estrutural' => $primeiro->estrutural ?? '--',
+                'mes' => $mesNum ? ($nomesMeses[$mesNum - 1] ?? str_pad($mesNum, 2, '0', STR_PAD_LEFT)) : '--',
+                'descricao' => $primeiro->descricao ?? '--',
                 'valor_emissao_anterior' => $items->sum('valor_emissao_anterior'),
                 'valor_emissao_exercicio' => $items->sum('valor_emissao_exercicio'),
                 'valor_pago_anterior' => $items->sum('valor_pago_anterior'),
@@ -116,11 +125,13 @@ class IndicadoresContabeisController extends Controller
         })->values();
 
         // 5. Recursos Vinculados
-        $resumoRecursos = $recursosMensal->groupBy('codigo')->map(function ($items) {
+        $resumoRecursos = $recursosMensal->groupBy('codigo')->map(function ($items) use ($nomesMeses) {
+            $primeiro = $items->first();
+            $mesNum = isset($primeiro->mes) ? (int)$primeiro->mes : null;
             return (object) [
-                'codigo' => $items->first()->codigo,
-                'mes' => $items->first()->mes,
-                'descricao' => $items->first()->descricao,
+                'codigo' => $primeiro->codigo ?? '--',
+                'mes' => $mesNum ? ($nomesMeses[$mesNum - 1] ?? str_pad($mesNum, 2, '0', STR_PAD_LEFT)) : '--',
+                'descricao' => $primeiro->descricao ?? '--',
                 'valor_emissao_anterior' => $items->sum('valor_emissao_anterior'),
                 'valor_emissao_exercicio' => $items->sum('valor_emissao_exercicio'),
                 'valor_pago_anterior' => $items->sum('valor_pago_anterior'),
