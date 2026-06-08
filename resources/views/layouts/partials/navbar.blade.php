@@ -537,7 +537,7 @@
                         class="btn btn-primary rounded-3 px-3 py-1.5 fw-bold shadow-sm d-inline-flex align-items-center gap-1.5 text-nowrap"
                         style="font-size: 0.825rem; height: 36px; line-height: 1;">
                         <i class="fas fa-lock" style="font-size: 0.75rem;"></i>
-                        <span>Acesso Restrito</span>
+                        <span>&nbsp;Acesso Restrito</span>
                     </a>
                 @endauth
             </div>
