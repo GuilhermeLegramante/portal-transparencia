@@ -122,7 +122,7 @@
                 </div>
             </div>
 
-            {{-- BLOCO TABELA: Detalhamento Anualizado Geral (Corrigido) --}}
+            {{-- BLOCO TABELA: Detalhamento Anualizado Geral (100% Corrigido para Modo Claro e Escuro) --}}
             <div class="dark-table-wrapper">
                 <x-tabela-transparencia titulo="Quadro Comparativo Consolidado das Despesas" :colunas="[
                     ['label' => 'Métrica Contábil', 'align' => 'text-start'],
@@ -164,7 +164,8 @@
                             {{ number_format($resumoAnual->valor_atualizado_anterior, 2, ',', '.') }}</td>
                         <td class="text-end text-primary dark-text-primary fw-bold">R$
                             {{ number_format($resumoAnual->valor_atualizado_exercicio, 2, ',', '.') }}</td>
-                        <td class="text-end fw-bold dark-text-white">
+                        <td
+                            class="text-end fw-bold {{ $resumoAnual->valor_atualizado_exercicio - $resumoAnual->valor_atualizado_anterior >= 0 ? 'text-success' : 'text-danger' }}">
                             R$
                             {{ number_format($resumoAnual->valor_atualizado_exercicio - $resumoAnual->valor_atualizado_anterior, 2, ',', '.') }}
                         </td>
@@ -177,7 +178,8 @@
                             {{ number_format($resumoAnual->valor_empenhado_anterior, 2, ',', '.') }}</td>
                         <td class="text-end text-dark dark-text-white fw-semibold">R$
                             {{ number_format($resumoAnual->valor_empenhado_exercicio, 2, ',', '.') }}</td>
-                        <td class="text-end dark-text-white">
+                        <td
+                            class="text-end {{ $resumoAnual->valor_empenhado_exercicio - $resumoAnual->valor_empenhado_anterior >= 0 ? 'text-success' : 'text-danger' }}">
                             R$
                             {{ number_format($resumoAnual->valor_empenhado_exercicio - $resumoAnual->valor_empenhado_anterior, 2, ',', '.') }}
                         </td>
@@ -190,7 +192,8 @@
                             {{ number_format($resumoAnual->valor_pago_anterior, 2, ',', '.') }}</td>
                         <td class="text-end text-dark dark-text-white fw-semibold">R$
                             {{ number_format($resumoAnual->valor_pago_exercicio, 2, ',', '.') }}</td>
-                        <td class="text-end dark-text-white">
+                        <td
+                            class="text-end {{ $resumoAnual->valor_pago_exercicio - $resumoAnual->valor_pago_anterior >= 0 ? 'text-success' : 'text-danger' }}">
                             R$
                             {{ number_format($resumoAnual->valor_pago_exercicio - $resumoAnual->valor_pago_anterior, 2, ',', '.') }}
                         </td>
