@@ -151,6 +151,13 @@ class IndicadoresContabeisController extends Controller
             ];
         })->values();
 
+
+        $dadosUnidade = $this->repo->getResumoPorUnidade($idcliente, $exercicio);
+        $resumoRecursos = $this->repo->getResumoPorRecurso($idcliente, $exercicio);
+        $resumoElementos = $this->repo->getResumoPorElemento($idcliente, $exercicio);
+        $resumoSubfuncoes = $this->repo->getResumoPorSubfuncao($idcliente, $exercicio);
+        $resumoFuncoes = $this->repo->getResumoPorFuncao($idcliente, $exercicio);
+
         return view('gestor.indicadores.index', compact(
             'exercicio',
             'resumoAnual',
@@ -165,8 +172,13 @@ class IndicadoresContabeisController extends Controller
             'resumoSubfuncoes',
             'resumoElementos',
             'resumoRecursos',
-            'topUnidades', // <-- NOVO
-            'biFuncoes'    // <-- NOVO
+            'topUnidades',
+            'biFuncoes',
+            'dadosUnidade',
+            'resumoRecursos',
+            'resumoElementos',
+            'resumoSubfuncoes',
+            'resumoFuncoes'
         ));
     }
 }

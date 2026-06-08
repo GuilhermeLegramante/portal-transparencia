@@ -264,4 +264,209 @@ class IndicadoresContabeisRepository
 
       return DB::select($sql, [$exercicio, $exercicio, $exercicio, $exercicio, $idCliente, $exercicio, $exercicio]);
    }
+
+   /**
+    * Obtém o resumo de despesas consolidado por unidade orçamentária.
+    * * @param int $idCliente
+    * @param int $exercicio
+    * @return array
+    */
+   public function getResumoPorUnidade(int $idCliente, int $exercicio): array
+   {
+      // Utilizamos o select para executar a query com os parâmetros vinculados
+      return DB::select("
+        SELECT 
+            CONCAT(orgao.codigo, '.', unidade.codigo) AS codigo,
+            unidade.nome AS descricao,
+            SUM(IF(empenho.exercicio = :ant, movimento.emissao - movimento.anular, 0.00)) AS valor_empenhado_anterior,
+            SUM(IF(empenho.exercicio = :exe, movimento.emissao - movimento.anular, 0.00)) AS valor_empenhado_exercicio,
+            SUM(IF(empenho.exercicio = :ant, movimento.pagamento, 0.00)) AS valor_pago_anterior,
+            SUM(IF(empenho.exercicio = :exe, movimento.pagamento, 0.00)) AS valor_pago_exercicio
+        FROM ctbempenhomovimento movimento
+        INNER JOIN ctbempenho empenho 
+            ON movimento.idempenho = empenho.id AND movimento.idcliente = empenho.idcliente
+        INNER JOIN ctbcontadespesa despesa 
+            ON empenho.iddespesa = despesa.id AND empenho.idcliente = despesa.idcliente
+        INNER JOIN ctbunidadeorcamentaria unidade 
+            ON despesa.idunidadeorcamentaria = unidade.id AND despesa.idcliente = unidade.idcliente
+        INNER JOIN ctborgao orgao 
+            ON unidade.idorgao = orgao.id AND unidade.idcliente = orgao.idcliente
+        WHERE movimento.idcliente = :id
+          AND empenho.exercicio IN (:ant, :exe)
+        GROUP BY orgao.codigo, unidade.codigo, unidade.nome
+        ORDER BY CAST(orgao.codigo AS UNSIGNED), CAST(unidade.codigo AS UNSIGNED)
+    ", [
+         'id'  => $idCliente,
+         'ant' => $exercicio - 1,
+         'exe' => $exercicio
+      ]);
+   }
+
+   /**
+    * Retorna o resumo consolidado por Recurso Vinculado com cálculo de variação.
+    */
+   public function getResumoPorRecurso(int $idCliente, int $exercicio): array
+   {
+      $anoAnterior = $exercicio - 1;
+
+      return DB::select("
+        SELECT query.*,
+               IFNULL(((1 - (query.valor_empenhado_exercicio / NULLIF(query.valor_empenhado_anterior, 0))) * 100) * -1, 0.00) AS variacao_empenhado,
+               IFNULL(((1 - (query.valor_pago_exercicio / NULLIF(query.valor_pago_anterior, 0))) * 100) * -1, 0.00) AS variacao_pago
+        FROM (
+            SELECT 
+                recurso.codigo AS codigo,
+                recurso.nome AS descricao,
+                IFNULL(SUM(IF(empenho.exercicio = :ant, movimento.emissao - movimento.anular, 0.00)), 0.00) AS valor_empenhado_anterior,
+                IFNULL(SUM(IF(empenho.exercicio = :exe, movimento.emissao - movimento.anular, 0.00)), 0.00) AS valor_empenhado_exercicio,
+                IFNULL(SUM(IF(empenho.exercicio = :ant, movimento.pagamento, 0.00)), 0.00) AS valor_pago_anterior,
+                IFNULL(SUM(IF(empenho.exercicio = :exe, movimento.pagamento, 0.00)), 0.00) AS valor_pago_exercicio
+            FROM ctbempenhomovimento movimento
+            INNER JOIN ctbempenho empenho 
+                ON movimento.idempenho = empenho.id AND movimento.idcliente = empenho.idcliente
+            INNER JOIN ctbrecursovinculado recurso 
+                ON empenho.idrecurso = recurso.id AND empenho.idcliente = recurso.idcliente
+            WHERE movimento.idcliente = :id
+              AND empenho.exercicio IN (:ant, :exe)
+            GROUP BY recurso.codigo, recurso.nome
+        ) query
+        ORDER BY query.codigo
+    ", [
+         'id'  => $idCliente,
+         'ant' => $anoAnterior,
+         'exe' => $exercicio
+      ]);
+   }
+
+   /**
+    * Retorna o resumo consolidado por Elemento de Despesa.
+    */
+   public function getResumoPorElemento(int $idCliente, int $exercicio): array
+   {
+      $anoAnterior = $exercicio - 1;
+
+      return DB::select("
+        SELECT 
+            query.*,
+            (query.empenhado_exercicio - query.empenhado_anterior) AS diferenca,
+            IFNULL(((1 - (query.empenhado_exercicio / NULLIF(query.empenhado_anterior, 0))) * 100) * -1, 0.00) AS variacao
+        FROM (
+            SELECT 
+                elemento.estrutural AS estrutural,
+                elemento.nome AS descricao,
+                SUM(IF(empenho.exercicio = :ant, movimento.emissao - movimento.anular, 0.00)) AS empenhado_anterior,
+                SUM(IF(empenho.exercicio = :exe, movimento.emissao - movimento.anular, 0.00)) AS empenhado_exercicio,
+                SUM(IF(empenho.exercicio = :ant, movimento.pagamento, 0.00)) AS pagamento_anterior,
+                SUM(IF(empenho.exercicio = :exe, movimento.pagamento, 0.00)) AS pagamento_exercicio
+            FROM ctbempenhomovimento movimento
+            INNER JOIN ctbempenho empenho 
+                ON empenho.id = movimento.idempenho AND empenho.idcliente = movimento.idcliente
+            INNER JOIN ctbcontadespesa despesa 
+                ON despesa.id = empenho.iddespesa AND despesa.idcliente = despesa.idcliente
+            INNER JOIN ctbelemento elemento 
+                ON elemento.id = despesa.idelemento AND elemento.idcliente = despesa.idcliente
+            WHERE movimento.idcliente = :id
+              AND empenho.exercicio IN (:ant, :exe)
+            GROUP BY elemento.estrutural, elemento.nome
+        ) query
+        ORDER BY query.estrutural
+    ", [
+         'id'  => $idCliente,
+         'ant' => $anoAnterior,
+         'exe' => $exercicio
+      ]);
+   }
+
+   /**
+    * Retorna o resumo consolidado por Subfunção com cálculos de variação.
+    */
+   public function getResumoPorSubfuncao(int $idCliente, int $exercicio): array
+   {
+      $anoAnterior = $exercicio - 1;
+
+      return DB::select("
+        SELECT 
+            query.codigo,
+            query.descricao,
+            SUM(query.valor_orcado_anterior + query.valor_remanejo_anterior) AS valor_atualizado_anterior,
+            SUM(query.valor_orcado_exercicio + query.valor_remanejo_exercicio) AS valor_atualizado_exercicio,
+            IFNULL(((1 - (SUM(query.valor_orcado_exercicio + query.valor_remanejo_exercicio) / 
+                NULLIF(SUM(query.valor_orcado_anterior + query.valor_remanejo_anterior), 0))) * 100) * -1, 0.00) AS variacao_atualizado,
+            SUM(query.valor_empenhado_anterior) AS valor_empenhado_anterior,
+            SUM(query.valor_empenhado_exercicio) AS valor_empenhado_exercicio,
+            IFNULL(((1 - (SUM(query.valor_empenhado_exercicio) / 
+                NULLIF(SUM(query.valor_empenhado_anterior), 0))) * 100) * -1, 0.00) AS variacao_gastos,
+            SUM(query.valor_pago_anterior) AS valor_pago_anterior,
+            SUM(query.valor_pago_exercicio) AS valor_pago_exercicio
+        FROM (
+            SELECT 
+                subfuncao.codigo AS codigo,
+                subfuncao.nome AS descricao,
+                /* Cálculos baseados em subqueries para loa, movimento e remanejo conforme sua estrutura */
+                (SELECT IFNULL(SUM(loa.total), 0.00) FROM ctbcontadespesaloa loa WHERE loa.iddespesa = despesa.id AND loa.exercicio = :exe) AS valor_orcado_exercicio,
+                (SELECT IFNULL(SUM(loa.total), 0.00) FROM ctbcontadespesaloa loa WHERE loa.iddespesa = despesa.id AND loa.exercicio = :ant) AS valor_orcado_anterior,
+                (SELECT IFNULL(SUM(mov.emissao - mov.anular), 0.00) FROM ctbempenhomovimento mov JOIN ctbempenho emp ON emp.id = mov.idempenho WHERE emp.iddespesa = despesa.id AND emp.exercicio = :exe) AS valor_empenhado_exercicio,
+                (SELECT IFNULL(SUM(mov.emissao - mov.anular), 0.00) FROM ctbempenhomovimento mov JOIN ctbempenho emp ON emp.id = mov.idempenho WHERE emp.iddespesa = despesa.id AND emp.exercicio = :ant) AS valor_empenhado_anterior,
+                (SELECT IFNULL(SUM(mov.pagamento), 0.00) FROM ctbempenhomovimento mov JOIN ctbempenho emp ON emp.id = mov.idempenho WHERE emp.iddespesa = despesa.id AND emp.exercicio = :exe) AS valor_pago_exercicio,
+                (SELECT IFNULL(SUM(mov.pagamento), 0.00) FROM ctbempenhomovimento mov JOIN ctbempenho emp ON emp.id = mov.idempenho WHERE emp.iddespesa = despesa.id AND emp.exercicio = :ant) AS valor_pago_anterior,
+                (SELECT IFNULL(SUM(IF(rem.operacao = 'S', rem.total, -rem.total)), 0.00) FROM ctbcontadespesaextra rem WHERE rem.iddespesa = despesa.id AND rem.exercicio = :exe) AS valor_remanejo_exercicio,
+                (SELECT IFNULL(SUM(IF(rem.operacao = 'S', rem.total, -rem.total)), 0.00) FROM ctbcontadespesaextra rem WHERE rem.iddespesa = despesa.id AND rem.exercicio = :ant) AS valor_remanejo_anterior
+            FROM ctbcontadespesa despesa
+            INNER JOIN ctbsubfuncao subfuncao ON subfuncao.id = despesa.idsubfuncao
+            WHERE despesa.idcliente = :id
+        ) query
+        GROUP BY query.codigo, query.descricao
+        ORDER BY CAST(query.codigo AS UNSIGNED)
+    ", [
+         'id'  => $idCliente,
+         'ant' => $anoAnterior,
+         'exe' => $exercicio
+      ]);
+   }
+
+   /**
+    * Retorna o resumo consolidado por Função Orçamentária.
+    */
+   public function getResumoPorFuncao(int $idCliente, int $exercicio): array
+   {
+      $anoAnterior = $exercicio - 1;
+
+      return DB::select("
+        SELECT 
+            query.codigo,
+            query.descricao,
+            SUM(query.valor_orcado_anterior + query.valor_remanejo_anterior) AS valor_atualizado_anterior,
+            SUM(query.valor_orcado_exercicio + query.valor_remanejo_exercicio) AS valor_atualizado_exercicio,
+            IFNULL(((1 - (SUM(query.valor_orcado_exercicio + query.valor_remanejo_exercicio) / 
+                NULLIF(SUM(query.valor_orcado_anterior + query.valor_remanejo_anterior), 0))) * 100) * -1, 0.00) AS variacao_atualizado,
+            SUM(query.valor_empenhado_anterior) AS valor_empenhado_anterior,
+            SUM(query.valor_empenhado_exercicio) AS valor_empenhado_exercicio,
+            IFNULL(((1 - (SUM(query.valor_empenhado_exercicio) / 
+                NULLIF(SUM(query.valor_empenhado_anterior), 0))) * 100) * -1, 0.00) AS variacao_gastos,
+            SUM(query.valor_pago_anterior) AS valor_pago_anterior,
+            SUM(query.valor_pago_exercicio) AS valor_pago_exercicio
+        FROM (
+            SELECT 
+                funcao.codigo AS codigo,
+                funcao.nome AS descricao,
+                (SELECT IFNULL(SUM(loa.total), 0) FROM ctbcontadespesaloa loa WHERE loa.iddespesa = despesa.id AND loa.exercicio = :exe) AS valor_orcado_exercicio,
+                (SELECT IFNULL(SUM(loa.total), 0) FROM ctbcontadespesaloa loa WHERE loa.iddespesa = despesa.id AND loa.exercicio = :ant) AS valor_orcado_anterior,
+                (SELECT IFNULL(SUM(mov.emissao - mov.anular), 0) FROM ctbempenhomovimento mov JOIN ctbempenho emp ON emp.id = mov.idempenho WHERE emp.iddespesa = despesa.id AND emp.exercicio = :exe) AS valor_empenhado_exercicio,
+                (SELECT IFNULL(SUM(mov.emissao - mov.anular), 0) FROM ctbempenhomovimento mov JOIN ctbempenho emp ON emp.id = mov.idempenho WHERE emp.iddespesa = despesa.id AND emp.exercicio = :ant) AS valor_empenhado_anterior,
+                (SELECT IFNULL(SUM(mov.pagamento), 0) FROM ctbempenhomovimento mov JOIN ctbempenho emp ON emp.id = mov.idempenho WHERE emp.iddespesa = despesa.id AND emp.exercicio = :exe) AS valor_pago_exercicio,
+                (SELECT IFNULL(SUM(mov.pagamento), 0) FROM ctbempenhomovimento mov JOIN ctbempenho emp ON emp.id = mov.idempenho WHERE emp.iddespesa = despesa.id AND emp.exercicio = :ant) AS valor_pago_anterior,
+                (SELECT IFNULL(SUM(IF(rem.operacao = 'S', rem.total, -rem.total)), 0) FROM ctbcontadespesaextra rem WHERE rem.iddespesa = despesa.id AND rem.exercicio = :exe) AS valor_remanejo_exercicio,
+                (SELECT IFNULL(SUM(IF(rem.operacao = 'S', rem.total, -rem.total)), 0) FROM ctbcontadespesaextra rem WHERE rem.iddespesa = despesa.id AND rem.exercicio = :ant) AS valor_remanejo_anterior
+            FROM ctbcontadespesa despesa
+            INNER JOIN ctbfuncao funcao ON funcao.id = despesa.idfuncao
+            WHERE despesa.idcliente = :id
+        ) query
+        GROUP BY query.codigo, query.descricao
+        ORDER BY query.descricao
+    ", [
+         'id'  => $idCliente,
+         'ant' => $anoAnterior,
+         'exe' => $exercicio
+      ]);
+   }
 }

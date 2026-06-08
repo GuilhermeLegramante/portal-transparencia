@@ -184,13 +184,12 @@
                                 ['label' => 'Pago Anterior', 'align' => 'text-end'],
                                 ['label' => 'Pago Exercício', 'align' => 'text-end'],
                             ]">
-                                @foreach ($resumoUnidades as $item)
+                                @foreach ($dadosUnidade as $item)
                                     <tr class="align-middle">
                                         <td class="text-start font-monospace small text-dark fw-semibold">
                                             {{ $item->codigo ?? '--' }}</td>
                                         <td class="text-start text-dark text-truncate" style="max-width: 240px;">
                                             {{ $item->descricao ?? '--' }}</td>
-                                        <td class="text-center text-secondary">{{ $item->mes }}</td>
                                         <td class="text-end text-secondary">R$
                                             {{ number_format($item->valor_empenhado_anterior ?? 0, 2, ',', '.') }}</td>
                                         <td class="text-end text-dark fw-semibold">R$
