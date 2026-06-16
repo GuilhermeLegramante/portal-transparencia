@@ -406,44 +406,47 @@
                     </ul>
                 </li>
 
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {{ request()->is('parlamentar*') ? 'active fw-bold' : '' }}"
-                        href="#" id="navbarParlamentar" role="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        Parlamentar
-                    </a>
-                    <ul class="dropdown-menu shadow border-0" aria-labelledby="navbarParlamentar">
+                @if (config('app.client_name') != 'cacequipm' && config('app.client_name') != 'sisprem')
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {{ request()->is('parlamentar*') ? 'active fw-bold' : '' }}"
+                            href="#" id="navbarParlamentar" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Parlamentar
+                        </a>
+                        <ul class="dropdown-menu shadow border-0" aria-labelledby="navbarParlamentar">
 
-                        {{-- Submenu: Legislatura (Parlamentares e Mesa) --}}
-                        <li class="dropdown-submenu">
-                            <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
-                                Legislatura
-                                <i class="fa fa-chevron-right ms-2" style="font-size: 0.7rem;"></i>
-                            </a>
-                            <ul class="dropdown-menu shadow border-0">
-                                <li>
-                                    <a class="dropdown-item" href="{{ route('parlamentar.index') }}">
-                                        Parlamentares
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item"
-                                        href="{{ route('parlamentar.index', ['tab' => 'mesa']) }}">
-                                        Mesa Diretora
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                            {{-- Submenu: Legislatura (Parlamentares e Mesa) --}}
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item d-flex justify-content-between align-items-center"
+                                    href="#">
+                                    Legislatura
+                                    <i class="fa fa-chevron-right ms-2" style="font-size: 0.7rem;"></i>
+                                </a>
+                                <ul class="dropdown-menu shadow border-0">
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('parlamentar.index') }}">
+                                            Parlamentares
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item"
+                                            href="{{ route('parlamentar.index', ['tab' => 'mesa']) }}">
+                                            Mesa Diretora
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
 
-                        {{-- Item Direto: Sessões --}}
-                        <li>
-                            <a class="dropdown-item" href="{{ route('parlamentar.sessao.index') }}">
-                                Sessões
-                            </a>
-                        </li>
+                            {{-- Item Direto: Sessões --}}
+                            <li>
+                                <a class="dropdown-item" href="{{ route('parlamentar.sessao.index') }}">
+                                    Sessões
+                                </a>
+                            </li>
 
-                    </ul>
-                </li>
+                        </ul>
+                    </li>
+                @endif
 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle {{ request()->is('ajuda*') ? 'active fw-bold' : '' }}"
