@@ -22,20 +22,20 @@
 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle {{ request()->is('planejamento*') ? 'active fw-bold' : '' }}"
-                        href="javascript:void(0)" id="navbarPlanejamento" role="button" data-bs-toggle="dropdown"
+                        href="#" id="navbarPlanejamento" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         Planejamento
                     </a>
                     <ul class="dropdown-menu shadow border-0" aria-labelledby="navbarPlanejamento">
                         <li class="dropdown-submenu">
-                            <a class="dropdown-item d-flex justify-content-between align-items-center" href="javascript:void(0)">
+                            <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
                                 Lei Orçamentária Anual (LOA)
                                 <i class="fa fa-chevron-right ms-2" style="font-size: 0.7rem;"></i>
                             </a>
                             <ul class="dropdown-menu shadow border-0">
                                 <li class="dropdown-submenu">
                                     <a class="dropdown-item d-flex justify-content-between align-items-center"
-                                        href="javascript:void(0)">
+                                        href="#">
                                         Despesa
                                         <i class="fa fa-chevron-right ms-2" style="font-size: 0.7rem;"></i>
                                     </a>
@@ -54,7 +54,7 @@
                                 </li>
                                 <li class="dropdown-submenu">
                                     <a class="dropdown-item d-flex justify-content-between align-items-center"
-                                        href="javascript:void(0)">
+                                        href="#">
                                         Receita
                                         <i class="fa fa-chevron-right ms-2" style="font-size: 0.7rem;"></i>
                                     </a>
@@ -77,7 +77,7 @@
 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle {{ request()->is('despesa*') ? 'active fw-bold' : '' }}"
-                        href="javascript:void(0)" id="navbarDespesa" role="button" data-bs-toggle="dropdown"
+                        href="#" id="navbarDespesa" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         Despesa
                     </a>
@@ -88,7 +88,7 @@
                         <li><a class="dropdown-item" href="{{ $baseUrl }}duodecimo">Duodécimo</a></li>
 
                         <li class="dropdown-submenu">
-                            <a class="dropdown-item d-flex justify-content-between align-items-center" href="javascript:void(0)">
+                            <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
                                 Empenho Orçamentário
                                 <i class="fa fa-chevron-right ms-2" style="font-size: 0.7rem;"></i>
                             </a>
@@ -117,7 +117,7 @@
                         </li>
 
                         <li class="dropdown-submenu">
-                            <a class="dropdown-item d-flex justify-content-between align-items-center" href="javascript:void(0)">
+                            <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
                                 Execução Orçamentária
                                 <i class="fa fa-chevron-right ms-2" style="font-size: 0.7rem;"></i>
                             </a>
@@ -150,7 +150,7 @@
                 @if (config('app.client_name') === 'cacequipm' || config('app.client_name') === 'sisprem')
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle {{ request()->is('receita*') ? 'active fw-bold' : '' }}"
-                            href="javascript:void(0)" id="navbarReceita" role="button" data-bs-toggle="dropdown"
+                            href="#" id="navbarReceita" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
                             Receita
                         </a>
@@ -159,7 +159,7 @@
                             {{-- ARRECADAÇÃO --}}
                             <li class="dropdown-submenu">
                                 <a class="dropdown-item d-flex justify-content-between align-items-center"
-                                    href="javascript:void(0)">
+                                    href="#">
                                     Arrecadação <i class="fa fa-chevron-right ms-2" style="font-size: 0.7rem;"></i>
                                 </a>
                                 <ul class="dropdown-menu shadow border-0">
@@ -181,7 +181,7 @@
                             {{-- EXECUÇÃO ORÇAMENTÁRIA --}}
                             <li class="dropdown-submenu">
                                 <a class="dropdown-item d-flex justify-content-between align-items-center"
-                                    href="javascript:void(0)">
+                                    href="#">
                                     Execução Orçamentária <i class="fa fa-chevron-right ms-2"
                                         style="font-size: 0.7rem;"></i>
                                 </a>
@@ -205,13 +205,13 @@
                 @endif
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle {{ request()->is('compras*') ? 'active fw-bold' : '' }}"
-                        href="javascript:void(0)" id="navbarCompras" role="button" data-bs-toggle="dropdown"
+                        href="#" id="navbarCompras" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         Compras
                     </a>
                     <ul class="dropdown-menu shadow border-0" aria-labelledby="navbarCompras">
                         <li class="dropdown-submenu">
-                            <a class="dropdown-item d-flex justify-content-between align-items-center" href="javascript:void(0)">
+                            <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
                                 Licitações
                                 <i class="fa fa-chevron-right ms-2" style="font-size: 0.7rem;"></i>
                             </a>
@@ -233,7 +233,7 @@
                                 Preços</a></li>
 
                         <li class="dropdown-submenu">
-                            <a class="dropdown-item d-flex justify-content-between align-items-center" href="javascript:void(0)">
+                            <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
                                 Requisição de Compras
                                 <i class="fa fa-chevron-right ms-2" style="font-size: 0.7rem;"></i>
                             </a>
@@ -266,13 +266,13 @@
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle {{ request()->is('pessoal*') ? 'active fw-bold' : '' }}"
-                        href="javascript:void(0)" id="navbarPessoal" role="button" data-bs-toggle="dropdown"
+                        href="#" id="navbarPessoal" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         Pessoal
                     </a>
                     <ul class="dropdown-menu shadow border-0" aria-labelledby="navbarPessoal">
                         <li class="dropdown-submenu">
-                            <a class="dropdown-item d-flex justify-content-between align-items-center" href="javascript:void(0)">
+                            <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
                                 Quadro Funcional
                                 <i class="fa fa-chevron-right small"></i>
                             </a>
@@ -308,7 +308,7 @@
                         </li>
 
                         <li class="dropdown-submenu">
-                            <a class="dropdown-item d-flex justify-content-between align-items-center" href="javascript:void(0)">
+                            <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
                                 Folha de Pagamento
                                 <i class="fa fa-chevron-right ms-2" style="font-size: 0.7rem;"></i>
                             </a>
@@ -352,7 +352,7 @@
                 {{-- AJUSTADO: Menu Dinâmico de Publicações (Listagem + Cadastro) --}}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle {{ request()->is('publicacoes*') ? 'active fw-bold' : '' }}"
-                        href="javascript:void(0)" id="navbarPublicacoes" role="button" data-bs-toggle="dropdown"
+                        href="#" id="navbarPublicacoes" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         Publicações
                     </a>
@@ -414,7 +414,7 @@
                 @if (config('app.client_name') != 'cacequipm' && config('app.client_name') != 'sisprem')
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle {{ request()->is('parlamentar*') ? 'active fw-bold' : '' }}"
-                            href="javascript:void(0)" id="navbarParlamentar" role="button" data-bs-toggle="dropdown"
+                            href="#" id="navbarParlamentar" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
                             Parlamentar
                         </a>
@@ -423,7 +423,7 @@
                             {{-- Submenu: Legislatura (Parlamentares e Mesa) --}}
                             <li class="dropdown-submenu">
                                 <a class="dropdown-item d-flex justify-content-between align-items-center"
-                                    href="javascript:void(0)">
+                                    href="#">
                                     Legislatura
                                     <i class="fa fa-chevron-right ms-2" style="font-size: 0.7rem;"></i>
                                 </a>
@@ -455,21 +455,21 @@
 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle {{ request()->is('ajuda*') ? 'active fw-bold' : '' }}"
-                        href="javascript:void(0)" id="navbarAjuda" role="button" data-bs-toggle="dropdown"
+                        href="#" id="navbarAjuda" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         Ajuda
                     </a>
                     <ul class="dropdown-menu shadow border-0" aria-labelledby="navbarAjuda">
-                        {{-- <li><a class="dropdown-item" href="javascript:void(0)">Glossário</a></li> --}}
+                        {{-- <li><a class="dropdown-item" href="#">Glossário</a></li> --}}
                         <li><a class="dropdown-item" href="{{ route('ajuda.faq') }}">Perguntas Frequentes (FAQ)</a>
                         </li>
-                        {{-- <li><a class="dropdown-item" href="javascript:void(0)">Links Úteis</a></li> --}}
+                        {{-- <li><a class="dropdown-item" href="#">Links Úteis</a></li> --}}
                     </ul>
                 </li>
 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle {{ request()->is('sic*') ? 'active fw-bold' : '' }}"
-                        href="javascript:void(0)" id="navbarSIC" role="button" data-bs-toggle='dropdown'>
+                        href="#" id="navbarSIC" role="button" data-bs-toggle='dropdown'>
                         SIC
                     </a>
                     <ul class="dropdown-menu shadow border-0">
@@ -529,7 +529,7 @@
                             </li>
                             <li>
                                 <a class="dropdown-item text-danger d-flex align-items-center rounded-2 py-2"
-                                    href="javascript:void(0)"
+                                    href="#"
                                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                     <i class="fas fa-sign-out-alt me-2 opacity-75"></i> Sair do Painel
                                 </a>
