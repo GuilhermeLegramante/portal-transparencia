@@ -393,21 +393,22 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
+            // Mobile
             if (window.innerWidth < 992) {
 
-                document.querySelectorAll('.dropdown-submenu > a').forEach(function(element) {
+                document.querySelectorAll('.dropdown-submenu > a').forEach(function(el) {
 
-                    element.addEventListener('click', function(e) {
+                    el.addEventListener('click', function(e) {
 
                         e.preventDefault();
+                        e.stopPropagation();
 
-                        let submenu = this.nextElementSibling;
+                        const submenu = this.nextElementSibling;
 
-                        if (submenu) {
+                        if (!submenu) return;
 
-                            submenu.classList.toggle('show');
+                        submenu.classList.toggle('show');
 
-                        }
                     });
 
                 });
