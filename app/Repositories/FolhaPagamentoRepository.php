@@ -197,6 +197,7 @@ class FolhaPagamentoRepository
             ->where('calculo.exercicio', $exercicio)
             ->where('calculo.mes', $mes)
             ->where('calculo.idcontrato', $idContrato)
+            ->whereIn('evento.tipo', ['P', 'D'])
             ->groupBy('evento.tipo', 'evento.confidencial', 'codigo', 'descricao')
             ->orderByRaw("CASE evento.tipo WHEN 'P' THEN 1 WHEN 'D' THEN 2 WHEN 'I' THEN 3 ELSE 4 END")
             ->orderBy('evento.codigo')
