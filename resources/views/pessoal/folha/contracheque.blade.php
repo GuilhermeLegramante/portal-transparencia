@@ -3,7 +3,7 @@
 @section('content')
     <div class="container py-4">
         <x-breadcrumb :items="$breadcrumb" />
-        
+
         <div class="card shadow border-0 overflow-hidden">
             {{-- Cabeçalho do Card --}}
             <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center p-3">
@@ -63,16 +63,31 @@
                             @php
                                 $totP = 0;
                                 $totD = 0;
+
+                                $privP = 0;
+                                $privD = 0;
                             @endphp
+
                             @foreach ($itens as $item)
+                                @if ($item->confidencial)
+                                    @php
+                                        if ($item->tipo == 'P') {
+                                            $privP += $item->valor;
+                                            $totP += $item->valor;
+                                        }
+
+                                        if ($item->tipo == 'D') {
+                                            $privD += $item->valor;
+                                            $totD += $item->valor;
+                                        }
+                                    @endphp
+
+                                    @continue
+                                @endif
+
                                 <tr>
                                     <td class="text-center font-monospace">{{ $item->codigo }}</td>
-                                    <td>
-                                        {{ $item->descricao }}
-                                        @if ($item->confidencial)
-                                            <i class="fa fa-lock ms-1 text-muted small" title="Dado protegido"></i>
-                                        @endif
-                                    </td>
+                                    <td>{{ $item->descricao }}</td>
                                     <td class="text-center">{{ number_format($item->referencia, 2, ',', '.') }}</td>
                                     <td class="text-end">
                                         {{ $item->tipo == 'P' ? number_format($item->valor, 2, ',', '.') : '-' }}
@@ -81,15 +96,49 @@
                                         {{ $item->tipo == 'D' ? number_format($item->valor, 2, ',', '.') : '-' }}
                                     </td>
                                 </tr>
+
                                 @php
                                     if ($item->tipo == 'P') {
                                         $totP += $item->valor;
                                     }
+
                                     if ($item->tipo == 'D') {
                                         $totD += $item->valor;
                                     }
                                 @endphp
                             @endforeach
+
+                            {{-- Vencimentos confidenciais --}}
+                            @if ($privP > 0)
+                                <tr>
+                                    <td class="text-center">***</td>
+                                    <td>
+                                        Informações Privadas
+                                        <i class="fa fa-lock ms-1 text-muted small"></i>
+                                    </td>
+                                    <td class="text-center">-</td>
+                                    <td class="text-end">
+                                        {{ number_format($privP, 2, ',', '.') }}
+                                    </td>
+                                    <td class="text-end">-</td>
+                                </tr>
+                            @endif
+
+                            {{-- Descontos confidenciais --}}
+                            @if ($privD > 0)
+                                <tr>
+                                    <td class="text-center">***</td>
+                                    <td>
+                                        Informações Privadas
+                                        <i class="fa fa-lock ms-1 text-muted small"></i>
+                                    </td>
+                                    <td class="text-center">-</td>
+                                    <td class="text-end">-</td>
+                                    <td class="text-end text-danger">
+                                        {{ number_format($privD, 2, ',', '.') }}
+                                    </td>
+                                </tr>
+                            @endif
                         </tbody>
                         <tfoot class="table-light">
                             <tr class="fw-bold text-nowrap">
