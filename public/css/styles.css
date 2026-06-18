@@ -731,3 +731,34 @@ body.dark-mode .container {
 body.dark-mode .bg-light-gray {
     background-color: #0f172a !important;
 }
+
+@media (max-width: 991px) {
+
+    .navbar-nav {
+        width: 100%;
+    }
+
+    .dropdown-menu {
+        border: none;
+        box-shadow: none !important;
+        padding-left: 15px;
+    }
+
+    .dropdown-submenu>.dropdown-menu {
+        display: none;
+    }
+
+    .dropdown-submenu>.dropdown-menu.show {
+        display: block;
+    }
+
+    .dropdown-submenu>a {
+        font-weight: 600;
+    }
+
+    .navbar-collapse {
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+
+}

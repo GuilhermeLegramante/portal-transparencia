@@ -69,7 +69,7 @@
     </div>
 
     @include('layouts.partials.topbar')
-    
+
     <div class="sticky-top shadow-sm">
         @include('layouts.partials.navbar')
     </div>
@@ -387,6 +387,33 @@
                     });
                 }
             });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            if (window.innerWidth < 992) {
+
+                document.querySelectorAll('.dropdown-submenu > a').forEach(function(element) {
+
+                    element.addEventListener('click', function(e) {
+
+                        e.preventDefault();
+
+                        let submenu = this.nextElementSibling;
+
+                        if (submenu) {
+
+                            submenu.classList.toggle('show');
+
+                        }
+                    });
+
+                });
+
+            }
+
         });
     </script>
 
