@@ -199,6 +199,7 @@ class FolhaPagamentoRepository
             ->where('calculo.idcontrato', $idContrato)
             ->groupBy('evento.tipo', 'evento.confidencial', 'codigo', 'descricao')
             ->orderByRaw("CASE evento.tipo WHEN 'P' THEN 1 WHEN 'D' THEN 2 WHEN 'I' THEN 3 ELSE 4 END")
+            ->orderBy('evento.codigo')
             ->get();
     }
 
