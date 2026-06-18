@@ -112,7 +112,7 @@
                             @if ($privP > 0)
                                 <tr>
                                     <td class="text-center">***</td>
-                                    <td>
+                                    <td class="text-uppercase">
                                         Informações Privadas
                                         <i class="fa fa-lock ms-1 text-muted small"></i>
                                     </td>
@@ -128,7 +128,7 @@
                             @if ($privD > 0)
                                 <tr>
                                     <td class="text-center">***</td>
-                                    <td>
+                                    <td class="text-uppercase">
                                         Informações Privadas
                                         <i class="fa fa-lock ms-1 text-muted small"></i>
                                     </td>
