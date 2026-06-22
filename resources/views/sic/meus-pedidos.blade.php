@@ -105,8 +105,8 @@
             </div>
 
             @php
-                $abertos = $pedidos->whereIn('status', ['A', 'ABERTO', 'EM ANÁLISE', 'PENDENTE'])->count();
-                $respondidos = $pedidos->whereIn('status', ['R', 'RESPONDIDO', 'CONCLUÍDO'])->count();
+                $abertos = $pedidos->whereIn('situacao', ['A', 'ABERTO', 'EM ANÁLISE', 'PENDENTE'])->count();
+                $respondidos = $pedidos->whereIn('situacao', ['R', 'RESPONDIDO', 'CONCLUÍDO'])->count();
             @endphp
 
             <div class="col-md-4">
