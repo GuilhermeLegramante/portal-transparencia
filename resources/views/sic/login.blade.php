@@ -14,6 +14,46 @@
                             <p class="text-muted">Portal da Transparência de {{ config('app.client_full_name') }}</p>
                         </div>
 
+                        {{-- Mensagem de sucesso --}}
+                        @if (session('success'))
+                            <div class="alert alert-success alert-dismissible fade show rounded-4 border-0 shadow-sm mb-4"
+                                role="alert">
+                                <i class="fas fa-check-circle me-2"></i>
+                                {{ session('success') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Fechar"></button>
+                            </div>
+                        @endif
+
+                        {{-- Mensagem de erro via sessão --}}
+                        @if (session('error'))
+                            <div class="alert alert-danger alert-dismissible fade show rounded-4 border-0 shadow-sm mb-4"
+                                role="alert">
+                                <i class="fas fa-exclamation-circle me-2"></i>
+                                {{ session('error') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Fechar"></button>
+                            </div>
+                        @endif
+
+                        {{-- Erros de validação / autenticação --}}
+                        @if ($errors->any())
+                            <div class="alert alert-danger alert-dismissible fade show rounded-4 border-0 shadow-sm mb-4"
+                                role="alert">
+                                <div class="fw-bold mb-2">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    Não foi possível entrar no sistema.
+                                </div>
+                                <ul class="mb-0 ps-3">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Fechar"></button>
+                            </div>
+                        @endif
+
                         <form action="{{ route('sic.auth') }}" method="POST">
                             @csrf
                             <div class="mb-4">
