@@ -145,7 +145,7 @@ class SicController extends Controller
             'senha'      => Hash::make($request->password), // Sempre criptografe a senha
             'tipopessoa' => $request->tipopessoa,
             'cpf'  => preg_replace('/[^0-9]/', '', $request->documento), // Remove pontos e traços
-            'created_at' => now(),
+            'datahora' => now(),
         ]);
 
         return redirect()->route('sic.login')->with('success', 'Cadastro realizado com sucesso! Faça login para continuar.');
