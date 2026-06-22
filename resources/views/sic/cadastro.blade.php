@@ -8,6 +8,19 @@
                     <div class="card-body p-5">
                         <h3 class="fw-bold mb-4 text-center">Cadastro de Cidadão</h3>
 
+                        {{-- Erros gerais --}}
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <strong>Não foi possível concluir o cadastro.</strong>
+                                <ul class="mb-0 mt-2">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
+
                         <form action="{{ route('sic.registrar') }}" method="POST">
                             @csrf
                             {{-- O idcliente é passado oculto ou tratado no Controller via config --}}
