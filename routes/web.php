@@ -323,7 +323,7 @@ Route::prefix('sic')->name('sic.')->group(function () {
     Route::post('/login', [SicController::class, 'autenticar'])->name('auth');
 
     Route::get('/cadastro', [SicController::class, 'cadastro'])->name('cadastro');
-    Route::post('/cadastro', [SicController::class, 'registrar'])->name('registrar');
+    Route::post('/cadastro', [SicController::class, 'storeCadastro'])->name('registrar');
 
     Route::post('/logout', [SicController::class, 'logout'])->name('logout');
 });
