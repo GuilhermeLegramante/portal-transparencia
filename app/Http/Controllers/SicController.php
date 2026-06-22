@@ -88,6 +88,22 @@ class SicController extends Controller
         return view('sic.estatisticas', compact('pedidos', 'exercicio', 'breadcrumb'));
     }
 
+    public function meusPedidos()
+    {
+        $breadcrumb = [
+            'SIC' => route('sic.index'),
+            'Meus Pedidos' => ''
+        ];
+
+        $pedidos = DB::table('sicpedido')
+            ->where('idcliente', config('app.client_id'))
+            ->where('idusuario', session('sic_user_id'))
+            ->orderBy('datahora', 'desc')
+            ->get();
+
+        return view('sic.meus-pedidos', compact('pedidos', 'breadcrumb'));
+    }
+
     /**
      * Exibe a tela de login
      */
