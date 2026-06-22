@@ -314,7 +314,7 @@ Route::prefix('sic')->name('sic.')->group(function () {
     Route::get('/estatisticas', [SicController::class, 'estatisticas'])->name('estatisticas');
 
     // Área Logada do Cidadão
-    Route::middleware('auth:cidadao')->group(function () {
+    Route::middleware('sic.auth')->group(function () {
         Route::get('/meus-pedidos', [SicController::class, 'meusPedidos'])->name('pedidos');
         Route::get('/novo-pedido', [SicController::class, 'createPedido'])->name('novo-pedido');
     });
