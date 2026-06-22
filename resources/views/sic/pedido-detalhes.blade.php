@@ -22,7 +22,7 @@
         <div class="card border-0 shadow-sm rounded-4 mb-4">
             <div class="card-body p-4">
                 <h5 class="fw-bold mb-3"><i class="fas fa-info-circle me-2 text-primary"></i>Descrição Inicial</h5>
-                <p class="text-secondary">{{ $pedido->descricao }}</p>
+                <p class="text-secondary">{{ $pedido->titulo }}</p>
                 <div class="text-muted small mt-3">
                     <i class="far fa-calendar-alt me-1"></i> Criado em:
                     {{ \Carbon\Carbon::parse($pedido->datahora)->format('d/m/Y H:i') }}
