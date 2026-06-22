@@ -13,7 +13,7 @@ class SicController extends Controller
     public function __construct()
     {
         // O idCliente já vem configurado pelo seu TenantMiddleware
-        
+
     }
 
     public function index()
@@ -125,6 +125,7 @@ class SicController extends Controller
             'password' => 'required|string|min:8|confirmed',
             'tipopessoa' => 'required|in:F,J',
             'documento' => 'required|string',
+            'telefone' => 'nullable|string',
         ]);
 
         // Verifica se o e-mail já existe para ESTE cliente específico
@@ -144,8 +145,9 @@ class SicController extends Controller
             'email'      => $request->email,
             'senha'      => Hash::make($request->password), // Sempre criptografe a senha
             'tipopessoa' => $request->tipopessoa,
-            'cpf'  => preg_replace('/[^0-9]/', '', $request->documento), // Remove pontos e traços
-            'datahora' => now(),
+            'cpf'        => preg_replace('/[^0-9]/', '', $request->documento), // Remove pontos e traços
+            'telefone'   => $request->telefone ? preg_replace('/[^0-9]/', '', $request->telefone) : null,
+            'datahora'   => now(),
         ]);
 
         return redirect()->route('sic.login')->with('success', 'Cadastro realizado com sucesso! Faça login para continuar.');
