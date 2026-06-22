@@ -253,4 +253,30 @@ class SicController extends Controller
 
         return redirect()->route('sic.pedidos')->with('success', 'Pedido criado com sucesso!');
     }
+
+    public function showPedido($id)
+    {
+        $pedido = DB::table('sicpedido')
+            ->where('id', $id)
+            ->where('idcliente', config('app.client_id'))
+            ->where('idusuario', session('sic_user_id')) // Garante que o usuário só veja seus próprios pedidos
+            ->first();
+
+        if (!$pedido) {
+            abort(404);
+        }
+
+        $mensagens = DB::table('sicpedidomensagem')
+            ->where('idpedido', $id)
+            ->orderBy('datahora', 'asc')
+            ->get();
+
+        $breadcrumb = [
+            'SIC' => route('sic.index'),
+            'Meus Pedidos' => route('sic.pedidos'),
+            'Detalhes do Pedido' => ''
+        ];
+
+        return view('sic.pedido-detalhes', compact('pedido', 'mensagens', 'breadcrumb'));
+    }
 }

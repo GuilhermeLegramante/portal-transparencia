@@ -318,6 +318,9 @@ Route::prefix('sic')->name('sic.')->group(function () {
         Route::get('/meus-pedidos', [SicController::class, 'meusPedidos'])->name('pedidos');
         Route::get('/novo-pedido', [SicController::class, 'createPedido'])->name('novo-pedido');
         Route::post('/novo-pedido', [SicController::class, 'storePedido'])->name('pedido.store');
+
+        Route::get('/sic/pedido/{id}', [SicController::class, 'showPedido'])
+            ->name('sic.pedido.show');
     });
 
     Route::get('/login', [SicController::class, 'login'])->name('login');
