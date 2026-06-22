@@ -97,7 +97,7 @@
                                     </div>
                                     <div>
                                         <h6 class="fw-bold mb-0">Telefone</h6>
-                                        <small class="text-muted">{{ config('app.phone') }}</small>
+                                        <small class="text-muted">{{ config('app.client_phone') }}</small>
                                     </div>
                                 </div>
 
