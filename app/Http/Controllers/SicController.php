@@ -251,6 +251,6 @@ class SicController extends Controller
             return $pedidoId;
         });
 
-        return redirect()->route('pedidos')->with('success', 'Pedido criado com sucesso!');
+        return redirect()->route('sic.pedidos')->with('success', 'Pedido criado com sucesso!');
     }
 }
