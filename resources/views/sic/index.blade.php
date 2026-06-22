@@ -47,6 +47,41 @@
             </div>
         </div>
 
+        @if (session('sic_user_id'))
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                        <div>
+                            <h5 class="fw-bold mb-1">
+                                <i class="fas fa-user-circle text-primary me-2"></i>
+                                Olá, {{ session('sic_user_name') }}
+                            </h5>
+                            <p class="text-muted mb-0">
+                                Você está autenticado no Serviço de Informação ao Cidadão.
+                            </p>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-2">
+                            <a href="{{ route('sic.pedidos') }}" class="btn btn-outline-primary rounded-3 fw-bold">
+                                <i class="fas fa-folder-open me-2"></i>Meus Pedidos
+                            </a>
+
+                            <a href="{{ route('sic.novo-pedido') }}" class="btn btn-primary rounded-3 fw-bold">
+                                <i class="fas fa-plus me-2"></i>Novo Pedido
+                            </a>
+
+                            <form action="{{ route('sic.logout') }}" method="POST" class="d-inline">
+                                @csrf
+                                <button type="submit" class="btn btn-outline-danger rounded-3 fw-bold">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Sair
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <div class="row g-4">
             <div class="col-lg-8">
                 <div class="row g-4">
