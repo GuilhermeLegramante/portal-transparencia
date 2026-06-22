@@ -235,7 +235,6 @@ class SicController extends Controller
                 'idcliente' => config('app.client_id'),
                 'idusuario' => session('sic_user_id'),
                 'titulo'    => $request->titulo,
-                'descricao' => $request->descricao,
                 'situacao'  => 'Aberto',
                 'datahora'  => now(),
             ]);
