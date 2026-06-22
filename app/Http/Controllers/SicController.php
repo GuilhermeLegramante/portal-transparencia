@@ -144,7 +144,7 @@ class SicController extends Controller
             'email'      => $request->email,
             'senha'      => Hash::make($request->password), // Sempre criptografe a senha
             'tipopessoa' => $request->tipopessoa,
-            'documento'  => preg_replace('/[^0-9]/', '', $request->documento), // Remove pontos e traços
+            'cpf'  => preg_replace('/[^0-9]/', '', $request->documento), // Remove pontos e traços
             'created_at' => now(),
         ]);
 
