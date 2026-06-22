@@ -320,7 +320,7 @@ Route::prefix('sic')->name('sic.')->group(function () {
         Route::post('/novo-pedido', [SicController::class, 'storePedido'])->name('pedido.store');
 
         Route::get('/sic/pedido/{id}', [SicController::class, 'showPedido'])
-            ->name('sic.pedido.show');
+            ->name('pedido.show');
     });
 
     Route::get('/login', [SicController::class, 'login'])->name('login');
