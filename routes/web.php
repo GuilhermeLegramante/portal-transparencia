@@ -317,6 +317,7 @@ Route::prefix('sic')->name('sic.')->group(function () {
     Route::middleware('sic.auth')->group(function () {
         Route::get('/meus-pedidos', [SicController::class, 'meusPedidos'])->name('pedidos');
         Route::get('/novo-pedido', [SicController::class, 'createPedido'])->name('novo-pedido');
+        Route::post('/novo-pedido', [SicController::class, 'storePedido'])->name('store-pedido');
     });
 
     Route::get('/login', [SicController::class, 'login'])->name('login');

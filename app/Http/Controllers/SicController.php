@@ -202,4 +202,56 @@ class SicController extends Controller
         session()->forget(['sic_user_id', 'sic_user_name']);
         return redirect()->route('sic.index');
     }
+
+    public function createPedido()
+    {
+        $breadcrumb = [
+            'SIC' => route('sic.index'),
+            'Novo Pedido' => ''
+        ];
+
+        return view('sic.novo-pedido', compact('breadcrumb'));
+    }
+
+    public function storePedido(Request $request)
+    {
+        $request->validate([
+            'titulo' => 'required|string|max:255',
+            'descricao' => 'required|string',
+            'arquivo' => 'nullable|file|mimes:pdf,jpg,png|max:5120', // Máx 5MB
+        ]);
+
+        // 1. Processar o upload do arquivo (se houver)
+        $caminhoArquivo = null;
+        if ($request->hasFile('arquivo')) {
+            // Salva na pasta 'anexos/pedidos' dentro de storage/app/public
+            $caminhoArquivo = $request->file('arquivo')->store('anexos/pedidos', 'public');
+        }
+
+        // 2. Inserção do Pedido (utilizando transação para garantir integridade)
+        $idPedido = DB::transaction(function () use ($request, $caminhoArquivo) {
+
+            $pedidoId = DB::table('sicpedido')->insertGetId([
+                'idcliente' => config('app.client_id'),
+                'idusuario' => session('sic_user_id'),
+                'titulo'    => $request->titulo,
+                'descricao' => $request->descricao,
+                'situacao'  => 'Aberto',
+                'datahora'  => now(),
+            ]);
+
+            // 3. Inserção da Mensagem com o caminho do arquivo
+            DB::table('sicpedidomensagem')->insert([
+                'idpedido'  => $pedidoId,
+                'idusuario' => session('sic_user_id'),
+                'mensagem'  => $request->descricao,
+                'anexo'     => $caminhoArquivo, // Salva o caminho (path) no DB
+                'datahora'  => now(),
+            ]);
+
+            return $pedidoId;
+        });
+
+        return redirect()->route('pedidos')->with('success', 'Pedido criado com sucesso!');
+    }
 }

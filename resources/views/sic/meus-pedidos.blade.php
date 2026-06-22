@@ -167,74 +167,56 @@
                             <tbody>
                                 @foreach ($pedidos as $pedido)
                                     <tr>
+                                        {{-- Protocolo: assumindo que seja o ID ou campo protocolo se existir --}}
                                         <td class="ps-4 fw-semibold">
-                                            {{ $pedido->protocolo ?? $pedido->id }}
+                                            {{ $pedido->id }}
                                         </td>
 
+                                        {{-- Assunto/Título --}}
                                         <td>
                                             <div class="fw-semibold text-dark">
-                                                {{ $pedido->assunto ?? ($pedido->titulo ?? 'Solicitação') }}
+                                                {{ $pedido->titulo ?? 'Sem título' }}
                                             </div>
-
-                                            @if (!empty($pedido->descricao))
-                                                <div class="text-muted small mt-1">
-                                                    {{ \Illuminate\Support\Str::limit(strip_tags($pedido->descricao), 90) }}
-                                                </div>
-                                            @endif
                                         </td>
 
+                                        {{-- Data --}}
                                         <td class="text-muted">
-                                            {{ !empty($pedido->created_at) ? \Carbon\Carbon::parse($pedido->created_at)->format('d/m/Y H:i') : (!empty($pedido->data) ? \Carbon\Carbon::parse($pedido->data)->format('d/m/Y') : '-') }}
+                                            {{ \Carbon\Carbon::parse($pedido->datahora)->format('d/m/Y H:i') }}
                                         </td>
 
+                                        {{-- Status --}}
                                         <td>
                                             @php
-                                                $status = strtoupper(trim($pedido->status ?? 'PENDENTE'));
+                                                // Normaliza o status para comparação
+                                                $status = strtoupper(trim($pedido->situacao ?? 'A'));
 
-                                                $statusClass = match ($status) {
+                                                // Lógica de cores baseada no campo 'situacao'
+                                                $isConcluido = in_array($status, [
                                                     'R',
                                                     'RESPONDIDO',
                                                     'CONCLUÍDO',
-                                                    'CONCLUIDO'
-                                                        => 'bg-success-subtle text-success border border-success-subtle',
-                                                    'A',
-                                                    'ABERTO',
-                                                    'EM ANÁLISE',
-                                                    'EM ANALISE',
-                                                    'PENDENTE'
-                                                        => 'bg-warning-subtle text-warning border border-warning-subtle',
-                                                    'CANCELADO'
-                                                        => 'bg-danger-subtle text-danger border border-danger-subtle',
-                                                    default
-                                                        => 'bg-secondary-subtle text-secondary border border-secondary-subtle',
-                                                };
+                                                    'CONCLUIDO',
+                                                ]);
+                                                $isCancelado = $status === 'CANCELADO';
 
-                                                $statusLabel = match ($status) {
-                                                    'R' => 'Respondido',
-                                                    'A' => 'Aberto',
-                                                    default => ucwords(mb_strtolower($status)),
-                                                };
+                                                $statusClass = $isConcluido
+                                                    ? 'bg-success-subtle text-success border-success'
+                                                    : ($isCancelado
+                                                        ? 'bg-danger-subtle text-danger border-danger'
+                                                        : 'bg-warning-subtle text-warning border-warning');
                                             @endphp
 
-                                            <span class="badge rounded-pill px-3 py-2 {{ $statusClass }}">
-                                                {{ $statusLabel }}
+                                            <span class="badge rounded-pill px-3 py-2 border {{ $statusClass }}">
+                                                {{ $status }}
                                             </span>
                                         </td>
 
+                                        {{-- Ações --}}
                                         <td class="text-end pe-4">
-                                            <div class="d-flex justify-content-end gap-2">
-                                                @if (Route::has('sic.pedido.show'))
-                                                    <a href="{{ route('sic.pedido.show', $pedido->id) }}"
-                                                        class="btn btn-sm btn-outline-primary rounded-3">
-                                                        <i class="fas fa-eye me-1"></i>Visualizar
-                                                    </a>
-                                                @else
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-outline-secondary rounded-3" disabled>
-                                                        <i class="fas fa-eye me-1"></i>Visualizar
-                                                    </button>
-                                                @endif
-                                            </div>
+                                            <a href="{{ route('sic.pedido.show', $pedido->id) }}"
+                                                class="btn btn-sm btn-outline-primary rounded-3">
+                                                <i class="fas fa-eye me-1"></i>Visualizar
+                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach
