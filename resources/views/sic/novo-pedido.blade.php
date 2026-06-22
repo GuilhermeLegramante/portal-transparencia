@@ -51,7 +51,7 @@
                     </div>
 
                     <div class="d-flex justify-content-end gap-2 mt-4">
-                        <a href="{{ route('sic.meus-pedidos') }}" class="btn btn-outline-secondary rounded-3 px-4">
+                        <a href="{{ route('sic.pedidos') }}" class="btn btn-outline-secondary rounded-3 px-4">
                             Cancelar
                         </a>
                         <button type="submit" class="btn btn-primary rounded-3 px-4 fw-bold shadow-sm">
