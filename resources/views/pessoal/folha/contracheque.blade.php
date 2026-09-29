@@ -7,7 +7,7 @@
         <div class="card shadow border-0 overflow-hidden">
             {{-- Cabeçalho do Card --}}
             <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center p-3">
-                <h5 class="mb-0"><i class="fa fa-file-invoice-dollar me-2"></i>Demonstrativo de Pagamento</h5>
+                <h5 class="mb-0"><i class="fa fa-file-invoice-dollar me-2"></i>Demonstrativo de Valores</h5>
                 <div class="d-print-none">
                     <button class="btn btn-sm btn-light" onclick="window.print()"><i class="fa fa-print me-1"></i>
                         Imprimir</button>
@@ -44,6 +44,17 @@
                     <div class="col-md-3">
                         <small class="text-muted d-block text-uppercase">Data Admissão</small>
                         <span>{{ date('d/m/Y', strtotime($contrato->admissao)) }}</span>
+                    </div>
+                </div>
+
+                {{-- AVISO / RESSALVA SOBRE OS VALORES CALCULADOS --}}
+                <div class="alert alert-warning border-0 shadow-sm mb-4 d-flex align-items-start" role="alert">
+                    <i class="fa fa-exclamation-triangle fs-4 me-3 text-warning mt-1"></i>
+                    <div>
+                        <strong>Aviso importante:</strong> Os valores exibidos neste demonstrativo representam os
+                        cálculos processados para a folha de pagamento e <strong>não refletem obrigatoriamente</strong>
+                        a movimentação financeira efetivamente realizada, podendo haver divergências decorrentes de
+                        estornos, bloqueios judiciais ou pagamentos complementares.
                     </div>
                 </div>
 
